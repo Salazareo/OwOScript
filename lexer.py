@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import argparse
 from ply import lex
 
@@ -31,6 +30,7 @@ tokens = [
     'LBRACE',
     'RBRACE',
     'SQUIGGLY',
+    'MULTID'
 ]
 
 # Reserved words which should not match any IDs we need to add this
@@ -50,7 +50,8 @@ reserved = {
     "noU": "NOU",
     "whileU": "WHILEU",
     "iStudied": "ISTUDIED",
-    "shi": "SHI"
+    "shi": "SHI",
+    "harem": "HAREM",
 }
 
 # Add reserved names to list of tokens
@@ -85,6 +86,7 @@ class OwOScriptLexer():
     t_RBRACE = r'\}'
     t_LBRACK = r'\['
     t_RBRACK = r'\]'
+    t_MULTID = r'\^'
 
     # A regular expression rule with some action code
     def t_NUMBER(self, t):
@@ -123,6 +125,8 @@ class OwOScriptLexer():
             print(tok)
 
 
+m = OwOScriptLexer()
+m.build()
 # Main function. DO NOT MODIFY
 if __name__ == "__main__":
 
@@ -135,6 +139,4 @@ if __name__ == "__main__":
     data = f.read()
     f.close()
 
-    m = OwOScriptLexer()
-    m.build()
     m.test(data)
