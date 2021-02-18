@@ -91,7 +91,7 @@ class OwOScriptLexer():
     t_LBRACK = r'\['
     t_RBRACK = r'\]'
     t_MULTID = r'\^'
-    t_PEQ = r'+='
+    t_PEQ = r'\+='
     t_MEQ = r'\-='
     t_TEQ = r'\*='
     t_DEQ = r'\/='
