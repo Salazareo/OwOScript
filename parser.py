@@ -12,7 +12,7 @@ tokens = lexer.tokens
 def p_binary_operators(p):
     '''expression : NUMBER PLUS NUMBER
                   | NUMBER MINUS NUMBER
-                  | NUMBER
+                  | NUMBER 
     '''
     # print(len(p))
     if p[2] == '+':

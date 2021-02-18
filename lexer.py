@@ -30,7 +30,11 @@ tokens = [
     'LBRACE',
     'RBRACE',
     'SQUIGGLY',
-    'MULTID'
+    'MULTID',
+    'PEQ',
+    'MEQ',
+    'TEQ',
+    'DEQ'
 ]
 
 # Reserved words which should not match any IDs we need to add this
@@ -87,8 +91,12 @@ class OwOScriptLexer():
     t_LBRACK = r'\['
     t_RBRACK = r'\]'
     t_MULTID = r'\^'
+    t_PEQ = r'+='
+    t_MEQ = r'\-='
+    t_TEQ = r'\*='
+    t_DEQ = r'\/='
 
-    # A regular expression rule with some action code
+   # A regular expression rule with some action code
     def t_NUMBER(self, t):
         # This needs to be like dynamic, it should be a float unless integer, but numbers are like a single thing so
         r'([0-9]*[.])?[0-9]+'
