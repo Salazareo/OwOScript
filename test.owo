@@ -1,3 +1,4 @@
 catgirl~chan hello() {
-  x = 2 + 2
+  x = 2 + 2;
+  owo desu;
 }

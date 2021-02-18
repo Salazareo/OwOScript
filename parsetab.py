@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'AND BANG CATGIRL CHAN COMMA DESU DIVIDE EQ EQOP GREATER GREATEREQ HAREM ID ISTUDIED KUN LBRACE LBRACK LESS LESSEQ LPAREN MINUS MULTID NANI NEQ NOU NUMBER OWO PERIOD PLUS RBRACE RBRACK REAL RPAREN SAN SEMICOL SHI SQUIGGLY TIMES UWU WAIFU WHILEU YOKAIexpression : NUMBER PLUS NUMBER\n                  | NUMBER MINUS NUMBER\n                  | NUMBER\n    '
+_lr_signature = 'leftPLUSMINUSleftTIMESDIVIDErightUMINUSAND BANG CATGIRL CHAN COMMA DEQ DESU DIVIDE EQ EQOP GREATER GREATEREQ HAREM ID ISTUDIED KUN LBRACE LBRACK LESS LESSEQ LPAREN MEQ MINUS MULTID NANI NEQ NOU NUMBER OWO PEQ PERIOD PLUS RBRACE RBRACK REAL RPAREN SAN SEMICOL SHI SQUIGGLY TEQ TIMES UWU WAIFU WHILEU YOKAIstatement : ID EQ numExprstatement : numExprnumExpr : numExpr PLUS numExpr\n                  | numExpr MINUS numExpr\n                  | numExpr TIMES numExpr\n                  | numExpr DIVIDE numExprnumExpr : MINUS numExpr %prec UMINUSnumExpr : LPAREN numExpr RPARENnumExpr : NUMBERnumExpr : ID'
     
-_lr_action_items = {'NUMBER':([0,3,4,],[2,5,6,]),'$end':([1,2,5,6,],[0,-3,-1,-2,]),'PLUS':([2,],[3,]),'MINUS':([2,],[4,]),}
+_lr_action_items = {'ID':([0,4,5,7,8,9,10,11,],[2,13,13,13,13,13,13,13,]),'MINUS':([0,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,],[4,-10,9,4,4,-9,4,4,4,4,4,-7,-10,9,9,-3,-4,-5,-6,-8,]),'LPAREN':([0,4,5,7,8,9,10,11,],[5,5,5,5,5,5,5,5,]),'NUMBER':([0,4,5,7,8,9,10,11,],[6,6,6,6,6,6,6,6,]),'$end':([1,2,3,6,12,13,15,16,17,18,19,20,],[0,-10,-2,-9,-7,-10,-1,-3,-4,-5,-6,-8,]),'EQ':([2,],[7,]),'PLUS':([2,3,6,12,13,14,15,16,17,18,19,20,],[-10,8,-9,-7,-10,8,8,-3,-4,-5,-6,-8,]),'TIMES':([2,3,6,12,13,14,15,16,17,18,19,20,],[-10,10,-9,-7,-10,10,10,10,10,-5,-6,-8,]),'DIVIDE':([2,3,6,12,13,14,15,16,17,18,19,20,],[-10,11,-9,-7,-10,11,11,11,11,-5,-6,-8,]),'RPAREN':([6,12,13,14,16,17,18,19,20,],[-9,-7,-10,20,-3,-4,-5,-6,-8,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'expression':([0,],[1,]),}
+_lr_goto_items = {'statement':([0,],[1,]),'numExpr':([0,4,5,7,8,9,10,11,],[3,12,14,15,16,17,18,19,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,8 +26,15 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> expression","S'",1,None,None,None),
-  ('expression -> NUMBER PLUS NUMBER','expression',3,'p_binary_operators','parser.py',13),
-  ('expression -> NUMBER MINUS NUMBER','expression',3,'p_binary_operators','parser.py',14),
-  ('expression -> NUMBER','expression',1,'p_binary_operators','parser.py',15),
+  ("S' -> statement","S'",1,None,None,None),
+  ('statement -> ID EQ numExpr','statement',3,'p_statement_assign','parser.py',21),
+  ('statement -> numExpr','statement',1,'p_statement_expr','parser.py',26),
+  ('numExpr -> numExpr PLUS numExpr','numExpr',3,'p_numExpr_binop','parser.py',31),
+  ('numExpr -> numExpr MINUS numExpr','numExpr',3,'p_numExpr_binop','parser.py',32),
+  ('numExpr -> numExpr TIMES numExpr','numExpr',3,'p_numExpr_binop','parser.py',33),
+  ('numExpr -> numExpr DIVIDE numExpr','numExpr',3,'p_numExpr_binop','parser.py',34),
+  ('numExpr -> MINUS numExpr','numExpr',2,'p_numExpr_uminus','parser.py',46),
+  ('numExpr -> LPAREN numExpr RPAREN','numExpr',3,'p_numExpr_group','parser.py',51),
+  ('numExpr -> NUMBER','numExpr',1,'p_numExpr_number','parser.py',56),
+  ('numExpr -> ID','numExpr',1,'p_expression_name','parser.py',61),
 ]
