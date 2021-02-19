@@ -11,15 +11,23 @@ precedence = (
 
 var = {}
 const = {} 
+#simple funciton capable of handling multiple statements (seperated by ;)
+def p_multiStatements_expr(t):
+    '''multiState : statement
+                    | multiState statement'''
+    t[0] = t[1]
+
+#all single line statement should go in here 
 def p_statement_expr(t):
     '''statement : numExpr SEMICOL
                  | boolExpr SEMICOL
                  | declare SEMICOL
+                 | print SEMICOL
     '''
     t[0] = t[1]
 
     
-def p_statement_declare(t):
+def p_statement_declare_or_assign(t):
     ''' declare : declaration
                 | declaration EQ numExpr 
                 | declaration EQ boolExpr    
@@ -28,7 +36,7 @@ def p_statement_declare(t):
     if t[2] == '=':
         var[t[1][1]][1] = t[3]
 
-def p_statement_declaration_or_assign_h(t):
+def p_statement_declaration(t):
     ''' declaration : type ID 
                     | arrays ID 
                     | REAL declaration
@@ -77,7 +85,7 @@ def p_boolExpr_op(t):
 def p_boolExpr_not(t):
     '''boolExpr : NOT boolExpr
     '''
-    t[0] = not t[1]
+    t[0] = not t[2]
 
 def p_boolExpr_group(t):
     'boolExpr : LPAREN boolExpr RPAREN'
@@ -104,6 +112,26 @@ def p_numExpr_binop(t):
     elif t[2] == '/':
         t[0] = t[1] *  1/t[3]
 
+# short binoperation (+=, *=, -=, \=) requires an ID that exists and updated its value in ditionary
+def p_numExpr_shortBinOp(t):
+    '''numExpr : ID PEQ numExpr
+                | ID MEQ numExpr
+                | ID DEQ numExpr
+                | ID TEQ numExpr
+    '''
+    try:
+        if t[2] == '+=':
+            var[t[1]][1] = var[t[1]][1] + t[3]
+        elif t[2] == '-=':
+            var[t[1]][1] = var[t[1]][1] - t[3]
+        elif t[2] == '*=':
+            var[t[1]][1] = var[t[1]][1] * t[3]
+        elif t[2] == '/=':
+            var[t[1]][1] = var[t[1]][1] *  1/t[3]
+    except LookupError:
+        print("Undefined name '%s'" % t[1])
+
+
 
 def p_numExpr_uminus(t):
     'numExpr : MINUS numExpr %prec UMINUS'
@@ -119,6 +147,13 @@ def p_numExpr_number(t):
     'numExpr : NUMBER'
     t[0] = t[1]
     
+#print the ID if it exists in our var dictionary.
+def p_print_var(t):
+    'print : ID'
+    try:
+        print(var[t[1]][1])
+    except LookupError:
+        print("Undefined name '%s'" % t[1])
 
 
 
@@ -135,8 +170,7 @@ parser = yacc.yacc()
 
 #declaration
 #waifu x; 
-x = parser.parse('real catgirl x = uwu || owo;')
-
+x = parser.parse('waifu x = 2; x+=5; y+=5;')
 print(x)
 print(var)
 print(const)
