@@ -35,7 +35,9 @@ tokens = [
     'PEQ',
     'MEQ',
     'TEQ',
-    'DEQ'
+    'DEQ',
+    'PP',
+    'MM'
 ]
 
 # Reserved words which should not match any IDs we need to add this
@@ -67,6 +69,8 @@ class OwOScriptLexer():
     t_ignore = ' \t'
 
     # Regular expression rule with some action code
+    t_PP = r'\+\+'
+    t_MM = r'--'
     t_PLUS = r'\+'
     t_MINUS = r'-'
     t_TIMES = r'\*'
