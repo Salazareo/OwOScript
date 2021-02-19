@@ -2,7 +2,13 @@ from ply import yacc, lex
 import lexer
 tokens = lexer.tokens
 
+########################################HELPERS###############################################
+owoTypes = {}
+owoTypes[int] = ['waifu']
+owoTypes[float] = ['waifu']
+owoTypes[bool] = ['catgirl']
 
+##############################################################################################
 precedence = (
     ('left', 'PLUS', 'MINUS'),
     ('left', 'TIMES', 'DIVIDE'),
@@ -11,7 +17,8 @@ precedence = (
 
 var = {}
 const = {} 
-#simple funciton capable of handling multiple statements (seperated by ;)
+
+#simple function capable of handling multiple statements (seperated by ;)
 def p_multiStatements_expr(t):
     '''multiState : statement
                     | multiState statement'''
@@ -23,18 +30,32 @@ def p_statement_expr(t):
                  | boolExpr SEMICOL
                  | declare SEMICOL
                  | print SEMICOL
+                 | reassign SEMICOL
     '''
     t[0] = t[1]
 
-    
+def p_statement_reassign(t):
+    ''' reassign : ID EQ numExpr
+                 | ID EQ boolExpr
+    '''
+    try:
+        var[t[1]][1] = t[3]
+    except LookupError:
+        print("Undefined name '%s'" % t[1])
+
 def p_statement_declare_or_assign(t):
     ''' declare : declaration
                 | declaration EQ numExpr 
                 | declaration EQ boolExpr    
     '''
     t[0] = t[1::]
-    if t[2] == '=':
-        var[t[1][1]][1] = t[3]
+    if len(t) > 2 and t[2] == '=':
+        expected = var[t[1][1]][0]
+        given = type(t[3])
+        if expected == owoTypes[given] or type(t[3]) == list:
+            var[t[1][1]][1] = t[3]
+        else:
+            raise TypeError("Expected type " + expected[0] + " given type " + owoTypes[given][0] + " Instead.")
 
 def p_statement_declaration(t):
     ''' declaration : type ID 
@@ -46,7 +67,7 @@ def p_statement_declaration(t):
         const[t[2][1]] = True
     else:       
         t[0] = t[1::]
-        var[t[2]] = [t[1], None]
+        var[t[2]] = [[t[1]], None]
 
 def p_arrays(t):
     ''' arrays : type HAREM 
@@ -151,10 +172,9 @@ def p_numExpr_number(t):
 def p_print_var(t):
     'print : ID'
     try:
-        print(var[t[1]][1])
+        print(var[t[1]])
     except LookupError:
         print("Undefined name '%s'" % t[1])
-
 
 
 # def p_expression_name(t):
@@ -170,7 +190,7 @@ parser = yacc.yacc()
 
 #declaration
 #waifu x; 
-x = parser.parse('waifu x = 2; x+=5; y+=5;')
+x = parser.parse('waifu x = uwu;')
 print(x)
 print(var)
 print(const)
