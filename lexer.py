@@ -11,14 +11,15 @@ tokens = [
     'MINUS',
     'TIMES',
     'DIVIDE',
-    'LESS',
-    'LESSEQ',
-    'GREATER',
-    'GREATEREQ',
+    'LT',
+    'LEQ',
+    'GT',
+    'GEQ',
     'EQOP',
     'NEQ',
     'AND',
-    'BANG',
+    'OR',
+    'NOT',
     'SEMICOL',
     'PERIOD',
     'COMMA',
@@ -39,8 +40,8 @@ tokens = [
 
 # Reserved words which should not match any IDs we need to add this
 reserved = {
-    "waifu": "WAIFU",
     "real": "REAL",
+    "waifu": "WAIFU",
     "catgirl": "CATGIRL",
     "chan": "CHAN",
     "kun": "KUN",
@@ -54,8 +55,7 @@ reserved = {
     "noU": "NOU",
     "whileU": "WHILEU",
     "iStudied": "ISTUDIED",
-    "shi": "SHI",
-    "harem": "HAREM",
+    "shi": "SHI"
 }
 
 # Add reserved names to list of tokens
@@ -71,15 +71,16 @@ class OwOScriptLexer():
     t_MINUS = r'-'
     t_TIMES = r'\*'
     t_DIVIDE = r'/'
-    t_LESSEQ = r'\<='
-    t_LESS = r'\<'
-    t_GREATEREQ = r'\>='
-    t_GREATER = r'\>'
+    t_LEQ = r'\<='
+    t_LT = r'\<'
+    t_GEQ = r'\>='
+    t_GT = r'\>'
     t_SQUIGGLY = r'\~'
     t_EQOP = r'\=='
     t_NEQ = r'\!='
     t_AND = r'\&&'
-    t_BANG = r'\!'
+    t_OR = r'\|\|'
+    t_NOT = r'\!'
     t_SEMICOL = r';'
     t_PERIOD = r'\.'
     t_COMMA = r','
