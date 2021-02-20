@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'leftPLUSMINUSleftTIMESDIVIDErightUMINUSAND CATGIRL CHAN COMMA DEQ DESU DIVIDE EQ EQOP GEQ GT HAREM ID ISTUDIED KUN LBRACE LBRACK LEQ LPAREN LT MEQ MINUS MM MULTID NANI NEQ NOT NOU NUMBER OR OWO PEQ PERIOD PLUS PP RBRACE RBRACK REAL RPAREN SAN SEMICOL SHI SQUIGGLY TEQ TIMES UWU WAIFU WHILEU YOKAIline : statement\n            | line statement\n    statement : expr SEMICOL\n                 | assign SEMICOL\n                 | declaration SEMICOL\n    assign : declaration EQ expr \n              | ID EQ expr\n    declaration : type ID\n                   | array ID\n                   | REAL declaration\n    expr : numExpr\n            | boolExpr\n            | reference\n     boolExpr : boolExpr NEQ boolExpr\n                 | numExpr NEQ numExpr\n                 | numExpr LEQ numExpr\n                 | numExpr GEQ numExpr\n                 | numExpr LT numExpr\n                 | numExpr GT numExpr\n                 | numExpr EQOP numExpr\n                 | boolExpr EQOP boolExpr\n                 | boolExpr AND boolExpr\n                 | boolExpr OR boolExpr\n    reference : ID\n                 | ID LBRACK numExpr RBRACK \n    boolExpr : referencenumExpr : referenceboolExpr : NOT boolExprboolExpr : LPAREN boolExpr RPAREN\n    numExpr : numExpr PLUS numExpr\n               | numExpr TIMES numExpr\n               | numExpr MINUS numExpr\n               | numExpr DIVIDE numExpr\n\n    numExpr : ID PEQ numExpr\n                | ID MEQ numExpr\n                | ID DEQ numExpr\n                | ID TEQ numExpr\n                | ID PP\n                | ID MM\n    numExpr : MINUS numExpr %prec UMINUSnumExpr : LPAREN numExpr RPARENnumExpr : NUMBERarray : type HAREMboolExpr : OWO\n                | UWU\n    prim : type\n            | YOKAI\n    type : WAIFU\n            | CATGIRL\n    '
+_lr_signature = 'leftPLUSMINUSleftTIMESDIVIDErightUMINUSAND CATGIRL CHAN COMMA DEQ DESU DIVIDE EQ EQOP GEQ GT HAREM ID ISTUDIED KUN LBRACE LBRACK LEQ LPAREN LT MEQ MINUS MM MULTID NANI NEQ NOT NOU NUMBER OR OWO PEQ PERIOD PLUS PP RBRACE RBRACK REAL RPAREN SAN SEMICOL SHI SQUIGGLY TEQ TIMES UWU WAIFU WHILEU YOKAI statement : expr SEMICOL\n                  | assignment SEMICOL\n                  | declaration SEMICOL\n                  | statement statement\n    expr : numExpr\n            | reference\n    assignment : reassign\n                  | initialize\n                  | arrayAssign\n     reassign : ID EQ expr\n     arrayAssign : ID LBRACK NUMBER RBRACK EQ expr\n     arrayLiteral : LBRACK RBRACK\n                     | LBRACK exprLst RBRACK\n     exprLst : expr\n                | expr COMMA exprLst\n     initialize : declaration EQ expr\n                   | declaration EQ arrayLiteral\n                   | const_declaration EQ expr\n     declaration : array_declaration\n                    | let_declartion\n    const_declaration : REAL array_declaration\n                         | REAL let_declartion\n    array_declaration : type HAREM IDlet_declartion : type IDtype : WAIFU\n            | CATGIRL\n    numExpr : numExpr PLUS numExpr\n                  | numExpr MINUS numExpr\n                  | numExpr TIMES numExpr\n                  | numExpr DIVIDE numExprnumExpr : MINUS numExpr %prec UMINUSnumExpr : LPAREN numExpr RPARENnumExpr : NUMBERnumExpr : letReferencereference : letReference\n                 | arrayReference\n    letReference : ID arrayReference : ID LBRACK NUMBER RBRACK '
     
-_lr_action_items = {'ID':([0,1,2,10,11,13,14,16,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,47,49,55,62,],[9,9,-1,48,50,54,54,54,-48,-49,-2,-3,-4,-5,54,54,54,54,54,54,54,54,54,54,54,54,54,54,54,54,54,54,54,54,54,-43,54,54,]),'REAL':([0,1,2,12,21,22,23,24,],[12,12,-1,12,-2,-3,-4,-5,]),'MINUS':([0,1,2,6,8,9,13,14,15,16,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,52,53,54,55,56,58,60,61,62,64,65,66,67,68,69,70,71,72,73,79,80,81,82,83,84,85,87,88,],[13,13,-1,28,-27,-24,13,13,-42,13,-2,-3,-4,-5,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,13,-38,-39,13,-40,-27,-24,13,28,-27,28,-27,13,-30,-31,-32,-33,28,28,28,28,28,28,28,28,28,28,28,28,-41,28,-25,]),'LPAREN':([0,1,2,13,14,16,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,47,55,62,],[14,14,-1,55,14,62,-2,-3,-4,-5,14,55,55,55,55,55,55,55,55,55,55,62,62,62,62,14,55,55,55,55,55,55,62,]),'NUMBER':([0,1,2,13,14,16,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,47,55,62,],[15,15,-1,15,15,15,-2,-3,-4,-5,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,]),'NOT':([0,1,2,14,16,21,22,23,24,25,36,37,38,39,40,62,],[16,16,-1,16,16,-2,-3,-4,-5,16,16,16,16,16,16,16,]),'OWO':([0,1,2,14,16,21,22,23,24,25,36,37,38,39,40,62,],[17,17,-1,17,17,-2,-3,-4,-5,17,17,17,17,17,17,17,]),'UWU':([0,1,2,14,16,21,22,23,24,25,36,37,38,39,40,62,],[18,18,-1,18,18,-2,-3,-4,-5,18,18,18,18,18,18,18,]),'WAIFU':([0,1,2,12,21,22,23,24,],[19,19,-1,19,-2,-3,-4,-5,]),'CATGIRL':([0,1,2,12,21,22,23,24,],[20,20,-1,20,-2,-3,-4,-5,]),'$end':([1,2,21,22,23,24,],[0,-1,-2,-3,-4,-5,]),'SEMICOL':([3,4,5,6,7,8,9,15,17,18,45,46,48,50,51,52,53,54,59,61,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,85,86,88,],[22,23,24,-11,-12,-13,-24,-42,-44,-45,-38,-39,-8,-9,-10,-40,-27,-24,-28,-26,-6,-30,-31,-32,-33,-15,-16,-17,-18,-19,-20,-14,-21,-22,-23,-7,-34,-35,-36,-37,-41,-29,-25,]),'EQ':([5,9,48,50,51,],[25,40,-8,-9,-10,]),'PLUS':([6,8,9,15,45,46,52,53,54,56,58,60,61,64,65,66,67,68,69,70,71,72,73,79,80,81,82,83,84,85,87,88,],[26,-27,-24,-42,-38,-39,-40,-27,-24,26,-27,26,-27,-30,-31,-32,-33,26,26,26,26,26,26,26,26,26,26,26,26,-41,26,-25,]),'TIMES':([6,8,9,15,45,46,52,53,54,56,58,60,61,64,65,66,67,68,69,70,71,72,73,79,80,81,82,83,84,85,87,88,],[27,-27,-24,-42,-38,-39,-40,-27,-24,27,-27,27,-27,27,-31,27,-33,27,27,27,27,27,27,27,27,27,27,27,27,-41,27,-25,]),'DIVIDE':([6,8,9,15,45,46,52,53,54,56,58,60,61,64,65,66,67,68,69,70,71,72,73,79,80,81,82,83,84,85,87,88,],[29,-27,-24,-42,-38,-39,-40,-27,-24,29,-27,29,-27,29,-31,29,-33,29,29,29,29,29,29,29,29,29,29,29,29,-41,29,-25,]),'NEQ':([6,7,8,9,15,17,18,45,46,52,53,54,56,57,58,59,60,61,64,65,66,67,68,69,70,71,72,73,74,75,76,77,79,80,81,82,85,86,87,88,],[30,36,-26,-24,-42,-44,-45,-38,-39,-40,-27,-24,30,36,-26,36,30,-26,-30,-31,-32,-33,-15,-16,-17,-18,-19,-20,36,36,36,36,-34,-35,-36,-37,-41,-29,30,-25,]),'LEQ':([6,8,9,15,45,46,52,53,54,56,58,60,61,64,65,66,67,79,80,81,82,85,87,88,],[31,-27,-24,-42,-38,-39,-40,-27,-24,31,-27,31,-27,-30,-31,-32,-33,-34,-35,-36,-37,-41,31,-25,]),'GEQ':([6,8,9,15,45,46,52,53,54,56,58,60,61,64,65,66,67,79,80,81,82,85,87,88,],[32,-27,-24,-42,-38,-39,-40,-27,-24,32,-27,32,-27,-30,-31,-32,-33,-34,-35,-36,-37,-41,32,-25,]),'LT':([6,8,9,15,45,46,52,53,54,56,58,60,61,64,65,66,67,79,80,81,82,85,87,88,],[33,-27,-24,-42,-38,-39,-40,-27,-24,33,-27,33,-27,-30,-31,-32,-33,-34,-35,-36,-37,-41,33,-25,]),'GT':([6,8,9,15,45,46,52,53,54,56,58,60,61,64,65,66,67,79,80,81,82,85,87,88,],[34,-27,-24,-42,-38,-39,-40,-27,-24,34,-27,34,-27,-30,-31,-32,-33,-34,-35,-36,-37,-41,34,-25,]),'EQOP':([6,7,8,9,15,17,18,45,46,52,53,54,56,57,58,59,60,61,64,65,66,67,68,69,70,71,72,73,74,75,76,77,79,80,81,82,85,86,87,88,],[35,37,-26,-24,-42,-44,-45,-38,-39,-40,-27,-24,35,37,-26,37,35,-26,-30,-31,-32,-33,-15,-16,-17,-18,-19,-20,37,37,37,37,-34,-35,-36,-37,-41,-29,35,-25,]),'AND':([7,8,9,15,17,18,45,46,52,53,54,57,58,59,61,64,65,66,67,68,69,70,71,72,73,74,75,76,77,79,80,81,82,85,86,88,],[38,-26,-24,-42,-44,-45,-38,-39,-40,-27,-24,38,-26,38,-26,-30,-31,-32,-33,-15,-16,-17,-18,-19,-20,38,38,38,38,-34,-35,-36,-37,-41,-29,-25,]),'OR':([7,8,9,15,17,18,45,46,52,53,54,57,58,59,61,64,65,66,67,68,69,70,71,72,73,74,75,76,77,79,80,81,82,85,86,88,],[39,-26,-24,-42,-44,-45,-38,-39,-40,-27,-24,39,-26,39,-26,-30,-31,-32,-33,-15,-16,-17,-18,-19,-20,39,39,39,39,-34,-35,-36,-37,-41,-29,-25,]),'PEQ':([9,54,],[41,41,]),'MEQ':([9,54,],[42,42,]),'DEQ':([9,54,],[43,43,]),'TEQ':([9,54,],[44,44,]),'PP':([9,54,],[45,45,]),'MM':([9,54,],[46,46,]),'LBRACK':([9,54,],[47,47,]),'HAREM':([10,19,20,],[49,-48,-49,]),'RPAREN':([15,17,18,45,46,52,53,54,56,57,58,59,61,64,65,66,67,68,69,70,71,72,73,74,75,76,77,79,80,81,82,84,85,86,87,88,],[-42,-44,-45,-38,-39,-40,-27,-24,85,86,-26,-28,-26,-30,-31,-32,-33,-15,-16,-17,-18,-19,-20,-14,-21,-22,-23,-34,-35,-36,-37,85,-41,-29,85,-25,]),'RBRACK':([15,45,46,52,53,54,64,65,66,67,79,80,81,82,83,85,88,],[-42,-38,-39,-40,-27,-24,-30,-31,-32,-33,-34,-35,-36,-37,88,-41,-25,]),}
+_lr_action_items = {'MINUS':([0,1,5,12,13,14,15,17,23,24,25,26,27,28,29,30,31,32,33,34,35,36,38,45,46,47,48,49,50,51,62,64,],[12,12,29,12,12,-33,-34,-37,12,-1,-2,-3,12,12,12,12,12,-31,-34,-37,29,12,12,12,-37,-27,-28,-29,-30,-32,12,12,]),'LPAREN':([0,1,12,13,23,24,25,26,27,28,29,30,31,36,38,45,62,64,],[13,13,13,13,13,-1,-2,-3,13,13,13,13,13,13,13,13,13,13,]),'NUMBER':([0,1,12,13,23,24,25,26,27,28,29,30,31,36,37,38,45,59,62,64,],[14,14,14,14,14,-1,-2,-3,14,14,14,14,14,14,53,14,14,63,14,14,]),'ID':([0,1,12,13,19,21,22,23,24,25,26,27,28,29,30,31,36,38,39,45,62,64,],[17,17,34,34,40,-25,-26,17,-1,-2,-3,46,34,34,34,34,46,46,55,46,46,46,]),'REAL':([0,1,23,24,25,26,],[20,20,20,-1,-2,-3,]),'WAIFU':([0,1,20,23,24,25,26,],[21,21,21,21,-1,-2,-3,]),'CATGIRL':([0,1,20,23,24,25,26,],[22,22,22,22,-1,-2,-3,]),'$end':([1,23,24,25,26,],[0,-4,-1,-2,-3,]),'SEMICOL':([2,3,4,5,6,7,8,9,10,11,14,15,16,17,32,33,34,40,43,44,46,47,48,49,50,51,52,54,55,56,60,61,66,67,],[24,25,26,-5,-6,-7,-8,-9,-19,-20,-33,-34,-36,-37,-31,-34,-37,-24,-16,-17,-37,-27,-28,-29,-30,-32,-10,-18,-23,-12,-38,-13,-38,-11,]),'EQ':([4,10,11,17,18,40,41,42,55,60,],[27,-19,-20,36,38,-24,-21,-22,-23,64,]),'COMMA':([5,6,14,15,16,32,33,34,46,47,48,49,50,51,58,66,],[-5,-6,-33,-34,-36,-31,-34,-37,-37,-27,-28,-29,-30,-32,62,-38,]),'RBRACK':([5,6,14,15,16,32,33,34,45,46,47,48,49,50,51,53,57,58,63,65,66,],[-5,-6,-33,-34,-36,-31,-34,-37,56,-37,-27,-28,-29,-30,-32,60,61,-14,66,-15,-38,]),'PLUS':([5,14,15,17,32,33,34,35,46,47,48,49,50,51,],[28,-33,-34,-37,-31,-34,-37,28,-37,-27,-28,-29,-30,-32,]),'TIMES':([5,14,15,17,32,33,34,35,46,47,48,49,50,51,],[30,-33,-34,-37,-31,-34,-37,30,-37,30,30,-29,-30,-32,]),'DIVIDE':([5,14,15,17,32,33,34,35,46,47,48,49,50,51,],[31,-33,-34,-37,-31,-34,-37,31,-37,31,31,-29,-30,-32,]),'RPAREN':([14,32,33,34,35,47,48,49,50,51,],[-33,-31,-34,-37,51,-27,-28,-29,-30,-32,]),'LBRACK':([17,27,46,],[37,45,59,]),'HAREM':([19,21,22,],[39,-25,-26,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'line':([0,],[1,]),'statement':([0,1,],[2,21,]),'expr':([0,1,25,40,],[3,3,63,78,]),'assign':([0,1,],[4,4,]),'declaration':([0,1,12,],[5,5,51,]),'numExpr':([0,1,13,14,16,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,47,55,62,],[6,6,52,56,60,6,64,65,66,67,68,69,70,71,72,73,60,60,60,60,6,79,80,81,82,83,84,87,]),'boolExpr':([0,1,14,16,25,36,37,38,39,40,62,],[7,7,57,59,7,74,75,76,77,7,57,]),'reference':([0,1,13,14,16,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,47,55,62,],[8,8,53,58,61,8,53,53,53,53,53,53,53,53,53,53,61,61,61,61,8,53,53,53,53,53,53,61,]),'type':([0,1,12,],[10,10,10,]),'array':([0,1,12,],[11,11,11,]),}
+_lr_goto_items = {'statement':([0,1,23,],[1,23,23,]),'expr':([0,1,23,27,36,38,45,62,64,],[2,2,2,43,52,54,58,58,67,]),'assignment':([0,1,23,],[3,3,3,]),'declaration':([0,1,23,],[4,4,4,]),'numExpr':([0,1,12,13,23,27,28,29,30,31,36,38,45,62,64,],[5,5,32,35,5,5,47,48,49,50,5,5,5,5,5,]),'reference':([0,1,23,27,36,38,45,62,64,],[6,6,6,6,6,6,6,6,6,]),'reassign':([0,1,23,],[7,7,7,]),'initialize':([0,1,23,],[8,8,8,]),'arrayAssign':([0,1,23,],[9,9,9,]),'array_declaration':([0,1,20,23,],[10,10,41,10,]),'let_declartion':([0,1,20,23,],[11,11,42,11,]),'letReference':([0,1,12,13,23,27,28,29,30,31,36,38,45,62,64,],[15,15,33,33,15,15,33,33,33,33,15,15,15,15,15,]),'arrayReference':([0,1,23,27,36,38,45,62,64,],[16,16,16,16,16,16,16,16,16,]),'const_declaration':([0,1,23,],[18,18,18,]),'type':([0,1,20,23,],[19,19,19,19,]),'arrayLiteral':([27,],[44,]),'exprLst':([45,62,],[57,65,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,54 +26,43 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> line","S'",1,None,None,None),
-  ('line -> statement','line',1,'p_multiline_expr','parser.py',22),
-  ('line -> line statement','line',2,'p_multiline_expr','parser.py',23),
-  ('statement -> expr SEMICOL','statement',2,'p_statement_expr','parser.py',28),
-  ('statement -> assign SEMICOL','statement',2,'p_statement_expr','parser.py',29),
-  ('statement -> declaration SEMICOL','statement',2,'p_statement_expr','parser.py',30),
-  ('assign -> declaration EQ expr','assign',3,'p_assign','parser.py',35),
-  ('assign -> ID EQ expr','assign',3,'p_assign','parser.py',36),
-  ('declaration -> type ID','declaration',2,'p_declaration','parser.py',45),
-  ('declaration -> array ID','declaration',2,'p_declaration','parser.py',46),
-  ('declaration -> REAL declaration','declaration',2,'p_declaration','parser.py',47),
-  ('expr -> numExpr','expr',1,'p_expr','parser.py',57),
-  ('expr -> boolExpr','expr',1,'p_expr','parser.py',58),
-  ('expr -> reference','expr',1,'p_expr','parser.py',59),
-  ('boolExpr -> boolExpr NEQ boolExpr','boolExpr',3,'p_boolExpr_op','parser.py',64),
-  ('boolExpr -> numExpr NEQ numExpr','boolExpr',3,'p_boolExpr_op','parser.py',65),
-  ('boolExpr -> numExpr LEQ numExpr','boolExpr',3,'p_boolExpr_op','parser.py',66),
-  ('boolExpr -> numExpr GEQ numExpr','boolExpr',3,'p_boolExpr_op','parser.py',67),
-  ('boolExpr -> numExpr LT numExpr','boolExpr',3,'p_boolExpr_op','parser.py',68),
-  ('boolExpr -> numExpr GT numExpr','boolExpr',3,'p_boolExpr_op','parser.py',69),
-  ('boolExpr -> numExpr EQOP numExpr','boolExpr',3,'p_boolExpr_op','parser.py',70),
-  ('boolExpr -> boolExpr EQOP boolExpr','boolExpr',3,'p_boolExpr_op','parser.py',71),
-  ('boolExpr -> boolExpr AND boolExpr','boolExpr',3,'p_boolExpr_op','parser.py',72),
-  ('boolExpr -> boolExpr OR boolExpr','boolExpr',3,'p_boolExpr_op','parser.py',73),
-  ('reference -> ID','reference',1,'p_reference','parser.py',88),
-  ('reference -> ID LBRACK numExpr RBRACK','reference',4,'p_reference','parser.py',89),
-  ('boolExpr -> reference','boolExpr',1,'p_boolExpr_reference','parser.py',99),
-  ('numExpr -> reference','numExpr',1,'p_numExpr_reference','parser.py',103),
-  ('boolExpr -> NOT boolExpr','boolExpr',2,'p_boolExpr_not','parser.py',107),
-  ('boolExpr -> LPAREN boolExpr RPAREN','boolExpr',3,'p_boolExpr_group','parser.py',111),
-  ('numExpr -> numExpr PLUS numExpr','numExpr',3,'p_numExpr_binop','parser.py',116),
-  ('numExpr -> numExpr TIMES numExpr','numExpr',3,'p_numExpr_binop','parser.py',117),
-  ('numExpr -> numExpr MINUS numExpr','numExpr',3,'p_numExpr_binop','parser.py',118),
-  ('numExpr -> numExpr DIVIDE numExpr','numExpr',3,'p_numExpr_binop','parser.py',119),
-  ('numExpr -> ID PEQ numExpr','numExpr',3,'p_numExpr_shortBinOp','parser.py',133),
-  ('numExpr -> ID MEQ numExpr','numExpr',3,'p_numExpr_shortBinOp','parser.py',134),
-  ('numExpr -> ID DEQ numExpr','numExpr',3,'p_numExpr_shortBinOp','parser.py',135),
-  ('numExpr -> ID TEQ numExpr','numExpr',3,'p_numExpr_shortBinOp','parser.py',136),
-  ('numExpr -> ID PP','numExpr',2,'p_numExpr_shortBinOp','parser.py',137),
-  ('numExpr -> ID MM','numExpr',2,'p_numExpr_shortBinOp','parser.py',138),
-  ('numExpr -> MINUS numExpr','numExpr',2,'p_numExpr_uminus','parser.py',159),
-  ('numExpr -> LPAREN numExpr RPAREN','numExpr',3,'p_numExpr_group','parser.py',165),
-  ('numExpr -> NUMBER','numExpr',1,'p_number','parser.py',169),
-  ('array -> type HAREM','array',2,'p_arrays','parser.py',173),
-  ('boolExpr -> OWO','boolExpr',1,'p_bool','parser.py',177),
-  ('boolExpr -> UWU','boolExpr',1,'p_bool','parser.py',178),
-  ('prim -> type','prim',1,'p_prim','parser.py',183),
-  ('prim -> YOKAI','prim',1,'p_prim','parser.py',184),
-  ('type -> WAIFU','type',1,'p_type','parser.py',189),
-  ('type -> CATGIRL','type',1,'p_type','parser.py',190),
+  ("S' -> statement","S'",1,None,None,None),
+  ('statement -> expr SEMICOL','statement',2,'p_statement','parser.py',27),
+  ('statement -> assignment SEMICOL','statement',2,'p_statement','parser.py',28),
+  ('statement -> declaration SEMICOL','statement',2,'p_statement','parser.py',29),
+  ('statement -> statement statement','statement',2,'p_statement','parser.py',30),
+  ('expr -> numExpr','expr',1,'p_expr','parser.py',36),
+  ('expr -> reference','expr',1,'p_expr','parser.py',37),
+  ('assignment -> reassign','assignment',1,'p_assignment','parser.py',43),
+  ('assignment -> initialize','assignment',1,'p_assignment','parser.py',44),
+  ('assignment -> arrayAssign','assignment',1,'p_assignment','parser.py',45),
+  ('reassign -> ID EQ expr','reassign',3,'p_reassign','parser.py',51),
+  ('arrayAssign -> ID LBRACK NUMBER RBRACK EQ expr','arrayAssign',6,'p_arrayAssign','parser.py',66),
+  ('arrayLiteral -> LBRACK RBRACK','arrayLiteral',2,'p_arrayLiteral','parser.py',81),
+  ('arrayLiteral -> LBRACK exprLst RBRACK','arrayLiteral',3,'p_arrayLiteral','parser.py',82),
+  ('exprLst -> expr','exprLst',1,'p_exprList','parser.py',91),
+  ('exprLst -> expr COMMA exprLst','exprLst',3,'p_exprList','parser.py',92),
+  ('initialize -> declaration EQ expr','initialize',3,'p_initialize','parser.py',101),
+  ('initialize -> declaration EQ arrayLiteral','initialize',3,'p_initialize','parser.py',102),
+  ('initialize -> const_declaration EQ expr','initialize',3,'p_initialize','parser.py',103),
+  ('declaration -> array_declaration','declaration',1,'p_declaration','parser.py',114),
+  ('declaration -> let_declartion','declaration',1,'p_declaration','parser.py',115),
+  ('const_declaration -> REAL array_declaration','const_declaration',2,'p_const_declaration','parser.py',122),
+  ('const_declaration -> REAL let_declartion','const_declaration',2,'p_const_declaration','parser.py',123),
+  ('array_declaration -> type HAREM ID','array_declaration',3,'p_array_declaration','parser.py',131),
+  ('let_declartion -> type ID','let_declartion',2,'p_let_declaration','parser.py',145),
+  ('type -> WAIFU','type',1,'p_type','parser.py',156),
+  ('type -> CATGIRL','type',1,'p_type','parser.py',157),
+  ('numExpr -> numExpr PLUS numExpr','numExpr',3,'p_numExpr_binop','parser.py',163),
+  ('numExpr -> numExpr MINUS numExpr','numExpr',3,'p_numExpr_binop','parser.py',164),
+  ('numExpr -> numExpr TIMES numExpr','numExpr',3,'p_numExpr_binop','parser.py',165),
+  ('numExpr -> numExpr DIVIDE numExpr','numExpr',3,'p_numExpr_binop','parser.py',166),
+  ('numExpr -> MINUS numExpr','numExpr',2,'p_numExpr_uminus','parser.py',178),
+  ('numExpr -> LPAREN numExpr RPAREN','numExpr',3,'p_numExpr_group','parser.py',183),
+  ('numExpr -> NUMBER','numExpr',1,'p_numExpr_number','parser.py',188),
+  ('numExpr -> letReference','numExpr',1,'p_numExpr_reference','parser.py',193),
+  ('reference -> letReference','reference',1,'p_reference','parser.py',198),
+  ('reference -> arrayReference','reference',1,'p_reference','parser.py',199),
+  ('letReference -> ID','letReference',1,'p_letReference','parser.py',205),
+  ('arrayReference -> ID LBRACK NUMBER RBRACK','arrayReference',4,'p_arrayReference','parser.py',214),
 ]
