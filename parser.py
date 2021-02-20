@@ -92,6 +92,7 @@ def p_expr(t):
     '''expr : numExpr
             | boolExpr
             | reference
+            | functionCall
     '''
     t[0] = t[1]
 
@@ -127,8 +128,8 @@ def p_functionDef(t):
     ''' functionDef : newFn newScope LPAREN declarationLst RPAREN enclosure popScope
     '''
     _, fnName, _, _, args, _, enclosure, _ = t
-    fns[fnName][1] = enclosure
-    t[0] = (fnName, enclosure)
+    fns[fnName][1] = (args, enclosure)
+    t[0] = (fnName, (args, enclosure))
 
 
 def p_enclosure(t):
@@ -168,6 +169,7 @@ def p_honorific(t):
     ''' honorific : CHAN
                   | KUN
                   | SAN
+                  | SAMA
     '''
     t[0] = t[1]
 
@@ -185,6 +187,26 @@ def p_arrayAssign(t):
             print("Array uninitialized")
     else:
         print("Bad type")
+
+
+def p_functionCall(t):
+    ''' functionCall : print
+                     | ID LPAREN exprLst RPAREN
+                     | ID LPAREN RPAREN
+    '''
+    if len(t) == 2:
+        t[0] = t[1]
+    elif len(t) == 4:
+        _, fnName, _, _ = t
+        if (fnName in fns):
+            # print('ok')
+            # ok we need to make objects to store our data properly
+            print("{} called with no args".format(fnName))
+    else:
+        _, fnName, _, args, _ = t
+        # print('ok')
+        print("{} called with args: {}".format(fnName, *args))
+        # ok we need to make objects to store our data properly
 
 
 def p_arrayLiteral(t):
@@ -382,6 +404,13 @@ def p_letReference(t):
         t[0] = None
 
 
+def p_print(t):
+    '''print : BAKA LPAREN exprLst RPAREN'''
+    _, _, _, elements, _ = t
+    print(*elements)
+    t[0] = lambda: print(elements)
+
+
 def p_arrayReference(t):
     ''' arrayReference : ID LBRACK NUMBER RBRACK '''
     _, name, _, index, _ = t
@@ -401,17 +430,18 @@ parser = yacc.yacc()
 
 x = parser.parse('''
     real waifu x = 4;
-    waifu~chan something(){
+    waifu~chan something(waifu t){
         waifu x = -1;
         x = 2;
         waifu y = 1;
         y = y + x;
     }
     waifu z = 2 + x;
+    something(z*2);
 ''')
-print(x)
+# print(x)
 print(fns)
-print(lets)
+# print(lets)
 # while True:
 #     try:
 #         s = raw_input('calc > ')

@@ -48,6 +48,7 @@ reserved = {
     "chan": "CHAN",
     "kun": "KUN",
     "san": "SAN",
+    "sama": "SAMA",
     "yokai": "YOKAI",
     "owo": "OWO",
     "uwu": "UWU",
@@ -57,7 +58,8 @@ reserved = {
     "noU": "NOU",
     "whileU": "WHILEU",
     "iStudied": "ISTUDIED",
-    "shi": "SHI"
+    "shi": "SHI",
+    "baka": "BAKA"
 }
 
 # Add reserved names to list of tokens
