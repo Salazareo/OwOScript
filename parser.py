@@ -18,7 +18,6 @@ precedence = (
 var = {}
 const = {} 
 
-                    | multiState statement'''
 def p_multiline_expr(t):
     '''line : statement
             | line statement
@@ -32,6 +31,9 @@ def p_statement_expr(t):
     '''
     t[0] = t[1]
 
+def p_whileloop_statement(t):
+    '''statement : WHILEU LPAREN boolExpr RPAREN ISTUDIED LBRACE statement RBRACE'''
+    pass
 def p_assign(t):
     '''assign : declaration EQ expr 
               | ID EQ expr
@@ -151,6 +153,8 @@ def p_numExpr_shortBinOp(t):
             var[t[1]][1] = var[t[1]][1] + 1
         elif t[2] == '--':
             var[t[1]][1] = var[t[1]][1] - 1
+        
+        t[0] = var[t[1]][1]
     except LookupError:
         print("Undefined name '%s'" % t[1])
 
@@ -199,7 +203,7 @@ parser = yacc.yacc()
 
 #declaration
 #waifu x; 
-x = parser.parse('catgirl y = 5; y--;')
+x = parser.parse('waifu x = 0; whileU (x < 10) iStudied { x+=11; }')
 print(x)
 print(var)
 print(const)
