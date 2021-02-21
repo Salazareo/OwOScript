@@ -8,6 +8,10 @@ tokens = lexer.tokens
 def toIntIfInt(x):
     return int(x) if x % int(x) == 0 else x
 
+owotypes = {}
+owotypes[int] = 'waifu'
+owotypes[float] = 'waifu'
+owotypes[bool] = 'catgirl'
 
 class ScopedMap():
 
@@ -112,19 +116,76 @@ def p_reassign(t):
     '''
     _, name, _, val = t
     if (name in lets and name not in consts):
-        t[0] = [name, '=', val]
-        lets[name]["val"] = val
+        typeVal = lets[name]['type']
+        if owotypes[type(val)] == typeVal:
+            t[0] = [name, '=', val]
+            lets[name]["val"] = val
+        else: 
+            print("Incorrect type for %s, expecting type %s given type %s", name, typeVal, owotypes[type(val)])
     else:
         if (name in lets):
             if (consts.inScopeIndex(lets.getScopeIndex(name), name)):
-                print("Cannot reassing constant")
+                print("Cannot reassign constant")
             else:
-                t[0] = [name, '=', val]
-                lets[name]["val"] = val
+                typeVal = lets[name]['type']
+                if owotypes[type(val)] == typeVal:
+                    t[0] = [name, '=', val]
+                    lets[name]["val"] = val
+                else: 
+                    print("Incorrect type for %s, expecting type %s given type %s", name, typeVal, owotypes[type(val)])
         else:
             print("Variable {} not declared.".format(name))
         # error ehere
 
+def p_shortbinop(t):
+    ''' reassign : ID PEQ expr
+                 | ID MEQ expr
+                 | ID TEQ expr 
+                 | ID DEQ expr
+                 | ID PP
+                 | ID MM
+    '''
+    if len(t) == 4:
+        _, name, op, val = t
+    else:
+        _, name, op = t
+        val = 1
+    
+    if (name in lets and name not in consts):
+        typeVal = lets[name]['type']
+        if 'waifu' == typeVal:
+            if "+" in op:
+                lets[name]["val"] += val
+            elif "-" in op:
+                lets[name]["val"] -= val
+            elif "*" in op:
+                lets[name]["val"] *= val
+            elif "/" in op:
+                 lets[name]["val"] /= val
+
+            t[0] = [name, '=', lets[name]["val"]]
+        else: 
+            print("Incorrect type for %s, expecting type %s given type %s", name, typeVal, owotypes[type(val)])
+    else:
+        if (name in lets):
+            if (consts.inScopeIndex(lets.getScopeIndex(name), name)):
+                print("Cannot reassign constant")
+            else:
+                typeVal = lets[name]['type']
+                if 'waifu' == typeVal:
+                    if "+" in op:
+                        lets[name]["val"] += val
+                    elif "-" in op:
+                        lets[name]["val"] -= val
+                    elif "*" in op:
+                        lets[name]["val"] *= val
+                    elif "/" in op:
+                        lets[name]["val"] /= val
+                    t[0] = [name, '=', lets[name]["val"]]
+                else: 
+                    print("Incorrect type for %s, expecting type %s given type %s", name, typeVal, owotypes[type(val)])
+        else:
+            print("Variable {} not declared.".format(name))
 
 def p_functionDef(t):
     ''' functionDef : newFn newScope LPAREN declarationLst RPAREN enclosure popScope
@@ -183,8 +244,11 @@ def p_arrayAssign(t):
     if (name in lets):
         if (lets[name]['val'] != None):
             # if lets[name]["type"] == typeOf(val):
-            t[0] = [name + ' harem', index, '=', val]
-            lets[name]['val'][index] = val
+            if owotypes[type(val)] == lets[name]["type"]:
+                t[0] = [name + ' harem', index, '=', val]
+                lets[name]['val'][index] = val
+            else: 
+                print("Incorrect type for harem %s, expecting type %s given type %s", name, lets[name]["type"], owotypes[type(val)])
         else:
             print("Array uninitialized")
     else:
@@ -245,10 +309,11 @@ def p_letInitialize(t):
     '''
     typeVal, name = t[1][0:2]
     val = t[3]
-    # if (typeOf(val) == typeVal):
-    t[0] = [name, '=', val]
-    lets[name]["val"] = val
-    # else error
+    if owotypes[type(val)] == typeVal:
+        t[0] = [name, '=', val]
+        lets[name]["val"] = val
+    else: 
+        print("Incorrect type for %s, expecting type %s given type %s", name, typeVal, owotypes[type(val)])
 
 
 def p_constInitialize(t):
@@ -257,8 +322,11 @@ def p_constInitialize(t):
     typeVal, name = t[1][0:2]
     val = t[3]
     # if (typeOf(val) == typeVal):
-    t[0] = [name, '=', val]
-    lets[name]["val"] = val
+    if owotypes[type(val)] == typeVal:
+        t[0] = [name, '=', val]
+        lets[name]["val"] = val
+    else: 
+        print("Incorrect type for %s, expecting type %s given type %s", name, typeVal, owotypes[type(val)])
 
 
 def p_declaration(t):
@@ -477,45 +545,30 @@ def p_arrayReference(t):
 
 parser = yacc.yacc()
 
-if __name__ == "__main__":
-    argParser = argparse.ArgumentParser(
-        description='Take in the OwOScript source code and parse it into an AST.')
-    argParser.add_argument(
-        'FILE', help="Input file with OwOScript source code")
-    args = argParser.parse_args()
+# if __name__ == "__main__":
+#     argParser = argparse.ArgumentParser(
+#         description='Take in the OwOScript source code and parse it into an AST.')
+#     argParser.add_argument(
+#         'FILE', help="Input file with OwOScript source code")
+#     args = argParser.parse_args()
 
-    f = open(args.FILE, 'r')
-    data = f.read()
-    f.close()
-    parser.parse(data)
+#     f = open(args.FILE, 'r')
+#     data = f.read()
+#     f.close()
+#     parser.parse(data)
 
-    # Write output to a file
-    with open('output.json', 'w') as f:
-        f.write(json.dumps(fns.scopes, indent=2))
-    print("parsing complete")
+#     # Write output to a file
+#     with open('output.json', 'w') as f:
+#         f.write(json.dumps(fns.scopes, indent=2))
+#     print("parsing complete")
 
-# x = parser.parse('''
-#     real waifu x = 4;
-#     waifu~chan something(waifu t){
-#         waifu x = -1;
-#         x = 2;
-#         waifu y = 1;
-#         y = y + x;
-#     }
-#     waifu z = 2 + x;
-#     whileU (z < 10) iStudied {
-#         z = z+1;
-#     }
-#     shi (real waifu x : w ){
-#         baka(z);
-#     }
-#     shi (waifu x =0; x < 10; x= x+1 ){
-#         baka(x);
-#     }
-# ''')
-# # print(x)
-# print(fns)
-
+x = parser.parse('''
+    waifu x = 4;
+    x++; x--; x*=2; x/=2; x+=4; x-=1;
+''')
+print(x)
+print(fns)
+print(lets)
 
 # print(lets)
 # while True:
