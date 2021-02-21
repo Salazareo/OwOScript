@@ -1,5 +1,6 @@
 from ply import yacc, lex
 import lexer
+import json
 tokens = lexer.tokens
 
 
@@ -59,6 +60,9 @@ class ScopedMap():
     def __str__(self) -> str:
         return str(self.scopes)
 
+    def toJSON(self):
+        return json.dumps(self.scopes, indent=4)
+
 
 # scopes = []
 # scopes.append({"lets": {}, "consts": {}, "fns": {}})
@@ -66,11 +70,6 @@ lets = ScopedMap()
 consts = ScopedMap()
 fns = ScopedMap()
 
-# def p_assign(p):
-#     '''assign : ID EQ numExpr'''
-#     print(len(p))
-#     vars[p[0]] - p[2]
-# we have to do ugly bnf sadge, but ok it kinda works
 precedence = (
     ('left', 'PLUS', 'MINUS'),
     ('left', 'TIMES', 'DIVIDE'),
@@ -84,6 +83,8 @@ def p_statement(t):
                   | declaration SEMICOL
                   | statement statement
                   | functionDef
+                  | whileLoop
+                  | forLoop
     '''
     t[0] = t[1::]
 
@@ -230,9 +231,16 @@ def p_exprList(t):
 
 
 def p_initialize(t):
-    ''' initialize : declaration EQ expr
-                   | declaration EQ arrayLiteral
-                   | const_declaration EQ expr
+    ''' initialize : letInitialize
+                   | constInitialize
+    '''
+    t[0] = t[1]
+    # else error
+
+
+def p_letInitialize(t):
+    ''' letInitialize : declaration EQ expr
+                      | declaration EQ arrayLiteral
     '''
     typeVal, name = t[1][0:2]
     val = t[3]
@@ -240,6 +248,16 @@ def p_initialize(t):
     t[0] = [name, '=', val]
     lets[name]["val"] = val
     # else error
+
+
+def p_constInitialize(t):
+    ''' constInitialize : const_declaration EQ expr
+    '''
+    typeVal, name = t[1][0:2]
+    val = t[3]
+    # if (typeOf(val) == typeVal):
+    t[0] = [name, '=', val]
+    lets[name]["val"] = val
 
 
 def p_declaration(t):
@@ -393,6 +411,37 @@ def p_reference(t):
     t[0] = t[1]
 
 
+def p_whileLoop(t):
+    '''whileLoop : WHILEU LPAREN boolExpr RPAREN ISTUDIED newScope enclosure popScope
+    '''
+    _, _, _, cond, _, _, _, statements, _ = t
+    print("While loop with condition {} created".format(cond))
+
+
+def p_forLoop(t):
+    '''forLoop : SHI newScope LPAREN forTrio RPAREN enclosure popScope
+               | SHI newScope LPAREN forElement RPAREN enclosure popScope
+    '''
+    _, _, _, _, cond, _, statements, _ = t
+    print("For loop with condition {} created".format(cond))
+
+
+def p_forTrio(t):
+    ''' forTrio : letInitialize SEMICOL boolExpr SEMICOL reassign
+                | letInitialize SEMICOL boolExpr SEMICOL arrayAssign
+                | arrayAssign SEMICOL boolExpr SEMICOL arrayAssign
+    '''
+    t[0] = [t[1], t[3], t[5]]
+
+
+def p_forElement(t):
+    ''' forElement : declaration COL ID
+                   | const_declaration COL ID
+    '''
+    #  need to error check
+    t[0] = [t[1], t[3]]
+
+
 def p_letReference(t):
     '''letReference : ID'''
     _, name = t
@@ -437,10 +486,22 @@ x = parser.parse('''
         y = y + x;
     }
     waifu z = 2 + x;
-    something(z*2);
+    whileU (z < 10) iStudied {
+        z = z+1;
+    }
+    shi (real waifu x : w ){
+        baka(z);
+    }
+    shi (waifu x =0; x < 10; x= x+1 ){
+        baka(x);
+    }
 ''')
 # print(x)
 print(fns)
+# Write output to a file
+with open('output.json', 'w') as f:
+    f.write(json.dumps(fns.scopes, indent=2))
+
 # print(lets)
 # while True:
 #     try:

@@ -3,3 +3,4 @@
 *.out
 temp.py
 parsetab.py
+output.json

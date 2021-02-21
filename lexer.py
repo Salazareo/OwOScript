@@ -33,6 +33,7 @@ tokens = [
     'SQUIGGLY',
     'MULTID',
     'PEQ',
+    'COL',
     'MEQ',
     'TEQ',
     'DEQ',
@@ -102,6 +103,7 @@ class OwOScriptLexer():
     t_MEQ = r'\-='
     t_TEQ = r'\*='
     t_DEQ = r'\/='
+    t_COL = r'\:'
 
    # A regular expression rule with some action code
     def t_NUMBER(self, t):
