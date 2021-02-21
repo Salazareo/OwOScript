@@ -476,7 +476,7 @@ def p_arrayReference(t):
 
 parser = yacc.yacc()
 
-
+# TODO: Get input from file
 x = parser.parse('''
     real waifu x = 4;
     waifu~chan something(waifu t){
