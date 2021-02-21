@@ -1,4 +1,17 @@
-catgirl~chan hello() {
-  x = 2 + 2;
-  owo desu;
+real waifu x = 4;
+waifu~chan something(waifu t){
+  waifu x = -1;
+  x = 2;
+  waifu y = 1;
+  y = y + x;
+}
+waifu z = 2 + x;
+whileU (z < 10) iStudied {
+  z = z+1;
+}
+shi (real waifu x : w ){
+  baka(z);
+}
+shi (waifu x =0; x < 10; x= x+1 ){
+  baka(x);
 }

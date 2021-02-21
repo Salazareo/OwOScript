@@ -1,6 +1,7 @@
 from ply import yacc, lex
 import lexer
 import json
+import argparse
 tokens = lexer.tokens
 
 
@@ -476,31 +477,45 @@ def p_arrayReference(t):
 
 parser = yacc.yacc()
 
-# TODO: Get input from file
-x = parser.parse('''
-    real waifu x = 4;
-    waifu~chan something(waifu t){
-        waifu x = -1;
-        x = 2;
-        waifu y = 1;
-        y = y + x;
-    }
-    waifu z = 2 + x;
-    whileU (z < 10) iStudied {
-        z = z+1;
-    }
-    shi (real waifu x : w ){
-        baka(z);
-    }
-    shi (waifu x =0; x < 10; x= x+1 ){
-        baka(x);
-    }
-''')
-# print(x)
-print(fns)
-# Write output to a file
-with open('output.json', 'w') as f:
-    f.write(json.dumps(fns.scopes, indent=2))
+if __name__ == "__main__":
+    argParser = argparse.ArgumentParser(
+        description='Take in the OwOScript source code and parse it into an AST.')
+    argParser.add_argument(
+        'FILE', help="Input file with OwOScript source code")
+    args = argParser.parse_args()
+
+    f = open(args.FILE, 'r')
+    data = f.read()
+    f.close()
+    parser.parse(data)
+
+    # Write output to a file
+    with open('output.json', 'w') as f:
+        f.write(json.dumps(fns.scopes, indent=2))
+    print("parsing complete")
+
+# x = parser.parse('''
+#     real waifu x = 4;
+#     waifu~chan something(waifu t){
+#         waifu x = -1;
+#         x = 2;
+#         waifu y = 1;
+#         y = y + x;
+#     }
+#     waifu z = 2 + x;
+#     whileU (z < 10) iStudied {
+#         z = z+1;
+#     }
+#     shi (real waifu x : w ){
+#         baka(z);
+#     }
+#     shi (waifu x =0; x < 10; x= x+1 ){
+#         baka(x);
+#     }
+# ''')
+# # print(x)
+# print(fns)
+
 
 # print(lets)
 # while True:
