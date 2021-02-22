@@ -79,22 +79,45 @@ precedence = (
 
 
 def p_statement(t):
-    ''' statement : expr SEMICOL
-                  | assignment SEMICOL
-                  | declaration SEMICOL
+    ''' statement : singleStatement
                   | statement statement
-                  | functionDef
-                  | whileLoop
-                  | forLoop
     '''
     t[0] = t[1::]
 
 
+def p_singleStatement(t):
+    ''' singleStatement : expr SEMICOL
+                        | assignment SEMICOL
+                        | declaration SEMICOL
+                        | functionDef
+                        | whileLoop
+                        | forLoop
+                        | if
+                        | returnStatement SEMICOL
+    '''
+
+
 def p_expr(t):
-    '''expr : numExpr
-            | boolExpr
-            | reference
-            | functionCall
+    ''' expr : ternaryOp
+             | numExpr
+             | boolExpr
+             | reference
+             | functionCall
+             | arrayExpr
+    '''
+    t[0] = t[1]
+
+
+def p_ternaryOp(t):
+    ''' ternaryOp : boolExpr QMARK expr COL expr
+    '''
+    print("Ternary op with cond {} and exprs {} {}".format(t[1], t[3], t[5]))
+    t[0] = t[1::]
+
+
+def p_arrayExpr(t):
+    '''arrayExpr : arrayLiteral
+                 | letReference
     '''
     t[0] = t[1]
 
@@ -103,6 +126,27 @@ def p_assignment(t):
     '''assignment : reassign
                   | initialize
                   | arrayAssign
+    '''
+    t[0] = t[1]
+
+
+def p_if(t):
+    ''' if : ifAlone else
+           | ifAlone
+    '''
+    t[0] = t[1]
+
+
+def p_ifAlone(t):
+    ''' ifAlone : NANI LPAREN boolExpr RPAREN newScope enclosure popScope
+                | NANI LPAREN boolExpr RPAREN newScope singleStatement popScope
+    '''
+    t[0] = t[1]
+
+
+def p_else(t):
+    ''' else : NOU LPAREN boolExpr RPAREN newScope enclosure popScope
+             | NOU LPAREN boolExpr RPAREN newScope singleStatement popScope
     '''
     t[0] = t[1]
 
@@ -157,6 +201,13 @@ def p_newScope(t):
     consts.addScope()
     fns.addScope()
     t[0] = None
+
+
+def p_returnStatement(t):
+    ''' returnStatement : expr DESU
+    '''
+    print("returned {}".format(t[1]))
+    t[0] = t[1]
 
 
 def p_popScope(t):
@@ -241,7 +292,6 @@ def p_initialize(t):
 
 def p_letInitialize(t):
     ''' letInitialize : declaration EQ expr
-                      | declaration EQ arrayLiteral
     '''
     typeVal, name = t[1][0:2]
     val = t[3]

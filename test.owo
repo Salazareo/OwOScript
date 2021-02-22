@@ -4,6 +4,7 @@ waifu~chan something(waifu t){
   x = 2;
   waifu y = 1;
   y = y + x;
+  y desu;
 }
 waifu z = 2 + x;
 whileU (z < 10) iStudied {

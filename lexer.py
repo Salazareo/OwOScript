@@ -38,7 +38,9 @@ tokens = [
     'TEQ',
     'DEQ',
     'PP',
-    'MM'
+    'MM',
+    'QMARK',
+
 ]
 
 # Reserved words which should not match any IDs we need to add this
@@ -104,6 +106,7 @@ class OwOScriptLexer():
     t_TEQ = r'\*='
     t_DEQ = r'\/='
     t_COL = r'\:'
+    t_QMARK = r'\?'
 
    # A regular expression rule with some action code
     def t_NUMBER(self, t):
