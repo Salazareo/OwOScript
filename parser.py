@@ -95,6 +95,7 @@ def p_singleStatement(t):
                         | if
                         | returnStatement SEMICOL
     '''
+    t[0] = t[1]
 
 
 def p_expr(t):
@@ -157,14 +158,14 @@ def p_reassign(t):
     _, name, _, val = t
     if (name in lets and name not in consts):
         t[0] = [name, '=', val]
-        lets[name]["val"] = val
+        lets[name]["value"] = val
     else:
         if (name in lets):
             if (consts.inScopeIndex(lets.getScopeIndex(name), name)):
                 print("Cannot reassing constant")
             else:
                 t[0] = [name, '=', val]
-                lets[name]["val"] = val
+                lets[name]["value"] = val
         else:
             print("Variable {} not declared.".format(name))
         # error ehere
@@ -293,11 +294,14 @@ def p_initialize(t):
 def p_letInitialize(t):
     ''' letInitialize : declaration EQ expr
     '''
-    typeVal, name = t[1][0:2]
+    print(t[1])
+    name = t[1]["value"]["value"]
+    typeName = t[1]["value"]["type"]
     val = t[3]
     # if (typeOf(val) == typeVal):
-    t[0] = [name, '=', val]
-    lets[name]["val"] = val
+    t[0] = {"type": "initialize", "value": [
+        {"type": typeName, "value": name}, '=', t[3]["value"]]}
+    lets[name]["value"] = val
     # else error
 
 
@@ -308,7 +312,7 @@ def p_constInitialize(t):
     val = t[3]
     # if (typeOf(val) == typeVal):
     t[0] = [name, '=', val]
-    lets[name]["val"] = val
+    lets[name]["value"] = val
 
 
 def p_declaration(t):
@@ -322,7 +326,7 @@ def p_declaration(t):
 def p_declarationLst(t):
     '''declarationLst : declaration
                       | declaration COMMA declarationLst
-                      | 
+                      |
     '''
     if len(t) == 2:
         t[0] = [t[1]]
@@ -350,7 +354,7 @@ def p_array_declaration(t):
         lets.forceNew(name, {
             "type": typeVal,
             "array": True,
-            "val": None
+            "value": None
         })
     else:
         print("{} has already been declared.".format(name))
@@ -360,9 +364,10 @@ def p_let_declaration(t):
     '''let_declartion : type ID'''
 
     _, typeVal, name = t
-    t[0] = [typeVal, name]
+    t[0] = {"type": "declaration", "value": {
+        "type": t[1]["value"], "value": t[2]}}
     if (not lets.inCurrentScope(name) and not fns.inCurrentScope(name)):
-        lets.forceNew(name, {"type": typeVal, "array": False, "val": None})
+        lets.forceNew(name, {"type": typeVal, "array": False, "value": None})
     else:
         print("{} has already been declared.".format(name))
 
@@ -371,7 +376,7 @@ def p_type(t):
     '''type : WAIFU
             | CATGIRL
     '''
-    t[0] = t[1]
+    t[0] = {"type": "typeName", "value": t[1]}
 
 
 def p_boolExpr_op(t):
@@ -394,25 +399,29 @@ def p_boolExpr_op(t):
                '&&': lambda x, y: x and y,
                '||': lambda x, y: x or y
                }
-    t[0] = options[op](a, b)
+    if isinstance(t[1]["value"], (int, float, bool)) and isinstance(t[3]["value"], (int, float, bool)):
+        t[0] = {"type": 'bool', "value": options[op](a, b)}
+    else:
+        t[0] = {"type": 'bool', "value": t[1::]}
 
 
 def p_boolExprNeg(t):
     'boolExpr : NOT boolExpr'
-    t[0] = not t[2]
+    t[0] = {"type": 'bool', "value": t[1:3] if not isinstance(
+        t[2]["value"], (bool)) else not t[2]["value"]}
 
 
 def p_boolExpr_group(t):
     '''boolExpr : LPAREN boolExpr RPAREN
     '''
-    t[0] = t[2]
+    t[0] = {"type": 'bool', "value": t[1::]}
 
 
 def p_bool(t):
     ''' boolExpr : OWO
                  | UWU
     '''
-    t[0] = True if t[1] == 'uwu' else False
+    t[0] = {"type": "bool", "value": True if t[1] == 'uwu' else False}
 
 
 def p_numExpr_binop(t):
@@ -420,39 +429,43 @@ def p_numExpr_binop(t):
                   | numExpr MINUS numExpr
                   | numExpr TIMES numExpr
                   | numExpr DIVIDE numExpr'''
-    if t[2] == '+':
-        t[0] = t[1] + t[3]
-    elif t[2] == '-':
-        t[0] = t[1] - t[3]
-    elif t[2] == '*':
-        t[0] = t[1] * t[3]
-    elif t[2] == '/':
-        t[0] = t[1] / t[3]
+    if isinstance(t[1]["value"], (float, int)) and isinstance(t[3]["value"], (float, int)):
+        if t[2] == '+':
+            t[0] = {"type": "numExpr", "value": t[1]["value"] + t[3]["value"]}
+        elif t[2] == '-':
+            t[0] = {"type": "numExpr", "value": t[1]["value"] - t[3]["value"]}
+        elif t[2] == '*':
+            t[0] = {"type": "numExpr", "value": t[1]["value"] * t[3]["value"]}
+        elif t[2] == '/':
+            t[0] = {"type": "numExpr", "value": t[1]["value"] / t[3]["value"]}
+    else:
+        t[0] = {"type": "numExpr", "value": {
+            "type": t[2], "value": [t[1]["value"], t[3]["value"]]}}
 
 
 def p_numExpr_uminus(t):
     'numExpr : MINUS numExpr %prec UMINUS'
-    t[0] = -t[2]
+    t[0] = {"type": 'numExpr', "value": t[1:3]}
 
 
 def p_numExpr_group(t):
     'numExpr : LPAREN numExpr RPAREN'
-    t[0] = t[2]
+    t[0] = {"type": 'numExpr', "value": t[1::]}
 
 
 def p_numExpr_number(t):
     'numExpr : NUMBER'
-    t[0] = t[1]
+    t[0] = {"type": 'number', "value": t[1]}
 
 
 def p_numExpr_reference(t):
-    'numExpr : letReference'
+    'numExpr : reference'
     t[0] = t[1]
 
 
 def p_boolExpr_reference(t):
-    'boolExpr : letReference'
-    t[0] = t[1]
+    'boolExpr : reference'
+    t[0] = {"type": "bool", "value": t[1]}
 
 
 def p_reference(t):
@@ -498,7 +511,8 @@ def p_letReference(t):
     _, name = t
     try:
         if (name in lets):
-            t[0] = lets[name]["val"]
+            t[0] = {"type": "letReference", "value": {
+                "value": name, "type": lets[name]["type"]["value"]}}
     except IndexError:
         print("Undefined name '%s'" % t[1])
         t[0] = None
@@ -512,11 +526,12 @@ def p_print(t):
 
 
 def p_arrayReference(t):
-    ''' arrayReference : ID LBRACK NUMBER RBRACK '''
+    ''' arrayReference : ID LBRACK numExpr RBRACK '''
     _, name, _, index, _ = t
     try:
         if (name in lets):
-            t[0] = lets[name]["val"][index]
+            t[0] = {"type": "arrayReference", "value": {
+                "name": name, "index": index, "value": lets[name]}}
         else:
             print("Undefined name '%s'" % t[1])
             t[0] = None
@@ -537,11 +552,11 @@ if __name__ == "__main__":
     f = open(args.FILE, 'r')
     data = f.read()
     f.close()
-    parser.parse(data)
+    ast = parser.parse(data)
 
     # Write output to a file
     with open('output.json', 'w') as f:
-        f.write(json.dumps(fns.scopes, indent=2))
+        f.write(json.dumps(ast, indent=2))
     print("parsing complete")
 
 # x = parser.parse('''
