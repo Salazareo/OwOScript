@@ -186,14 +186,7 @@ def test_boolExpr():
         "type": "program",
         "value": {
             "type": "boolExpr",
-            "value": [
-                "(",
-                {
-                    "type": "boolExpr",
-                    "value": False
-                },
-                ")"
-            ]
+            "value": False
         }
     }
     ast = make_ast(input, parser)
