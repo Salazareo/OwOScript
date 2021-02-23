@@ -55,6 +55,7 @@ forTrio : forAssign; boolExpr; forReassign
 forAssign : reassign
           | letInitialize
           | arrayAssign
+          | binOpAssign
 
 forReassign : reassign
             | arrayAssign

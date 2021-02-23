@@ -1,6 +1,1 @@
-waifu x = 10;
-
-x = 15;
-x -= 5;
-
-baka(x);
+waifu x;

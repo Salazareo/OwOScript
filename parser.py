@@ -354,7 +354,6 @@ def p_binOpAssign(t):
                     | ID PP
                     | ID MM
     '''
-    _, val, op, expr = t
     options = {'+=': lambda x, y: x + y,
                '-=': lambda x, y: x - y,
                '*=': lambda x, y: x * y,
@@ -447,13 +446,15 @@ def p_forAssign(t):
     ''' forAssign : reassign
                   | letInitialize
                   | arrayAssign
+                  | binOpAssign
     '''
     t[0] = t[1]
 
 
 def p_forReassign(t):
     ''' forReassign : reassign
-                    | arrayAssign
+                    | arrayAssign    
+                    | binOpAssign
     '''
     t[0] = t[1]
 
