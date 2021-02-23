@@ -1,22 +1,107 @@
 from parser import make_parser, run_parser, make_ast
 import json
+import os
 
 parser = make_parser()
 
-def test_from_file(inputName, outputName, errorMsg="Test failed"):
+def output_to_file(inputName, outputName):
     inputFile = open(inputName)
     input = inputFile.read()
     inputFile.close()
-    ast = make_ast(input, parser)
+    run_parser(input, outputName, parser)
 
-    #Compare to output file
-    with open(outputName) as outputFile:
-        expected = json.load(outputFile)
-        if ast != expected: print(errorMsg) 
+    parser.restart() 
 
 
 
 #run tests here
+def test_vars():
+    print("============================")
+    print("Testing:Declare waifu")
+    input = "waifu varName;"
+    # Note: There are shift conflicts in this test case
+    expected = {
+        "type": "program",
+        "value": {
+            "type": "declaration",
+            "value": {
+                "type": "waifu",
+                "value": "varName"
+        }}
+    }
+    ast = make_ast(input, parser)
+    if ast != expected: print("test:Declare waifu did not pass") 
+
+    print("Testing:Waifu initialization")
+    input = "waifu y = 2.5;"
+    expected = {
+        "type": "program",
+        "value": {
+            "type": "initialize",
+            "value": [
+              {
+                "type": "waifu",
+                "value": "y"
+              },
+              "=",
+              {
+                "type": "numExpr",
+                "value": 2.5
+              }
+        ]}
+    }
+    ast = make_ast(input, parser)
+    if ast != expected: print("test:Waifu initialization did not pass") 
+
+    print("Testing:Waifu reassignment")
+    input = "y = 500;" # y has already been initialized previously
+    expected = {
+        "type": "program",
+        "value": {
+            "type": "reassign",
+            "value": [
+                "y",
+                "=",
+                {
+                  "type": "numExpr",
+                  "value": 500
+                }
+            ]
+        }
+    }
+    ast = make_ast(input, parser)
+    if ast != expected: print("test:Waifu reassignment did not pass")
+    
+    print("Testing:Waifu reference")
+    input = "waifu z = 42; z;"
+    expected = {
+        "type": "program",
+        "value": [{
+            "type": "initialize",
+            "value": [
+                {
+                  "type": "waifu",
+                  "value": "z"
+                },
+                "=",
+                {
+                  "type": "numExpr",
+                  "value": 42
+                }]
+        },
+        {
+            "type": "letReference",
+            "value": {
+                "type": "waifu",
+                "value": "z"
+            }
+        }]
+    }
+    ast = make_ast(input, parser)
+    if ast != expected: print("test:Waifu reference did not pass")
+
+    parser.restart()  
+
 def test_numExpr():
     print("============================")
     print("Testing:9001")
@@ -78,6 +163,9 @@ def test_numExpr():
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:Negative numbers did not pass")  
+    
+    parser.restart() 
+
 
 def test_boolExpr():
     print("============================")
@@ -184,22 +272,56 @@ def test_boolExpr():
     #     }
     # }
     # ast = make_ast(input, parser)
-    # if ast != expected: print("test:Chaining boolExpr did not pass")  
+    # if ast != expected: print("test:Chaining boolExpr did not pass") 
 
-def test_arrays():
-    print("============================")
-    print("Testing:Arrays")
-    inputName = "array_example.owo"
-    outputName = "array_output.json"
-    test_from_file(inputName, outputName, "Array tests did not pass")
+    parser.restart() 
 
+    
 
+# def test_simple():
+#     print("============================")
+#     print("Making file:Expr example")
+#     output_to_file("expr_example.owo", "expr_output.json")
 
+# def test_arrays():
+#     print("============================")
+#     print("Making file:Arrays")
+#     sourceFile = open("array_example.owo")
+#     sourceCode = sourceFile.read()
+#     sourceFile.close()
+#     run_parser(sourceCode, "array_output.json", parser)
 
+# def test_if():
+#     print("============================")
+#     print("Making file:If statements")
+#     sourceFile = open("if_example.owo")
+#     sourceCode = sourceFile.read()
+#     sourceFile.close()
+#     run_parser(sourceCode, "if_output.json", parser)
 
+# def test_loops():
+#     print("============================")
+#     print("Making file:Loops")
+#     sourceFile = open("loop_example.owo")
+#     sourceCode = sourceFile.read()
+#     sourceFile.close()
+#     run_parser(sourceCode, "loop_output.json", parser)
+
+# def test_functions():
+#     print("============================")
+#     print("Making file:Functions")
+#     sourceFile = open("function_example.owo")
+#     sourceCode = sourceFile.read()
+#     sourceFile.close()
+#     run_parser(sourceCode, "function_output.json", parser)
 
 if __name__ == "__main__":
     test_numExpr()
     test_boolExpr()
-    test_arrays()
+    test_vars()
+    # test_simple()
+    # test_arrays()
+    # test_if()
+    # test_loops()
+    print("Testing complete.")
 
