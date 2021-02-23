@@ -1,0 +1,135 @@
+{
+  "type": "program",
+  "value": [
+    {
+      "type": "initialize",
+      "value": [
+        {
+          "type": "waifu harem",
+          "value": "lst"
+        },
+        "=",
+        {
+          "type": "arrayLiteral",
+          "value": [
+            "[",
+            {
+              "type": "numExpr",
+              "value": 3
+            },
+            {
+              "type": "numExpr",
+              "value": 2
+            },
+            {
+              "type": "numExpr",
+              "value": 1
+            },
+            "]"
+          ],
+          "]": {
+            "type": "numExpr",
+            "value": 7
+          }
+        }
+      ]
+    },
+    [
+      {
+        "type": "initialize",
+        "value": [
+          {
+            "type": "catgirl harem",
+            "value": "bools"
+          },
+          "=",
+          {
+            "type": "arrayLiteral",
+            "value": [
+              "[",
+              {
+                "type": "boolExpr",
+                "value": true
+              },
+              {
+                "type": "boolExpr",
+                "value": false
+              },
+              {
+                "type": "boolExpr",
+                "value": true
+              },
+              {
+                "type": "boolExpr",
+                "value": false
+              },
+              "]"
+            ]
+          }
+        ]
+      },
+      [
+        {
+          "type": "arrayAssign",
+          "value": [
+            "[",
+            {
+              "type": "numExpr",
+              "value": 0
+            },
+            "]",
+            "=",
+            {
+              "type": "numExpr",
+              "value": 7
+            }
+          ]
+        },
+        {
+          "type": "boolExpr",
+          "value": {
+            "type": "&&",
+            "value": [
+              {
+                "type": "boolExpr",
+                "value": true
+              },
+              {
+                "type": "arrayReference",
+                "value": [
+                  {
+                    "value": "bools",
+                    "type": "catgirl harem"
+                  },
+                  "[",
+                  {
+                    "type": "numExpr",
+                    "value": {
+                      "type": "arrayReference",
+                      "value": [
+                        {
+                          "value": "lst",
+                          "type": "waifu harem"
+                        },
+                        "[",
+                        {
+                          "type": "numExpr",
+                          "value": {
+                            "type": "numExpr",
+                            "value": 3
+                          }
+                        },
+                        "]"
+                      ]
+                    }
+                  },
+                  "]"
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    ]
+  ]
+}

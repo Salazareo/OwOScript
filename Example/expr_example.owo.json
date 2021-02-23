@@ -1,0 +1,45 @@
+{
+  "type": "program",
+  "value": [
+    {
+      "type": "numExpr",
+      "value": 1
+    },
+    [
+      {
+        "type": "numExpr",
+        "value": 2
+      },
+      [
+        {
+          "type": "initialize",
+          "value": [
+            {
+              "type": "waifu",
+              "value": "x"
+            },
+            "=",
+            {
+              "type": "numExpr",
+              "value": 2.0
+            }
+          ]
+        },
+        {
+          "type": "constInitialize",
+          "value": [
+            {
+              "type": "catgirl",
+              "value": "nyan"
+            },
+            "=",
+            {
+              "type": "boolExpr",
+              "value": true
+            }
+          ]
+        }
+      ]
+    ]
+  ]
+}
