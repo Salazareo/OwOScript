@@ -77,7 +77,6 @@ def declarations(name, typeVal, isArray, type):
     else:
         raise Exception("{} has already been declared.".format(name))
 
-
     # scopes = []
     # scopes.append({"lets": {}, "consts": {}, "fns": {}})
 lets = ScopedMap()
@@ -190,7 +189,6 @@ def p_reassign(t):
         else:
             raise Exception("Variable {} not declared.".format(name))
         # error here
-    
 
 
 def p_functionDeclaration(t):
@@ -347,6 +345,7 @@ def p_declaration(t):
     # note const declaration cannot go here, we have to assign when we do that
     t[0] = t[1]
 
+
 def p_binOpAssign(t):
     ''' binOpAssign : ID PEQ numExpr
                     | ID MEQ numExpr
@@ -359,18 +358,19 @@ def p_binOpAssign(t):
                '-=': lambda x, y: x - y,
                '*=': lambda x, y: x * y,
                '/=': lambda x, y: x / y,
-               '++': lambda x, y : x + 1,
-               '--': lambda x, y : x - 1
+               '++': lambda x, y: x + 1,
+               '--': lambda x, y: x - 1
                }
     if len(t) == 4:
         _, name, op, val = t
-    else: 
+    else:
         _, name, op = t
         val = 1
     if (name in lets and name not in consts):
         t[0] = {'type': 'short_binop', 'value': t[1::]}
         if val != 1 and isinstance(val["value"], (float, int)):
-            lets[name]["value"]["value"] = options[op](lets[name]["value"]["value"], val["value"])
+            lets[name]["value"]["value"] = options[op](
+                lets[name]["value"]["value"], val["value"])
     else:
         if (name in lets):
             if (consts.inScopeIndex(lets.getScopeIndex(name), name)):
@@ -378,10 +378,10 @@ def p_binOpAssign(t):
             else:
                 t[0] = {'type': 'short_binop', 'value': t[1::]}
                 if val != 1 and isinstance(val["value"], (float, int)):
-                    lets[name]["value"]["value"] = options[op](lets[name]["value"]["value"], val["value"])
+                    lets[name]["value"]["value"] = options[op](
+                        lets[name]["value"]["value"], val["value"])
         else:
             raise Exception("Variable {} not declared.".format(name))
-            
 
 
 def p_argumentDeclaration(t):
@@ -473,6 +473,7 @@ def p_print(t):
     _, *elements = t
     t[0] = {"type": "printCall", "value": [
         elements[0], elements[1], *elements[2], elements[3]]}
+
 
 def p_boolExpr_op(t):
     ''' boolExpr : boolExpr AND boolExpr
@@ -573,7 +574,7 @@ def p_boolExprNeg(t):
     'boolExpr : NOT boolExpr'
 
     t[0] = {"type": t[1], "value": t[2]} if not isinstance(
-        t[2]['value'], (bool)) else {"type": "boolExpr", "value": t[2]['value']}
+        t[2]['value'], (bool)) else {"type": "boolExpr", "value": not t[2]['value']}
     # t[0] = {"type": 'boolExpr', "value": t[1:3] if not else not t[2]["value"]}
 
 
