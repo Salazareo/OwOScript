@@ -1,0 +1,19 @@
+waifu x = 5;
+
+nani (x == 5){
+    x = 7;
+}
+
+nani (x < 5){
+    x = 10;
+} noU {
+    x = 5;
+}
+
+nani (x == 10){
+    x = 5;
+}noU nani(x > 4){
+    x = 100;
+}noU {
+    x = 0;
+}

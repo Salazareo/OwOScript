@@ -119,9 +119,9 @@ def p_expr(t):
     ''' expr : ternaryOp
              | numExpr
              | boolExpr
-             | reference
              | functionCall
              | arrayExpr
+             | reference
     '''
     t[0] = t[1]
 
@@ -146,6 +146,7 @@ def p_assignment(t):
     '''assignment : reassign
                   | initialize
                   | arrayAssign
+                  | binOpAssign
     '''
     t[0] = t[1]
 
@@ -345,6 +346,44 @@ def p_declaration(t):
     t[0] = t[1]
 
 
+def p_binOpAssign(t):
+    ''' binOpAssign : ID PEQ numExpr
+                    | ID MEQ numExpr
+                    | ID TEQ numExpr
+                    | ID DEQ numExpr
+                    | ID PP
+                    | ID MM
+    '''
+    options = {'+=': lambda x, y: x + y,
+               '-=': lambda x, y: x - y,
+               '*=': lambda x, y: x * y,
+               '/=': lambda x, y: x / y,
+               '++': lambda x, y: x + 1,
+               '--': lambda x, y: x - 1
+               }
+    if len(t) == 4:
+        _, name, op, val = t
+    else:
+        _, name, op = t
+        val = 1
+    if (name in lets and name not in consts):
+        t[0] = {'type': 'short_binop', 'value': t[1::]}
+        if val != 1 and isinstance(val["value"], (float, int)):
+            lets[name]["value"]["value"] = options[op](
+                lets[name]["value"]["value"], val["value"])
+    else:
+        if (name in lets):
+            if (consts.inScopeIndex(lets.getScopeIndex(name), name)):
+                raise Exception("Cannot reassign constant")
+            else:
+                t[0] = {'type': 'short_binop', 'value': t[1::]}
+                if val != 1 and isinstance(val["value"], (float, int)):
+                    lets[name]["value"]["value"] = options[op](
+                        lets[name]["value"]["value"], val["value"])
+        else:
+            raise Exception("Variable {} not declared.".format(name))
+
+
 def p_argumentDeclaration(t):
     '''argumentDeclaration : declaration
                            | declaration COMMA argumentDeclaration
@@ -408,13 +447,15 @@ def p_forAssign(t):
     ''' forAssign : reassign
                   | letInitialize
                   | arrayAssign
+                  | binOpAssign
     '''
     t[0] = t[1]
 
 
 def p_forReassign(t):
     ''' forReassign : reassign
-                    | arrayAssign
+                    | arrayAssign    
+                    | binOpAssign
     '''
     t[0] = t[1]
 
@@ -435,14 +476,14 @@ def p_print(t):
 
 
 def p_boolExpr_op(t):
-    ''' boolExpr : expr NEQ expr
+    ''' boolExpr : boolExpr AND boolExpr
+                 | boolExpr OR boolExpr
+                 | expr NEQ expr
                  | numExpr LEQ numExpr
                  | numExpr GEQ numExpr
                  | numExpr LT numExpr
                  | numExpr GT numExpr
                  | expr EQOP expr
-                 | boolExpr AND boolExpr
-                 | boolExpr OR boolExpr
     '''
     _, a, op, b = t
     options = {'<': lambda x, y: x < y,
@@ -500,7 +541,7 @@ def p_reference(t):
 
 
 def p_letReference(t):
-    '''letReference : ID'''
+    '''letReference : ID '''
     _, name = t
     if (name in lets):
         t[0] = {
@@ -530,26 +571,11 @@ def p_arrayReference(t):
         raise Exception("Undefined name '%s'" % name)
 
 
-def p_numExpr_uminus(t):
-    'numExpr : MINUS numExpr %prec UMINUS'
-    t[0] = {"type": t[1], "value": t[2]}
-
-
-def p_numExpr_group(t):
-    'numExpr : LPAREN numExpr RPAREN'
-    t[0] = {"type": 'numExpr', "value": t[1::]}
-
-
-def p_numExpr_number(t):
-    'numExpr : NUMBER'
-    t[0] = {"type": 'numExpr', "value": t[1]}
-
-
 def p_boolExprNeg(t):
     'boolExpr : NOT boolExpr'
 
     t[0] = {"type": t[1], "value": t[2]} if not isinstance(
-        t[2]['value'], (bool)) else {"type": "boolExpr", "value": t[2]['value']}
+        t[2]['value'], (bool)) else {"type": "boolExpr", "value": not t[2]['value']}
     # t[0] = {"type": 'boolExpr', "value": t[1:3] if not else not t[2]["value"]}
 
 
@@ -564,6 +590,21 @@ def p_bool(t):
                  | UWU
     '''
     t[0] = {"type": "boolExpr", "value": True if t[1] == 'uwu' else False}
+
+
+def p_numExpr_uminus(t):
+    'numExpr : MINUS numExpr %prec UMINUS'
+    t[0] = {"type": t[1], "value": t[2]}
+
+
+def p_numExpr_group(t):
+    'numExpr : LPAREN numExpr RPAREN'
+    t[0] = {"type": 'numExpr', "value": t[1::]}
+
+
+def p_numExpr_number(t):
+    'numExpr : NUMBER'
+    t[0] = {"type": 'numExpr', "value": t[1]}
 
 
 def p_fnType(t):
