@@ -77,6 +77,7 @@ def declarations(name, typeVal, isArray, type):
     else:
         raise Exception("{} has already been declared.".format(name))
 
+
     # scopes = []
     # scopes.append({"lets": {}, "consts": {}, "fns": {}})
 lets = ScopedMap()
@@ -119,9 +120,9 @@ def p_expr(t):
     ''' expr : ternaryOp
              | numExpr
              | boolExpr
-             | reference
              | functionCall
              | arrayExpr
+             | reference
     '''
     t[0] = t[1]
 
@@ -435,14 +436,14 @@ def p_print(t):
 
 
 def p_boolExpr_op(t):
-    ''' boolExpr : expr NEQ expr
+    ''' boolExpr : boolExpr AND boolExpr
+                 | boolExpr OR boolExpr
+                 | expr NEQ expr
                  | numExpr LEQ numExpr
                  | numExpr GEQ numExpr
                  | numExpr LT numExpr
                  | numExpr GT numExpr
                  | expr EQOP expr
-                 | boolExpr AND boolExpr
-                 | boolExpr OR boolExpr
     '''
     _, a, op, b = t
     options = {'<': lambda x, y: x < y,
@@ -499,7 +500,7 @@ def p_reference(t):
 
 
 def p_letReference(t):
-    '''letReference : ID'''
+    '''letReference : ID '''
     _, name = t
     if (name in lets):
         t[0] = {
@@ -529,21 +530,6 @@ def p_arrayReference(t):
         raise Exception("Undefined name '%s'" % name)
 
 
-def p_numExpr_uminus(t):
-    'numExpr : MINUS numExpr %prec UMINUS'
-    t[0] = {"type": t[1], "value": t[2]}
-
-
-def p_numExpr_group(t):
-    'numExpr : LPAREN numExpr RPAREN'
-    t[0] = {"type": 'numExpr', "value": t[1::]}
-
-
-def p_numExpr_number(t):
-    'numExpr : NUMBER'
-    t[0] = {"type": 'numExpr', "value": t[1]}
-
-
 def p_boolExprNeg(t):
     'boolExpr : NOT boolExpr'
 
@@ -563,6 +549,21 @@ def p_bool(t):
                  | UWU
     '''
     t[0] = {"type": "boolExpr", "value": True if t[1] == 'uwu' else False}
+
+
+def p_numExpr_uminus(t):
+    'numExpr : MINUS numExpr %prec UMINUS'
+    t[0] = {"type": t[1], "value": t[2]}
+
+
+def p_numExpr_group(t):
+    'numExpr : LPAREN numExpr RPAREN'
+    t[0] = {"type": 'numExpr', "value": t[1::]}
+
+
+def p_numExpr_number(t):
+    'numExpr : NUMBER'
+    t[0] = {"type": 'numExpr', "value": t[1]}
 
 
 def p_fnType(t):
