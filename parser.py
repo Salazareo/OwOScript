@@ -599,13 +599,14 @@ def p_bool(t):
 
 def p_numExpr_uminus(t):
     'numExpr : MINUS numExpr %prec UMINUS'
-    t[0] = {"type": t[1], "value": t[2]}
+    t[0] = {"type": t[1], "value": t[2] if not isinstance(
+        t[2]['value'], (int, float)) else -t[2]['value']}
 
 
 def p_numExpr_group(t):
     'numExpr : LPAREN numExpr RPAREN'
     t[0] = {"type": 'numExpr', "value":  t[1::]
-            if not isinstance(t[2]['value'], (float, int)) else t[2]}
+            if not isinstance(t[2]['value'], (float, int)) else t[2]['value']}
 
 
 def p_numExpr_number(t):
@@ -633,8 +634,10 @@ def p_type(t):
 def make_parser():
     return yacc.yacc()
 
+
 def make_ast(sourceCode, parser):
     return parser.parse(sourceCode)
+
 
 def run_parser(sourceCode, outputFileName, parser):
     ast = make_ast(sourceCode, parser)
@@ -642,6 +645,7 @@ def run_parser(sourceCode, outputFileName, parser):
     with open(outputFileName, 'w') as f:
         f.write(json.dumps(ast, indent=2))
     print("parsing complete")
+
 
 if __name__ == "__main__":
     argParser = argparse.ArgumentParser(
@@ -654,4 +658,3 @@ if __name__ == "__main__":
     sourceCode = sourceFile.read()
     sourceFile.close()
     run_parser(sourceCode, '{}.json'.format(args.FILE), parser)
-
