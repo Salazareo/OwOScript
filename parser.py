@@ -645,6 +645,6 @@ if __name__ == "__main__":
     ast = parser.parse(data)
 
     # Write output to a file
-    with open('output.json', 'w') as f:
+    with open('{}.json'.format(args.FILE), 'w') as f:
         f.write(json.dumps(ast, indent=2))
     print("parsing complete")
