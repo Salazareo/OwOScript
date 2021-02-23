@@ -468,6 +468,7 @@ def p_numExpr_binop(t):
                | numExpr TIMES numExpr
                | numExpr DIVIDE numExpr'''
     if isinstance(t[1]["value"], (float, int)) and isinstance(t[3]["value"], (float, int)):
+        # Directly evaluates literals as optimization
         if t[2] == '+':
             t[0] = {"type": "numExpr", "value": t[1]["value"] + t[3]["value"]}
         elif t[2] == '-':
@@ -582,8 +583,18 @@ def p_type(t):
 def p_error(t):
     raise Exception("Syntax error at line", t.lineno)
 
+def make_parser():
+    return yacc.yacc()
 
-parser = yacc.yacc()
+def make_ast(sourceCode, parser):
+    return parser.parse(sourceCode)
+
+def run_parser(sourceCode, outputFileName, parser):
+    ast = make_ast(sourceCode, parser)
+    # Write output to a file
+    with open(outputFileName, 'w') as f:
+        f.write(json.dumps(ast, indent=2))
+    print("parsing complete")
 
 if __name__ == "__main__":
     argParser = argparse.ArgumentParser(
@@ -592,12 +603,9 @@ if __name__ == "__main__":
         'FILE', help="Input file with OwOScript source code")
     args = argParser.parse_args()
 
-    f = open(args.FILE, 'r')
-    data = f.read()
-    f.close()
-    ast = parser.parse(data)
-
-    # Write output to a file
-    with open('output.json', 'w') as f:
-        f.write(json.dumps(ast, indent=2))
-    print("parsing complete")
+    parser = make_parser()
+    sourceFile = open(args.FILE, 'r')
+    sourceCode = sourceFile.read()
+    sourceFile.close()
+    run_parser(sourceCode, "output.json", parser)
+    
