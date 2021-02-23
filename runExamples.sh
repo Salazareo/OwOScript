@@ -1,4 +1,4 @@
 #!/bin/bash
-for filename in ./Examples/*.owo; do
-    python3 ./parser.py ./Examples/$filename
+for filename in Example/*.owo; do
+    python parser.py $filename
 done
