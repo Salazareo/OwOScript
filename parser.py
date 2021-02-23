@@ -147,6 +147,7 @@ def p_assignment(t):
     '''assignment : reassign
                   | initialize
                   | arrayAssign
+                  | binOpAssign
     '''
     t[0] = t[1]
 
@@ -189,6 +190,7 @@ def p_reassign(t):
         else:
             raise Exception("Variable {} not declared.".format(name))
         # error here
+    
 
 
 def p_functionDeclaration(t):
@@ -345,6 +347,42 @@ def p_declaration(t):
     # note const declaration cannot go here, we have to assign when we do that
     t[0] = t[1]
 
+def p_binOpAssign(t):
+    ''' binOpAssign : ID PEQ numExpr
+                    | ID MEQ numExpr
+                    | ID TEQ numExpr
+                    | ID DEQ numExpr
+                    | ID PP
+                    | ID MM
+    '''
+    options = {'+=': lambda x, y: x + y,
+               '-=': lambda x, y: x - y,
+               '*=': lambda x, y: x * y,
+               '/=': lambda x, y: x / y,
+               '++': lambda x, y : x + 1,
+               '--': lambda x, y : x - 1
+               }
+    if len(t) == 4:
+        _, name, op, val = t
+    else: 
+        _, name, op = t
+        val = 1
+    if (name in lets and name not in consts):
+        t[0] = {'type': 'short_binop', 'value': t[1::]}
+        if val != 1 and isinstance(val["value"], (float, int)):
+            lets[name]["value"]["value"] = options[op](lets[name]["value"]["value"], val["value"])
+    else:
+        if (name in lets):
+            if (consts.inScopeIndex(lets.getScopeIndex(name), name)):
+                raise Exception("Cannot reassign constant")
+            else:
+                t[0] = {'type': 'short_binop', 'value': t[1::]}
+                if val != 1 and isinstance(val["value"], (float, int)):
+                    lets[name]["value"]["value"] = options[op](lets[name]["value"]["value"], val["value"])
+        else:
+            raise Exception("Variable {} not declared.".format(name))
+            
+
 
 def p_argumentDeclaration(t):
     '''argumentDeclaration : declaration
@@ -409,13 +447,15 @@ def p_forAssign(t):
     ''' forAssign : reassign
                   | letInitialize
                   | arrayAssign
+                  | binOpAssign
     '''
     t[0] = t[1]
 
 
 def p_forReassign(t):
     ''' forReassign : reassign
-                    | arrayAssign
+                    | arrayAssign    
+                    | binOpAssign
     '''
     t[0] = t[1]
 
@@ -433,7 +473,6 @@ def p_print(t):
     _, *elements = t
     t[0] = {"type": "printCall", "value": [
         elements[0], elements[1], *elements[2], elements[3]]}
-
 
 def p_boolExpr_op(t):
     ''' boolExpr : boolExpr AND boolExpr
