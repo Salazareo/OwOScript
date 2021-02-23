@@ -1,0 +1,1400 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" class="vtree" width="960" height="800">
+    <style>
+.vtree-node text { font: 14px sans-serif; }
+.vtree-link { fill: none; stroke: #888; stroke-width: 2px; }
+.vtree-table { stroke-width: 2px; stroke: steelblue; }
+path.vtree-table { fill: white; }
+g.vtree-node rect { fill: white; stroke: black; stroke-width: 1px; }
+g.vtree-node rect.number-text { fill: #d8f0ed; }
+g.vtree-node rect.string-text { fill: #e7f0db; }
+g.vtree-node rect.boolean-text { fill: #e1d8f0; }
+g.vtree-node rect.null-text { fill: #888; }
+</style>
+    <g class="vtree-root" transform="translate(389.866796486119,479.0426947651895)scale(0.21022410381342888)">
+        <g class="vtree-node" transform="translate(480,20)">
+            <g class="vtree-node" transform="translate(-48,0)">
+                <path class="vtree-link" d="M48,13C48,61 -1998,61 -1998,109" />
+                <g class="vtree-node" transform="translate(48,75)">
+                    <path class="vtree-link" d="M-2046,25C-2046,25 140,25 140,25" />
+                    <g class="vtree-node" transform="translate(-2093,0)">
+                        <path class="vtree-link" d="M47,34C47,88 -46,88 -46,142" />
+                        <g class="vtree-node" transform="translate(47,96)">
+                            <path class="vtree-link" d="M-11,34C-11,34 81,34 81,34" />
+                            <path class="vtree-link" d="M-93,34C-93,34 -11,34 -11,34" />
+                            <g class="vtree-node" transform="translate(-136,0)">
+                                <g transform="translate(0,21)">
+                                    <g transform="translate(0,0)">
+                                        <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                        <text x="4" y="21">type</text>
+                                    </g>
+                                    <g transform="translate(43,0)">
+                                        <rect class="string-text" x="0" y="0" width="42" height="25" />
+                                        <text x="4" y="21">waifu</text>
+                                    </g>
+                                    <g transform="translate(0,25)">
+                                        <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                        <text x="4" y="21">value</text>
+                                    </g>
+                                    <g transform="translate(43,25)">
+                                        <rect class="string-text" x="0" y="0" width="42" height="25" />
+                                        <text x="4" y="21">x</text>
+                                    </g>
+                                </g>
+                                <g>
+                                    <text x="43" y="17" text-anchor="middle">value[0]</text>
+                                </g>
+                            </g>
+                            <g class="vtree-node" transform="translate(-41,0)">
+                                <g transform="translate(21,21)">
+                                    <rect class="string-text" x="0" y="0" width="17" height="25" />
+                                    <text x="4" y="21">=</text>
+                                </g>
+                                <g>
+                                    <text x="29" y="17" text-anchor="middle">value[1]</text>
+                                </g>
+                            </g>
+                            <g class="vtree-node" transform="translate(27,0)">
+                                <g transform="translate(0,21)">
+                                    <g transform="translate(0,0)">
+                                        <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                        <text x="4" y="21">type</text>
+                                    </g>
+                                    <g transform="translate(43,0)">
+                                        <rect class="string-text" x="0" y="0" width="65" height="25" />
+                                        <text x="4" y="21">numExpr</text>
+                                    </g>
+                                    <g transform="translate(0,25)">
+                                        <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                        <text x="4" y="21">value</text>
+                                    </g>
+                                    <g transform="translate(43,25)">
+                                        <rect class="number-text" x="0" y="0" width="65" height="25" />
+                                        <text x="4" y="21">5</text>
+                                    </g>
+                                </g>
+                                <g>
+                                    <text x="54" y="17" text-anchor="middle">value[2]</text>
+                                </g>
+                            </g>
+                        </g>
+                        <g transform="translate(0,21)">
+                            <g transform="translate(0,0)">
+                                <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                <text x="4" y="21">type</text>
+                            </g>
+                            <g transform="translate(35,0)">
+                                <rect class="string-text" x="0" y="0" width="59" height="25" />
+                                <text x="4" y="21">initialize</text>
+                            </g>
+                        </g>
+                        <g>
+                            <text x="47" y="17" text-anchor="middle">value[0]</text>
+                        </g>
+                    </g>
+                    <g class="vtree-node" transform="translate(111,0)">
+                        <path class="vtree-link" d="M29,25C29,64.5 -1628,64.5 -1628,104" />
+                        <g class="vtree-node" transform="translate(29,79)">
+                            <path class="vtree-link" d="M-1657,25C-1657,25 389,25 389,25" />
+                            <g class="vtree-node" transform="translate(-1669,0)">
+                                <path class="vtree-link" d="M12,25C12,69 12,69 12,113" />
+                                <g class="vtree-node" transform="translate(12,79)">
+                                    <g class="vtree-node" transform="translate(-26,0)">
+                                        <path class="vtree-link" d="M26,34C26,82 -328,82 -328,130" />
+                                        <g class="vtree-node" transform="translate(26,96)">
+                                            <path class="vtree-link" d="M-35,34C-35,34 193,34 193,34" />
+                                            <path class="vtree-link" d="M-195,34C-195,34 -35,34 -35,34" />
+                                            <path class="vtree-link" d="M-354,34C-354,34 -195,34 -195,34" />
+                                            <g class="vtree-node" transform="translate(-384,0)">
+                                                <g transform="translate(23,21)">
+                                                    <rect class="string-text" x="0" y="0" width="13" height="25" />
+                                                    <text x="4" y="21">(</text>
+                                                </g>
+                                                <g>
+                                                    <text x="29" y="17" text-anchor="middle">value[0]</text>
+                                                </g>
+                                            </g>
+                                            <g class="vtree-node" transform="translate(-245,0)">
+                                                <path class="vtree-link" d="M50,34C50,82 50,82 50,130" />
+                                                <g class="vtree-node" transform="translate(20,96)">
+                                                    <path class="vtree-link" d="M30,34C30,82 -29,82 -29,130" />
+                                                    <g class="vtree-node" transform="translate(30,96)">
+                                                        <path class="vtree-link" d="M-59,34C-59,34 66,34 66,34" />
+                                                        <g class="vtree-node" transform="translate(-121,0)">
+                                                            <path class="vtree-link" d="M62,34C62,88 62,88 62,142" />
+                                                            <g class="vtree-node" transform="translate(19,96)">
+                                                                <g transform="translate(0,21)">
+                                                                    <g transform="translate(0,0)">
+                                                                        <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                        <text x="4" y="21">type</text>
+                                                                    </g>
+                                                                    <g transform="translate(43,0)">
+                                                                        <rect class="string-text" x="0" y="0" width="42" height="25" />
+                                                                        <text x="4" y="21">waifu</text>
+                                                                    </g>
+                                                                    <g transform="translate(0,25)">
+                                                                        <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                        <text x="4" y="21">value</text>
+                                                                    </g>
+                                                                    <g transform="translate(43,25)">
+                                                                        <rect class="string-text" x="0" y="0" width="42" height="25" />
+                                                                        <text x="4" y="21">x</text>
+                                                                    </g>
+                                                                </g>
+                                                                <g>
+                                                                    <text x="43" y="17" text-anchor="middle">value</text>
+                                                                </g>
+                                                            </g>
+                                                            <g transform="translate(0,21)">
+                                                                <g transform="translate(0,0)">
+                                                                    <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                    <text x="4" y="21">type</text>
+                                                                </g>
+                                                                <g transform="translate(35,0)">
+                                                                    <rect class="string-text" x="0" y="0" width="88" height="25" />
+                                                                    <text x="4" y="21">letReference</text>
+                                                                </g>
+                                                            </g>
+                                                            <g>
+                                                                <text x="62" y="17" text-anchor="middle">value[0]</text>
+                                                            </g>
+                                                        </g>
+                                                        <g class="vtree-node" transform="translate(12,0)">
+                                                            <g transform="translate(0,21)">
+                                                                <g transform="translate(0,0)">
+                                                                    <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                    <text x="4" y="21">type</text>
+                                                                </g>
+                                                                <g transform="translate(43,0)">
+                                                                    <rect class="string-text" x="0" y="0" width="65" height="25" />
+                                                                    <text x="4" y="21">numExpr</text>
+                                                                </g>
+                                                                <g transform="translate(0,25)">
+                                                                    <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                    <text x="4" y="21">value</text>
+                                                                </g>
+                                                                <g transform="translate(43,25)">
+                                                                    <rect class="number-text" x="0" y="0" width="65" height="25" />
+                                                                    <text x="4" y="21">5</text>
+                                                                </g>
+                                                            </g>
+                                                            <g>
+                                                                <text x="54" y="17" text-anchor="middle">value[1]</text>
+                                                            </g>
+                                                        </g>
+                                                    </g>
+                                                    <g transform="translate(0,21)">
+                                                        <g transform="translate(0,0)">
+                                                            <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                            <text x="4" y="21">type</text>
+                                                        </g>
+                                                        <g transform="translate(35,0)">
+                                                            <rect class="string-text" x="0" y="0" width="25" height="25" />
+                                                            <text x="4" y="21">==</text>
+                                                        </g>
+                                                    </g>
+                                                    <g>
+                                                        <text x="30" y="17" text-anchor="middle">value</text>
+                                                    </g>
+                                                </g>
+                                                <g transform="translate(0,21)">
+                                                    <g transform="translate(0,0)">
+                                                        <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                        <text x="4" y="21">type</text>
+                                                    </g>
+                                                    <g transform="translate(35,0)">
+                                                        <rect class="string-text" x="0" y="0" width="65" height="25" />
+                                                        <text x="4" y="21">boolExpr</text>
+                                                    </g>
+                                                </g>
+                                                <g>
+                                                    <text x="50" y="17" text-anchor="middle">value[1]</text>
+                                                </g>
+                                            </g>
+                                            <g class="vtree-node" transform="translate(-65,0)">
+                                                <g transform="translate(23,21)">
+                                                    <rect class="string-text" x="0" y="0" width="13" height="25" />
+                                                    <text x="4" y="21">)</text>
+                                                </g>
+                                                <g>
+                                                    <text x="29" y="17" text-anchor="middle">value[2]</text>
+                                                </g>
+                                            </g>
+                                            <g class="vtree-node" transform="translate(141,0)">
+                                                <path class="vtree-link" d="M52,34C52,82 -108,82 -108,130" />
+                                                <g class="vtree-node" transform="translate(52,96)">
+                                                    <path class="vtree-link" d="M0,34C0,34 162,34 162,34" />
+                                                    <path class="vtree-link" d="M-160,34C-160,34 0,34 0,34" />
+                                                    <g class="vtree-node" transform="translate(-190,0)">
+                                                        <g transform="translate(23,21)">
+                                                            <rect class="string-text" x="0" y="0" width="13" height="25" />
+                                                            <text x="4" y="21">{</text>
+                                                        </g>
+                                                        <g>
+                                                            <text x="29" y="17" text-anchor="middle">value[0]</text>
+                                                        </g>
+                                                    </g>
+                                                    <g class="vtree-node" transform="translate(-49,0)">
+                                                        <path class="vtree-link" d="M49,34C49,82 -43,82 -43,130" />
+                                                        <g class="vtree-node" transform="translate(49,96)">
+                                                            <path class="vtree-link" d="M-24,34C-24,34 68,34 68,34" />
+                                                            <path class="vtree-link" d="M-92,34C-92,34 -24,34 -24,34" />
+                                                            <g class="vtree-node" transform="translate(-122,0)">
+                                                                <g transform="translate(21,21)">
+                                                                    <rect class="string-text" x="0" y="0" width="17" height="25" />
+                                                                    <text x="4" y="21">x</text>
+                                                                </g>
+                                                                <g>
+                                                                    <text x="29" y="17" text-anchor="middle">value[0]</text>
+                                                                </g>
+                                                            </g>
+                                                            <g class="vtree-node" transform="translate(-54,0)">
+                                                                <g transform="translate(21,21)">
+                                                                    <rect class="string-text" x="0" y="0" width="17" height="25" />
+                                                                    <text x="4" y="21">=</text>
+                                                                </g>
+                                                                <g>
+                                                                    <text x="29" y="17" text-anchor="middle">value[1]</text>
+                                                                </g>
+                                                            </g>
+                                                            <g class="vtree-node" transform="translate(14,0)">
+                                                                <g transform="translate(0,21)">
+                                                                    <g transform="translate(0,0)">
+                                                                        <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                        <text x="4" y="21">type</text>
+                                                                    </g>
+                                                                    <g transform="translate(43,0)">
+                                                                        <rect class="string-text" x="0" y="0" width="65" height="25" />
+                                                                        <text x="4" y="21">numExpr</text>
+                                                                    </g>
+                                                                    <g transform="translate(0,25)">
+                                                                        <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                        <text x="4" y="21">value</text>
+                                                                    </g>
+                                                                    <g transform="translate(43,25)">
+                                                                        <rect class="number-text" x="0" y="0" width="65" height="25" />
+                                                                        <text x="4" y="21">7</text>
+                                                                    </g>
+                                                                </g>
+                                                                <g>
+                                                                    <text x="54" y="17" text-anchor="middle">value[2]</text>
+                                                                </g>
+                                                            </g>
+                                                        </g>
+                                                        <g transform="translate(0,21)">
+                                                            <g transform="translate(0,0)">
+                                                                <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                <text x="4" y="21">type</text>
+                                                            </g>
+                                                            <g transform="translate(35,0)">
+                                                                <rect class="string-text" x="0" y="0" width="62" height="25" />
+                                                                <text x="4" y="21">reassign</text>
+                                                            </g>
+                                                        </g>
+                                                        <g>
+                                                            <text x="49" y="17" text-anchor="middle">value[1]</text>
+                                                        </g>
+                                                    </g>
+                                                    <g class="vtree-node" transform="translate(132,0)">
+                                                        <g transform="translate(23,21)">
+                                                            <rect class="string-text" x="0" y="0" width="13" height="25" />
+                                                            <text x="4" y="21">}</text>
+                                                        </g>
+                                                        <g>
+                                                            <text x="29" y="17" text-anchor="middle">value[2]</text>
+                                                        </g>
+                                                    </g>
+                                                </g>
+                                                <g transform="translate(0,21)">
+                                                    <g transform="translate(0,0)">
+                                                        <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                        <text x="4" y="21">type</text>
+                                                    </g>
+                                                    <g transform="translate(35,0)">
+                                                        <rect class="string-text" x="0" y="0" width="69" height="25" />
+                                                        <text x="4" y="21">enclosure</text>
+                                                    </g>
+                                                </g>
+                                                <g>
+                                                    <text x="52" y="17" text-anchor="middle">value[3]</text>
+                                                </g>
+                                            </g>
+                                        </g>
+                                        <g transform="translate(0,21)">
+                                            <g transform="translate(0,0)">
+                                                <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                <text x="4" y="21">type</text>
+                                            </g>
+                                            <g transform="translate(35,0)">
+                                                <rect class="string-text" x="0" y="0" width="16" height="25" />
+                                                <text x="4" y="21">if</text>
+                                            </g>
+                                        </g>
+                                        <g>
+                                            <text x="26" y="17" text-anchor="middle">[0]</text>
+                                        </g>
+                                    </g>
+                                </g>
+                                <g transform="translate(8,21)">
+                                    <circle cx="4" cy="4" r="4" />
+                                </g>
+                                <g>
+                                    <text x="12" y="17" text-anchor="middle">[0]</text>
+                                </g>
+                            </g>
+                            <g class="vtree-node" transform="translate(377,0)">
+                                <path class="vtree-link" d="M12,25C12,64.5 -1028,64.5 -1028,104" />
+                                <g class="vtree-node" transform="translate(12,79)">
+                                    <path class="vtree-link" d="M-1040,25C-1040,25 617,25 617,25" />
+                                    <g class="vtree-node" transform="translate(-1052,0)">
+                                        <path class="vtree-link" d="M12,25C12,69 -217,69 -217,113" />
+                                        <g class="vtree-node" transform="translate(12,79)">
+                                            <path class="vtree-link" d="M-229,34C-229,34 388,34 388,34" />
+                                            <g class="vtree-node" transform="translate(-255,0)">
+                                                <path class="vtree-link" d="M26,34C26,82 -328,82 -328,130" />
+                                                <g class="vtree-node" transform="translate(26,96)">
+                                                    <path class="vtree-link" d="M-35,34C-35,34 193,34 193,34" />
+                                                    <path class="vtree-link" d="M-195,34C-195,34 -35,34 -35,34" />
+                                                    <path class="vtree-link" d="M-354,34C-354,34 -195,34 -195,34" />
+                                                    <g class="vtree-node" transform="translate(-384,0)">
+                                                        <g transform="translate(23,21)">
+                                                            <rect class="string-text" x="0" y="0" width="13" height="25" />
+                                                            <text x="4" y="21">(</text>
+                                                        </g>
+                                                        <g>
+                                                            <text x="29" y="17" text-anchor="middle">value[0]</text>
+                                                        </g>
+                                                    </g>
+                                                    <g class="vtree-node" transform="translate(-245,0)">
+                                                        <path class="vtree-link" d="M50,34C50,82 50,82 50,130" />
+                                                        <g class="vtree-node" transform="translate(24,96)">
+                                                            <path class="vtree-link" d="M26,34C26,82 -33,82 -33,130" />
+                                                            <g class="vtree-node" transform="translate(26,96)">
+                                                                <path class="vtree-link" d="M-59,34C-59,34 66,34 66,34" />
+                                                                <g class="vtree-node" transform="translate(-121,0)">
+                                                                    <path class="vtree-link" d="M62,34C62,88 62,88 62,142" />
+                                                                    <g class="vtree-node" transform="translate(19,96)">
+                                                                        <g transform="translate(0,21)">
+                                                                            <g transform="translate(0,0)">
+                                                                                <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                                <text x="4" y="21">type</text>
+                                                                            </g>
+                                                                            <g transform="translate(43,0)">
+                                                                                <rect class="string-text" x="0" y="0" width="42" height="25" />
+                                                                                <text x="4" y="21">waifu</text>
+                                                                            </g>
+                                                                            <g transform="translate(0,25)">
+                                                                                <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                                <text x="4" y="21">value</text>
+                                                                            </g>
+                                                                            <g transform="translate(43,25)">
+                                                                                <rect class="string-text" x="0" y="0" width="42" height="25" />
+                                                                                <text x="4" y="21">x</text>
+                                                                            </g>
+                                                                        </g>
+                                                                        <g>
+                                                                            <text x="43" y="17" text-anchor="middle">value</text>
+                                                                        </g>
+                                                                    </g>
+                                                                    <g transform="translate(0,21)">
+                                                                        <g transform="translate(0,0)">
+                                                                            <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                            <text x="4" y="21">type</text>
+                                                                        </g>
+                                                                        <g transform="translate(35,0)">
+                                                                            <rect class="string-text" x="0" y="0" width="88" height="25" />
+                                                                            <text x="4" y="21">letReference</text>
+                                                                        </g>
+                                                                    </g>
+                                                                    <g>
+                                                                        <text x="62" y="17" text-anchor="middle">value[0]</text>
+                                                                    </g>
+                                                                </g>
+                                                                <g class="vtree-node" transform="translate(12,0)">
+                                                                    <g transform="translate(0,21)">
+                                                                        <g transform="translate(0,0)">
+                                                                            <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                            <text x="4" y="21">type</text>
+                                                                        </g>
+                                                                        <g transform="translate(43,0)">
+                                                                            <rect class="string-text" x="0" y="0" width="65" height="25" />
+                                                                            <text x="4" y="21">numExpr</text>
+                                                                        </g>
+                                                                        <g transform="translate(0,25)">
+                                                                            <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                            <text x="4" y="21">value</text>
+                                                                        </g>
+                                                                        <g transform="translate(43,25)">
+                                                                            <rect class="number-text" x="0" y="0" width="65" height="25" />
+                                                                            <text x="4" y="21">5</text>
+                                                                        </g>
+                                                                    </g>
+                                                                    <g>
+                                                                        <text x="54" y="17" text-anchor="middle">value[1]</text>
+                                                                    </g>
+                                                                </g>
+                                                            </g>
+                                                            <g transform="translate(0,21)">
+                                                                <g transform="translate(0,0)">
+                                                                    <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                    <text x="4" y="21">type</text>
+                                                                </g>
+                                                                <g transform="translate(35,0)">
+                                                                    <rect class="string-text" x="0" y="0" width="17" height="25" />
+                                                                    <text x="4" y="21">&lt;</text>
+                                                                </g>
+                                                            </g>
+                                                            <g>
+                                                                <text x="26" y="17" text-anchor="middle">value</text>
+                                                            </g>
+                                                        </g>
+                                                        <g transform="translate(0,21)">
+                                                            <g transform="translate(0,0)">
+                                                                <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                <text x="4" y="21">type</text>
+                                                            </g>
+                                                            <g transform="translate(35,0)">
+                                                                <rect class="string-text" x="0" y="0" width="65" height="25" />
+                                                                <text x="4" y="21">boolExpr</text>
+                                                            </g>
+                                                        </g>
+                                                        <g>
+                                                            <text x="50" y="17" text-anchor="middle">value[1]</text>
+                                                        </g>
+                                                    </g>
+                                                    <g class="vtree-node" transform="translate(-65,0)">
+                                                        <g transform="translate(23,21)">
+                                                            <rect class="string-text" x="0" y="0" width="13" height="25" />
+                                                            <text x="4" y="21">)</text>
+                                                        </g>
+                                                        <g>
+                                                            <text x="29" y="17" text-anchor="middle">value[2]</text>
+                                                        </g>
+                                                    </g>
+                                                    <g class="vtree-node" transform="translate(141,0)">
+                                                        <path class="vtree-link" d="M52,34C52,82 -108,82 -108,130" />
+                                                        <g class="vtree-node" transform="translate(52,96)">
+                                                            <path class="vtree-link" d="M0,34C0,34 162,34 162,34" />
+                                                            <path class="vtree-link" d="M-160,34C-160,34 0,34 0,34" />
+                                                            <g class="vtree-node" transform="translate(-190,0)">
+                                                                <g transform="translate(23,21)">
+                                                                    <rect class="string-text" x="0" y="0" width="13" height="25" />
+                                                                    <text x="4" y="21">{</text>
+                                                                </g>
+                                                                <g>
+                                                                    <text x="29" y="17" text-anchor="middle">value[0]</text>
+                                                                </g>
+                                                            </g>
+                                                            <g class="vtree-node" transform="translate(-49,0)">
+                                                                <path class="vtree-link" d="M49,34C49,82 -43,82 -43,130" />
+                                                                <g class="vtree-node" transform="translate(49,96)">
+                                                                    <path class="vtree-link" d="M-24,34C-24,34 68,34 68,34" />
+                                                                    <path class="vtree-link" d="M-92,34C-92,34 -24,34 -24,34" />
+                                                                    <g class="vtree-node" transform="translate(-122,0)">
+                                                                        <g transform="translate(21,21)">
+                                                                            <rect class="string-text" x="0" y="0" width="17" height="25" />
+                                                                            <text x="4" y="21">x</text>
+                                                                        </g>
+                                                                        <g>
+                                                                            <text x="29" y="17" text-anchor="middle">value[0]</text>
+                                                                        </g>
+                                                                    </g>
+                                                                    <g class="vtree-node" transform="translate(-54,0)">
+                                                                        <g transform="translate(21,21)">
+                                                                            <rect class="string-text" x="0" y="0" width="17" height="25" />
+                                                                            <text x="4" y="21">=</text>
+                                                                        </g>
+                                                                        <g>
+                                                                            <text x="29" y="17" text-anchor="middle">value[1]</text>
+                                                                        </g>
+                                                                    </g>
+                                                                    <g class="vtree-node" transform="translate(14,0)">
+                                                                        <g transform="translate(0,21)">
+                                                                            <g transform="translate(0,0)">
+                                                                                <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                                <text x="4" y="21">type</text>
+                                                                            </g>
+                                                                            <g transform="translate(43,0)">
+                                                                                <rect class="string-text" x="0" y="0" width="65" height="25" />
+                                                                                <text x="4" y="21">numExpr</text>
+                                                                            </g>
+                                                                            <g transform="translate(0,25)">
+                                                                                <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                                <text x="4" y="21">value</text>
+                                                                            </g>
+                                                                            <g transform="translate(43,25)">
+                                                                                <rect class="number-text" x="0" y="0" width="65" height="25" />
+                                                                                <text x="4" y="21">10</text>
+                                                                            </g>
+                                                                        </g>
+                                                                        <g>
+                                                                            <text x="54" y="17" text-anchor="middle">value[2]</text>
+                                                                        </g>
+                                                                    </g>
+                                                                </g>
+                                                                <g transform="translate(0,21)">
+                                                                    <g transform="translate(0,0)">
+                                                                        <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                        <text x="4" y="21">type</text>
+                                                                    </g>
+                                                                    <g transform="translate(35,0)">
+                                                                        <rect class="string-text" x="0" y="0" width="62" height="25" />
+                                                                        <text x="4" y="21">reassign</text>
+                                                                    </g>
+                                                                </g>
+                                                                <g>
+                                                                    <text x="49" y="17" text-anchor="middle">value[1]</text>
+                                                                </g>
+                                                            </g>
+                                                            <g class="vtree-node" transform="translate(132,0)">
+                                                                <g transform="translate(23,21)">
+                                                                    <rect class="string-text" x="0" y="0" width="13" height="25" />
+                                                                    <text x="4" y="21">}</text>
+                                                                </g>
+                                                                <g>
+                                                                    <text x="29" y="17" text-anchor="middle">value[2]</text>
+                                                                </g>
+                                                            </g>
+                                                        </g>
+                                                        <g transform="translate(0,21)">
+                                                            <g transform="translate(0,0)">
+                                                                <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                <text x="4" y="21">type</text>
+                                                            </g>
+                                                            <g transform="translate(35,0)">
+                                                                <rect class="string-text" x="0" y="0" width="69" height="25" />
+                                                                <text x="4" y="21">enclosure</text>
+                                                            </g>
+                                                        </g>
+                                                        <g>
+                                                            <text x="52" y="17" text-anchor="middle">value[3]</text>
+                                                        </g>
+                                                    </g>
+                                                </g>
+                                                <g transform="translate(0,21)">
+                                                    <g transform="translate(0,0)">
+                                                        <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                        <text x="4" y="21">type</text>
+                                                    </g>
+                                                    <g transform="translate(35,0)">
+                                                        <rect class="string-text" x="0" y="0" width="16" height="25" />
+                                                        <text x="4" y="21">if</text>
+                                                    </g>
+                                                </g>
+                                                <g>
+                                                    <text x="26" y="17" text-anchor="middle">[0]</text>
+                                                </g>
+                                            </g>
+                                            <g class="vtree-node" transform="translate(353,0)">
+                                                <path class="vtree-link" d="M35,34C35,82 -160,82 -160,130" />
+                                                <g class="vtree-node" transform="translate(35,96)">
+                                                    <path class="vtree-link" d="M-195,34C-195,34 34,34 34,34" />
+                                                    <g class="vtree-node" transform="translate(-224,0)">
+                                                        <g transform="translate(12,21)">
+                                                            <rect class="string-text" x="0" y="0" width="34" height="25" />
+                                                            <text x="4" y="21">noU</text>
+                                                        </g>
+                                                        <g>
+                                                            <text x="29" y="17" text-anchor="middle">value[0]</text>
+                                                        </g>
+                                                    </g>
+                                                    <g class="vtree-node" transform="translate(-18,0)">
+                                                        <path class="vtree-link" d="M52,34C52,82 -108,82 -108,130" />
+                                                        <g class="vtree-node" transform="translate(52,96)">
+                                                            <path class="vtree-link" d="M0,34C0,34 162,34 162,34" />
+                                                            <path class="vtree-link" d="M-160,34C-160,34 0,34 0,34" />
+                                                            <g class="vtree-node" transform="translate(-190,0)">
+                                                                <g transform="translate(23,21)">
+                                                                    <rect class="string-text" x="0" y="0" width="13" height="25" />
+                                                                    <text x="4" y="21">{</text>
+                                                                </g>
+                                                                <g>
+                                                                    <text x="29" y="17" text-anchor="middle">value[0]</text>
+                                                                </g>
+                                                            </g>
+                                                            <g class="vtree-node" transform="translate(-49,0)">
+                                                                <path class="vtree-link" d="M49,34C49,82 -43,82 -43,130" />
+                                                                <g class="vtree-node" transform="translate(49,96)">
+                                                                    <path class="vtree-link" d="M-24,34C-24,34 68,34 68,34" />
+                                                                    <path class="vtree-link" d="M-92,34C-92,34 -24,34 -24,34" />
+                                                                    <g class="vtree-node" transform="translate(-122,0)">
+                                                                        <g transform="translate(21,21)">
+                                                                            <rect class="string-text" x="0" y="0" width="17" height="25" />
+                                                                            <text x="4" y="21">x</text>
+                                                                        </g>
+                                                                        <g>
+                                                                            <text x="29" y="17" text-anchor="middle">value[0]</text>
+                                                                        </g>
+                                                                    </g>
+                                                                    <g class="vtree-node" transform="translate(-54,0)">
+                                                                        <g transform="translate(21,21)">
+                                                                            <rect class="string-text" x="0" y="0" width="17" height="25" />
+                                                                            <text x="4" y="21">=</text>
+                                                                        </g>
+                                                                        <g>
+                                                                            <text x="29" y="17" text-anchor="middle">value[1]</text>
+                                                                        </g>
+                                                                    </g>
+                                                                    <g class="vtree-node" transform="translate(14,0)">
+                                                                        <g transform="translate(0,21)">
+                                                                            <g transform="translate(0,0)">
+                                                                                <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                                <text x="4" y="21">type</text>
+                                                                            </g>
+                                                                            <g transform="translate(43,0)">
+                                                                                <rect class="string-text" x="0" y="0" width="65" height="25" />
+                                                                                <text x="4" y="21">numExpr</text>
+                                                                            </g>
+                                                                            <g transform="translate(0,25)">
+                                                                                <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                                <text x="4" y="21">value</text>
+                                                                            </g>
+                                                                            <g transform="translate(43,25)">
+                                                                                <rect class="number-text" x="0" y="0" width="65" height="25" />
+                                                                                <text x="4" y="21">5</text>
+                                                                            </g>
+                                                                        </g>
+                                                                        <g>
+                                                                            <text x="54" y="17" text-anchor="middle">value[2]</text>
+                                                                        </g>
+                                                                    </g>
+                                                                </g>
+                                                                <g transform="translate(0,21)">
+                                                                    <g transform="translate(0,0)">
+                                                                        <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                        <text x="4" y="21">type</text>
+                                                                    </g>
+                                                                    <g transform="translate(35,0)">
+                                                                        <rect class="string-text" x="0" y="0" width="62" height="25" />
+                                                                        <text x="4" y="21">reassign</text>
+                                                                    </g>
+                                                                </g>
+                                                                <g>
+                                                                    <text x="49" y="17" text-anchor="middle">value[1]</text>
+                                                                </g>
+                                                            </g>
+                                                            <g class="vtree-node" transform="translate(132,0)">
+                                                                <g transform="translate(23,21)">
+                                                                    <rect class="string-text" x="0" y="0" width="13" height="25" />
+                                                                    <text x="4" y="21">}</text>
+                                                                </g>
+                                                                <g>
+                                                                    <text x="29" y="17" text-anchor="middle">value[2]</text>
+                                                                </g>
+                                                            </g>
+                                                        </g>
+                                                        <g transform="translate(0,21)">
+                                                            <g transform="translate(0,0)">
+                                                                <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                <text x="4" y="21">type</text>
+                                                            </g>
+                                                            <g transform="translate(35,0)">
+                                                                <rect class="string-text" x="0" y="0" width="69" height="25" />
+                                                                <text x="4" y="21">enclosure</text>
+                                                            </g>
+                                                        </g>
+                                                        <g>
+                                                            <text x="52" y="17" text-anchor="middle">value[1]</text>
+                                                        </g>
+                                                    </g>
+                                                </g>
+                                                <g transform="translate(0,21)">
+                                                    <g transform="translate(0,0)">
+                                                        <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                        <text x="4" y="21">type</text>
+                                                    </g>
+                                                    <g transform="translate(35,0)">
+                                                        <rect class="string-text" x="0" y="0" width="34" height="25" />
+                                                        <text x="4" y="21">else</text>
+                                                    </g>
+                                                </g>
+                                                <g>
+                                                    <text x="35" y="17" text-anchor="middle">[1]</text>
+                                                </g>
+                                            </g>
+                                        </g>
+                                        <g transform="translate(8,21)">
+                                            <circle cx="4" cy="4" r="4" />
+                                        </g>
+                                        <g>
+                                            <text x="12" y="17" text-anchor="middle">[0]</text>
+                                        </g>
+                                    </g>
+                                    <g class="vtree-node" transform="translate(605,0)">
+                                        <path class="vtree-link" d="M12,25C12,69 -639,69 -639,113" />
+                                        <g class="vtree-node" transform="translate(12,79)">
+                                            <path class="vtree-link" d="M-651,34C-651,34 389,34 389,34" />
+                                            <g class="vtree-node" transform="translate(-677,0)">
+                                                <path class="vtree-link" d="M26,34C26,82 -328,82 -328,130" />
+                                                <g class="vtree-node" transform="translate(26,96)">
+                                                    <path class="vtree-link" d="M-35,34C-35,34 193,34 193,34" />
+                                                    <path class="vtree-link" d="M-195,34C-195,34 -35,34 -35,34" />
+                                                    <path class="vtree-link" d="M-354,34C-354,34 -195,34 -195,34" />
+                                                    <g class="vtree-node" transform="translate(-384,0)">
+                                                        <g transform="translate(23,21)">
+                                                            <rect class="string-text" x="0" y="0" width="13" height="25" />
+                                                            <text x="4" y="21">(</text>
+                                                        </g>
+                                                        <g>
+                                                            <text x="29" y="17" text-anchor="middle">value[0]</text>
+                                                        </g>
+                                                    </g>
+                                                    <g class="vtree-node" transform="translate(-245,0)">
+                                                        <path class="vtree-link" d="M50,34C50,82 50,82 50,130" />
+                                                        <g class="vtree-node" transform="translate(20,96)">
+                                                            <path class="vtree-link" d="M30,34C30,82 -29,82 -29,130" />
+                                                            <g class="vtree-node" transform="translate(30,96)">
+                                                                <path class="vtree-link" d="M-59,34C-59,34 66,34 66,34" />
+                                                                <g class="vtree-node" transform="translate(-121,0)">
+                                                                    <path class="vtree-link" d="M62,34C62,88 62,88 62,142" />
+                                                                    <g class="vtree-node" transform="translate(19,96)">
+                                                                        <g transform="translate(0,21)">
+                                                                            <g transform="translate(0,0)">
+                                                                                <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                                <text x="4" y="21">type</text>
+                                                                            </g>
+                                                                            <g transform="translate(43,0)">
+                                                                                <rect class="string-text" x="0" y="0" width="42" height="25" />
+                                                                                <text x="4" y="21">waifu</text>
+                                                                            </g>
+                                                                            <g transform="translate(0,25)">
+                                                                                <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                                <text x="4" y="21">value</text>
+                                                                            </g>
+                                                                            <g transform="translate(43,25)">
+                                                                                <rect class="string-text" x="0" y="0" width="42" height="25" />
+                                                                                <text x="4" y="21">x</text>
+                                                                            </g>
+                                                                        </g>
+                                                                        <g>
+                                                                            <text x="43" y="17" text-anchor="middle">value</text>
+                                                                        </g>
+                                                                    </g>
+                                                                    <g transform="translate(0,21)">
+                                                                        <g transform="translate(0,0)">
+                                                                            <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                            <text x="4" y="21">type</text>
+                                                                        </g>
+                                                                        <g transform="translate(35,0)">
+                                                                            <rect class="string-text" x="0" y="0" width="88" height="25" />
+                                                                            <text x="4" y="21">letReference</text>
+                                                                        </g>
+                                                                    </g>
+                                                                    <g>
+                                                                        <text x="62" y="17" text-anchor="middle">value[0]</text>
+                                                                    </g>
+                                                                </g>
+                                                                <g class="vtree-node" transform="translate(12,0)">
+                                                                    <g transform="translate(0,21)">
+                                                                        <g transform="translate(0,0)">
+                                                                            <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                            <text x="4" y="21">type</text>
+                                                                        </g>
+                                                                        <g transform="translate(43,0)">
+                                                                            <rect class="string-text" x="0" y="0" width="65" height="25" />
+                                                                            <text x="4" y="21">numExpr</text>
+                                                                        </g>
+                                                                        <g transform="translate(0,25)">
+                                                                            <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                            <text x="4" y="21">value</text>
+                                                                        </g>
+                                                                        <g transform="translate(43,25)">
+                                                                            <rect class="number-text" x="0" y="0" width="65" height="25" />
+                                                                            <text x="4" y="21">10</text>
+                                                                        </g>
+                                                                    </g>
+                                                                    <g>
+                                                                        <text x="54" y="17" text-anchor="middle">value[1]</text>
+                                                                    </g>
+                                                                </g>
+                                                            </g>
+                                                            <g transform="translate(0,21)">
+                                                                <g transform="translate(0,0)">
+                                                                    <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                    <text x="4" y="21">type</text>
+                                                                </g>
+                                                                <g transform="translate(35,0)">
+                                                                    <rect class="string-text" x="0" y="0" width="25" height="25" />
+                                                                    <text x="4" y="21">==</text>
+                                                                </g>
+                                                            </g>
+                                                            <g>
+                                                                <text x="30" y="17" text-anchor="middle">value</text>
+                                                            </g>
+                                                        </g>
+                                                        <g transform="translate(0,21)">
+                                                            <g transform="translate(0,0)">
+                                                                <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                <text x="4" y="21">type</text>
+                                                            </g>
+                                                            <g transform="translate(35,0)">
+                                                                <rect class="string-text" x="0" y="0" width="65" height="25" />
+                                                                <text x="4" y="21">boolExpr</text>
+                                                            </g>
+                                                        </g>
+                                                        <g>
+                                                            <text x="50" y="17" text-anchor="middle">value[1]</text>
+                                                        </g>
+                                                    </g>
+                                                    <g class="vtree-node" transform="translate(-65,0)">
+                                                        <g transform="translate(23,21)">
+                                                            <rect class="string-text" x="0" y="0" width="13" height="25" />
+                                                            <text x="4" y="21">)</text>
+                                                        </g>
+                                                        <g>
+                                                            <text x="29" y="17" text-anchor="middle">value[2]</text>
+                                                        </g>
+                                                    </g>
+                                                    <g class="vtree-node" transform="translate(141,0)">
+                                                        <path class="vtree-link" d="M52,34C52,82 -108,82 -108,130" />
+                                                        <g class="vtree-node" transform="translate(52,96)">
+                                                            <path class="vtree-link" d="M0,34C0,34 162,34 162,34" />
+                                                            <path class="vtree-link" d="M-160,34C-160,34 0,34 0,34" />
+                                                            <g class="vtree-node" transform="translate(-190,0)">
+                                                                <g transform="translate(23,21)">
+                                                                    <rect class="string-text" x="0" y="0" width="13" height="25" />
+                                                                    <text x="4" y="21">{</text>
+                                                                </g>
+                                                                <g>
+                                                                    <text x="29" y="17" text-anchor="middle">value[0]</text>
+                                                                </g>
+                                                            </g>
+                                                            <g class="vtree-node" transform="translate(-49,0)">
+                                                                <path class="vtree-link" d="M49,34C49,82 -43,82 -43,130" />
+                                                                <g class="vtree-node" transform="translate(49,96)">
+                                                                    <path class="vtree-link" d="M-24,34C-24,34 68,34 68,34" />
+                                                                    <path class="vtree-link" d="M-92,34C-92,34 -24,34 -24,34" />
+                                                                    <g class="vtree-node" transform="translate(-122,0)">
+                                                                        <g transform="translate(21,21)">
+                                                                            <rect class="string-text" x="0" y="0" width="17" height="25" />
+                                                                            <text x="4" y="21">x</text>
+                                                                        </g>
+                                                                        <g>
+                                                                            <text x="29" y="17" text-anchor="middle">value[0]</text>
+                                                                        </g>
+                                                                    </g>
+                                                                    <g class="vtree-node" transform="translate(-54,0)">
+                                                                        <g transform="translate(21,21)">
+                                                                            <rect class="string-text" x="0" y="0" width="17" height="25" />
+                                                                            <text x="4" y="21">=</text>
+                                                                        </g>
+                                                                        <g>
+                                                                            <text x="29" y="17" text-anchor="middle">value[1]</text>
+                                                                        </g>
+                                                                    </g>
+                                                                    <g class="vtree-node" transform="translate(14,0)">
+                                                                        <g transform="translate(0,21)">
+                                                                            <g transform="translate(0,0)">
+                                                                                <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                                <text x="4" y="21">type</text>
+                                                                            </g>
+                                                                            <g transform="translate(43,0)">
+                                                                                <rect class="string-text" x="0" y="0" width="65" height="25" />
+                                                                                <text x="4" y="21">numExpr</text>
+                                                                            </g>
+                                                                            <g transform="translate(0,25)">
+                                                                                <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                                <text x="4" y="21">value</text>
+                                                                            </g>
+                                                                            <g transform="translate(43,25)">
+                                                                                <rect class="number-text" x="0" y="0" width="65" height="25" />
+                                                                                <text x="4" y="21">5</text>
+                                                                            </g>
+                                                                        </g>
+                                                                        <g>
+                                                                            <text x="54" y="17" text-anchor="middle">value[2]</text>
+                                                                        </g>
+                                                                    </g>
+                                                                </g>
+                                                                <g transform="translate(0,21)">
+                                                                    <g transform="translate(0,0)">
+                                                                        <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                        <text x="4" y="21">type</text>
+                                                                    </g>
+                                                                    <g transform="translate(35,0)">
+                                                                        <rect class="string-text" x="0" y="0" width="62" height="25" />
+                                                                        <text x="4" y="21">reassign</text>
+                                                                    </g>
+                                                                </g>
+                                                                <g>
+                                                                    <text x="49" y="17" text-anchor="middle">value[1]</text>
+                                                                </g>
+                                                            </g>
+                                                            <g class="vtree-node" transform="translate(132,0)">
+                                                                <g transform="translate(23,21)">
+                                                                    <rect class="string-text" x="0" y="0" width="13" height="25" />
+                                                                    <text x="4" y="21">}</text>
+                                                                </g>
+                                                                <g>
+                                                                    <text x="29" y="17" text-anchor="middle">value[2]</text>
+                                                                </g>
+                                                            </g>
+                                                        </g>
+                                                        <g transform="translate(0,21)">
+                                                            <g transform="translate(0,0)">
+                                                                <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                <text x="4" y="21">type</text>
+                                                            </g>
+                                                            <g transform="translate(35,0)">
+                                                                <rect class="string-text" x="0" y="0" width="69" height="25" />
+                                                                <text x="4" y="21">enclosure</text>
+                                                            </g>
+                                                        </g>
+                                                        <g>
+                                                            <text x="52" y="17" text-anchor="middle">value[3]</text>
+                                                        </g>
+                                                    </g>
+                                                </g>
+                                                <g transform="translate(0,21)">
+                                                    <g transform="translate(0,0)">
+                                                        <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                        <text x="4" y="21">type</text>
+                                                    </g>
+                                                    <g transform="translate(35,0)">
+                                                        <rect class="string-text" x="0" y="0" width="16" height="25" />
+                                                        <text x="4" y="21">if</text>
+                                                    </g>
+                                                </g>
+                                                <g>
+                                                    <text x="26" y="17" text-anchor="middle">[0]</text>
+                                                </g>
+                                            </g>
+                                            <g class="vtree-node" transform="translate(354,0)">
+                                                <path class="vtree-link" d="M35,34C35,82 -583,82 -583,130" />
+                                                <g class="vtree-node" transform="translate(35,96)">
+                                                    <path class="vtree-link" d="M-618,25C-618,25 34,25 34,25" />
+                                                    <g class="vtree-node" transform="translate(-647,0)">
+                                                        <g transform="translate(12,21)">
+                                                            <rect class="string-text" x="0" y="0" width="34" height="25" />
+                                                            <text x="4" y="21">noU</text>
+                                                        </g>
+                                                        <g>
+                                                            <text x="29" y="17" text-anchor="middle">value[0]</text>
+                                                        </g>
+                                                    </g>
+                                                    <g class="vtree-node" transform="translate(5,0)">
+                                                        <path class="vtree-link" d="M29,25C29,69 -200,69 -200,113" />
+                                                        <g class="vtree-node" transform="translate(29,79)">
+                                                            <path class="vtree-link" d="M-229,34C-229,34 388,34 388,34" />
+                                                            <g class="vtree-node" transform="translate(-255,0)">
+                                                                <path class="vtree-link" d="M26,34C26,82 -328,82 -328,130" />
+                                                                <g class="vtree-node" transform="translate(26,96)">
+                                                                    <path class="vtree-link" d="M-35,34C-35,34 193,34 193,34" />
+                                                                    <path class="vtree-link" d="M-195,34C-195,34 -35,34 -35,34" />
+                                                                    <path class="vtree-link" d="M-354,34C-354,34 -195,34 -195,34" />
+                                                                    <g class="vtree-node" transform="translate(-384,0)">
+                                                                        <g transform="translate(23,21)">
+                                                                            <rect class="string-text" x="0" y="0" width="13" height="25" />
+                                                                            <text x="4" y="21">(</text>
+                                                                        </g>
+                                                                        <g>
+                                                                            <text x="29" y="17" text-anchor="middle">value[0]</text>
+                                                                        </g>
+                                                                    </g>
+                                                                    <g class="vtree-node" transform="translate(-245,0)">
+                                                                        <path class="vtree-link" d="M50,34C50,82 50,82 50,130" />
+                                                                        <g class="vtree-node" transform="translate(24,96)">
+                                                                            <path class="vtree-link" d="M26,34C26,82 -33,82 -33,130" />
+                                                                            <g class="vtree-node" transform="translate(26,96)">
+                                                                                <path class="vtree-link" d="M-59,34C-59,34 66,34 66,34" />
+                                                                                <g class="vtree-node" transform="translate(-121,0)">
+                                                                                    <path class="vtree-link" d="M62,34C62,88 62,88 62,142" />
+                                                                                    <g class="vtree-node" transform="translate(19,96)">
+                                                                                        <g transform="translate(0,21)">
+                                                                                            <g transform="translate(0,0)">
+                                                                                                <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                                                <text x="4" y="21">type</text>
+                                                                                            </g>
+                                                                                            <g transform="translate(43,0)">
+                                                                                                <rect class="string-text" x="0" y="0" width="42" height="25" />
+                                                                                                <text x="4" y="21">waifu</text>
+                                                                                            </g>
+                                                                                            <g transform="translate(0,25)">
+                                                                                                <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                                                <text x="4" y="21">value</text>
+                                                                                            </g>
+                                                                                            <g transform="translate(43,25)">
+                                                                                                <rect class="string-text" x="0" y="0" width="42" height="25" />
+                                                                                                <text x="4" y="21">x</text>
+                                                                                            </g>
+                                                                                        </g>
+                                                                                        <g>
+                                                                                            <text x="43" y="17" text-anchor="middle">value</text>
+                                                                                        </g>
+                                                                                    </g>
+                                                                                    <g transform="translate(0,21)">
+                                                                                        <g transform="translate(0,0)">
+                                                                                            <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                                            <text x="4" y="21">type</text>
+                                                                                        </g>
+                                                                                        <g transform="translate(35,0)">
+                                                                                            <rect class="string-text" x="0" y="0" width="88" height="25" />
+                                                                                            <text x="4" y="21">letReference</text>
+                                                                                        </g>
+                                                                                    </g>
+                                                                                    <g>
+                                                                                        <text x="62" y="17" text-anchor="middle">value[0]</text>
+                                                                                    </g>
+                                                                                </g>
+                                                                                <g class="vtree-node" transform="translate(12,0)">
+                                                                                    <g transform="translate(0,21)">
+                                                                                        <g transform="translate(0,0)">
+                                                                                            <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                                            <text x="4" y="21">type</text>
+                                                                                        </g>
+                                                                                        <g transform="translate(43,0)">
+                                                                                            <rect class="string-text" x="0" y="0" width="65" height="25" />
+                                                                                            <text x="4" y="21">numExpr</text>
+                                                                                        </g>
+                                                                                        <g transform="translate(0,25)">
+                                                                                            <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                                            <text x="4" y="21">value</text>
+                                                                                        </g>
+                                                                                        <g transform="translate(43,25)">
+                                                                                            <rect class="number-text" x="0" y="0" width="65" height="25" />
+                                                                                            <text x="4" y="21">4</text>
+                                                                                        </g>
+                                                                                    </g>
+                                                                                    <g>
+                                                                                        <text x="54" y="17" text-anchor="middle">value[1]</text>
+                                                                                    </g>
+                                                                                </g>
+                                                                            </g>
+                                                                            <g transform="translate(0,21)">
+                                                                                <g transform="translate(0,0)">
+                                                                                    <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                                    <text x="4" y="21">type</text>
+                                                                                </g>
+                                                                                <g transform="translate(35,0)">
+                                                                                    <rect class="string-text" x="0" y="0" width="17" height="25" />
+                                                                                    <text x="4" y="21">&gt;</text>
+                                                                                </g>
+                                                                            </g>
+                                                                            <g>
+                                                                                <text x="26" y="17" text-anchor="middle">value</text>
+                                                                            </g>
+                                                                        </g>
+                                                                        <g transform="translate(0,21)">
+                                                                            <g transform="translate(0,0)">
+                                                                                <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                                <text x="4" y="21">type</text>
+                                                                            </g>
+                                                                            <g transform="translate(35,0)">
+                                                                                <rect class="string-text" x="0" y="0" width="65" height="25" />
+                                                                                <text x="4" y="21">boolExpr</text>
+                                                                            </g>
+                                                                        </g>
+                                                                        <g>
+                                                                            <text x="50" y="17" text-anchor="middle">value[1]</text>
+                                                                        </g>
+                                                                    </g>
+                                                                    <g class="vtree-node" transform="translate(-65,0)">
+                                                                        <g transform="translate(23,21)">
+                                                                            <rect class="string-text" x="0" y="0" width="13" height="25" />
+                                                                            <text x="4" y="21">)</text>
+                                                                        </g>
+                                                                        <g>
+                                                                            <text x="29" y="17" text-anchor="middle">value[2]</text>
+                                                                        </g>
+                                                                    </g>
+                                                                    <g class="vtree-node" transform="translate(141,0)">
+                                                                        <path class="vtree-link" d="M52,34C52,82 -108,82 -108,130" />
+                                                                        <g class="vtree-node" transform="translate(52,96)">
+                                                                            <path class="vtree-link" d="M0,34C0,34 162,34 162,34" />
+                                                                            <path class="vtree-link" d="M-160,34C-160,34 0,34 0,34" />
+                                                                            <g class="vtree-node" transform="translate(-190,0)">
+                                                                                <g transform="translate(23,21)">
+                                                                                    <rect class="string-text" x="0" y="0" width="13" height="25" />
+                                                                                    <text x="4" y="21">{</text>
+                                                                                </g>
+                                                                                <g>
+                                                                                    <text x="29" y="17" text-anchor="middle">value[0]</text>
+                                                                                </g>
+                                                                            </g>
+                                                                            <g class="vtree-node" transform="translate(-49,0)">
+                                                                                <path class="vtree-link" d="M49,34C49,82 -43,82 -43,130" />
+                                                                                <g class="vtree-node" transform="translate(49,96)">
+                                                                                    <path class="vtree-link" d="M-24,34C-24,34 68,34 68,34" />
+                                                                                    <path class="vtree-link" d="M-92,34C-92,34 -24,34 -24,34" />
+                                                                                    <g class="vtree-node" transform="translate(-122,0)">
+                                                                                        <g transform="translate(21,21)">
+                                                                                            <rect class="string-text" x="0" y="0" width="17" height="25" />
+                                                                                            <text x="4" y="21">x</text>
+                                                                                        </g>
+                                                                                        <g>
+                                                                                            <text x="29" y="17" text-anchor="middle">value[0]</text>
+                                                                                        </g>
+                                                                                    </g>
+                                                                                    <g class="vtree-node" transform="translate(-54,0)">
+                                                                                        <g transform="translate(21,21)">
+                                                                                            <rect class="string-text" x="0" y="0" width="17" height="25" />
+                                                                                            <text x="4" y="21">=</text>
+                                                                                        </g>
+                                                                                        <g>
+                                                                                            <text x="29" y="17" text-anchor="middle">value[1]</text>
+                                                                                        </g>
+                                                                                    </g>
+                                                                                    <g class="vtree-node" transform="translate(14,0)">
+                                                                                        <g transform="translate(0,21)">
+                                                                                            <g transform="translate(0,0)">
+                                                                                                <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                                                <text x="4" y="21">type</text>
+                                                                                            </g>
+                                                                                            <g transform="translate(43,0)">
+                                                                                                <rect class="string-text" x="0" y="0" width="65" height="25" />
+                                                                                                <text x="4" y="21">numExpr</text>
+                                                                                            </g>
+                                                                                            <g transform="translate(0,25)">
+                                                                                                <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                                                <text x="4" y="21">value</text>
+                                                                                            </g>
+                                                                                            <g transform="translate(43,25)">
+                                                                                                <rect class="number-text" x="0" y="0" width="65" height="25" />
+                                                                                                <text x="4" y="21">100</text>
+                                                                                            </g>
+                                                                                        </g>
+                                                                                        <g>
+                                                                                            <text x="54" y="17" text-anchor="middle">value[2]</text>
+                                                                                        </g>
+                                                                                    </g>
+                                                                                </g>
+                                                                                <g transform="translate(0,21)">
+                                                                                    <g transform="translate(0,0)">
+                                                                                        <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                                        <text x="4" y="21">type</text>
+                                                                                    </g>
+                                                                                    <g transform="translate(35,0)">
+                                                                                        <rect class="string-text" x="0" y="0" width="62" height="25" />
+                                                                                        <text x="4" y="21">reassign</text>
+                                                                                    </g>
+                                                                                </g>
+                                                                                <g>
+                                                                                    <text x="49" y="17" text-anchor="middle">value[1]</text>
+                                                                                </g>
+                                                                            </g>
+                                                                            <g class="vtree-node" transform="translate(132,0)">
+                                                                                <g transform="translate(23,21)">
+                                                                                    <rect class="string-text" x="0" y="0" width="13" height="25" />
+                                                                                    <text x="4" y="21">}</text>
+                                                                                </g>
+                                                                                <g>
+                                                                                    <text x="29" y="17" text-anchor="middle">value[2]</text>
+                                                                                </g>
+                                                                            </g>
+                                                                        </g>
+                                                                        <g transform="translate(0,21)">
+                                                                            <g transform="translate(0,0)">
+                                                                                <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                                <text x="4" y="21">type</text>
+                                                                            </g>
+                                                                            <g transform="translate(35,0)">
+                                                                                <rect class="string-text" x="0" y="0" width="69" height="25" />
+                                                                                <text x="4" y="21">enclosure</text>
+                                                                            </g>
+                                                                        </g>
+                                                                        <g>
+                                                                            <text x="52" y="17" text-anchor="middle">value[3]</text>
+                                                                        </g>
+                                                                    </g>
+                                                                </g>
+                                                                <g transform="translate(0,21)">
+                                                                    <g transform="translate(0,0)">
+                                                                        <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                        <text x="4" y="21">type</text>
+                                                                    </g>
+                                                                    <g transform="translate(35,0)">
+                                                                        <rect class="string-text" x="0" y="0" width="16" height="25" />
+                                                                        <text x="4" y="21">if</text>
+                                                                    </g>
+                                                                </g>
+                                                                <g>
+                                                                    <text x="26" y="17" text-anchor="middle">[0]</text>
+                                                                </g>
+                                                            </g>
+                                                            <g class="vtree-node" transform="translate(353,0)">
+                                                                <path class="vtree-link" d="M35,34C35,82 -160,82 -160,130" />
+                                                                <g class="vtree-node" transform="translate(35,96)">
+                                                                    <path class="vtree-link" d="M-195,34C-195,34 34,34 34,34" />
+                                                                    <g class="vtree-node" transform="translate(-224,0)">
+                                                                        <g transform="translate(12,21)">
+                                                                            <rect class="string-text" x="0" y="0" width="34" height="25" />
+                                                                            <text x="4" y="21">noU</text>
+                                                                        </g>
+                                                                        <g>
+                                                                            <text x="29" y="17" text-anchor="middle">value[0]</text>
+                                                                        </g>
+                                                                    </g>
+                                                                    <g class="vtree-node" transform="translate(-18,0)">
+                                                                        <path class="vtree-link" d="M52,34C52,82 -108,82 -108,130" />
+                                                                        <g class="vtree-node" transform="translate(52,96)">
+                                                                            <path class="vtree-link" d="M0,34C0,34 162,34 162,34" />
+                                                                            <path class="vtree-link" d="M-160,34C-160,34 0,34 0,34" />
+                                                                            <g class="vtree-node" transform="translate(-190,0)">
+                                                                                <g transform="translate(23,21)">
+                                                                                    <rect class="string-text" x="0" y="0" width="13" height="25" />
+                                                                                    <text x="4" y="21">{</text>
+                                                                                </g>
+                                                                                <g>
+                                                                                    <text x="29" y="17" text-anchor="middle">value[0]</text>
+                                                                                </g>
+                                                                            </g>
+                                                                            <g class="vtree-node" transform="translate(-49,0)">
+                                                                                <path class="vtree-link" d="M49,34C49,82 -43,82 -43,130" />
+                                                                                <g class="vtree-node" transform="translate(49,96)">
+                                                                                    <path class="vtree-link" d="M-24,34C-24,34 68,34 68,34" />
+                                                                                    <path class="vtree-link" d="M-92,34C-92,34 -24,34 -24,34" />
+                                                                                    <g class="vtree-node" transform="translate(-122,0)">
+                                                                                        <g transform="translate(21,21)">
+                                                                                            <rect class="string-text" x="0" y="0" width="17" height="25" />
+                                                                                            <text x="4" y="21">x</text>
+                                                                                        </g>
+                                                                                        <g>
+                                                                                            <text x="29" y="17" text-anchor="middle">value[0]</text>
+                                                                                        </g>
+                                                                                    </g>
+                                                                                    <g class="vtree-node" transform="translate(-54,0)">
+                                                                                        <g transform="translate(21,21)">
+                                                                                            <rect class="string-text" x="0" y="0" width="17" height="25" />
+                                                                                            <text x="4" y="21">=</text>
+                                                                                        </g>
+                                                                                        <g>
+                                                                                            <text x="29" y="17" text-anchor="middle">value[1]</text>
+                                                                                        </g>
+                                                                                    </g>
+                                                                                    <g class="vtree-node" transform="translate(14,0)">
+                                                                                        <g transform="translate(0,21)">
+                                                                                            <g transform="translate(0,0)">
+                                                                                                <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                                                <text x="4" y="21">type</text>
+                                                                                            </g>
+                                                                                            <g transform="translate(43,0)">
+                                                                                                <rect class="string-text" x="0" y="0" width="65" height="25" />
+                                                                                                <text x="4" y="21">numExpr</text>
+                                                                                            </g>
+                                                                                            <g transform="translate(0,25)">
+                                                                                                <rect class="string-text" x="0" y="0" width="43" height="25" />
+                                                                                                <text x="4" y="21">value</text>
+                                                                                            </g>
+                                                                                            <g transform="translate(43,25)">
+                                                                                                <rect class="number-text" x="0" y="0" width="65" height="25" />
+                                                                                                <text x="4" y="21">0</text>
+                                                                                            </g>
+                                                                                        </g>
+                                                                                        <g>
+                                                                                            <text x="54" y="17" text-anchor="middle">value[2]</text>
+                                                                                        </g>
+                                                                                    </g>
+                                                                                </g>
+                                                                                <g transform="translate(0,21)">
+                                                                                    <g transform="translate(0,0)">
+                                                                                        <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                                        <text x="4" y="21">type</text>
+                                                                                    </g>
+                                                                                    <g transform="translate(35,0)">
+                                                                                        <rect class="string-text" x="0" y="0" width="62" height="25" />
+                                                                                        <text x="4" y="21">reassign</text>
+                                                                                    </g>
+                                                                                </g>
+                                                                                <g>
+                                                                                    <text x="49" y="17" text-anchor="middle">value[1]</text>
+                                                                                </g>
+                                                                            </g>
+                                                                            <g class="vtree-node" transform="translate(132,0)">
+                                                                                <g transform="translate(23,21)">
+                                                                                    <rect class="string-text" x="0" y="0" width="13" height="25" />
+                                                                                    <text x="4" y="21">}</text>
+                                                                                </g>
+                                                                                <g>
+                                                                                    <text x="29" y="17" text-anchor="middle">value[2]</text>
+                                                                                </g>
+                                                                            </g>
+                                                                        </g>
+                                                                        <g transform="translate(0,21)">
+                                                                            <g transform="translate(0,0)">
+                                                                                <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                                <text x="4" y="21">type</text>
+                                                                            </g>
+                                                                            <g transform="translate(35,0)">
+                                                                                <rect class="string-text" x="0" y="0" width="69" height="25" />
+                                                                                <text x="4" y="21">enclosure</text>
+                                                                            </g>
+                                                                        </g>
+                                                                        <g>
+                                                                            <text x="52" y="17" text-anchor="middle">value[1]</text>
+                                                                        </g>
+                                                                    </g>
+                                                                </g>
+                                                                <g transform="translate(0,21)">
+                                                                    <g transform="translate(0,0)">
+                                                                        <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                                        <text x="4" y="21">type</text>
+                                                                    </g>
+                                                                    <g transform="translate(35,0)">
+                                                                        <rect class="string-text" x="0" y="0" width="34" height="25" />
+                                                                        <text x="4" y="21">else</text>
+                                                                    </g>
+                                                                </g>
+                                                                <g>
+                                                                    <text x="35" y="17" text-anchor="middle">[1]</text>
+                                                                </g>
+                                                            </g>
+                                                        </g>
+                                                        <g transform="translate(25,21)">
+                                                            <circle cx="4" cy="4" r="4" />
+                                                        </g>
+                                                        <g>
+                                                            <text x="29" y="17" text-anchor="middle">value[1]</text>
+                                                        </g>
+                                                    </g>
+                                                </g>
+                                                <g transform="translate(0,21)">
+                                                    <g transform="translate(0,0)">
+                                                        <rect class="string-text" x="0" y="0" width="35" height="25" />
+                                                        <text x="4" y="21">type</text>
+                                                    </g>
+                                                    <g transform="translate(35,0)">
+                                                        <rect class="string-text" x="0" y="0" width="34" height="25" />
+                                                        <text x="4" y="21">else</text>
+                                                    </g>
+                                                </g>
+                                                <g>
+                                                    <text x="35" y="17" text-anchor="middle">[1]</text>
+                                                </g>
+                                            </g>
+                                        </g>
+                                        <g transform="translate(8,21)">
+                                            <circle cx="4" cy="4" r="4" />
+                                        </g>
+                                        <g>
+                                            <text x="12" y="17" text-anchor="middle">[1]</text>
+                                        </g>
+                                    </g>
+                                </g>
+                                <g transform="translate(8,21)">
+                                    <circle cx="4" cy="4" r="4" />
+                                </g>
+                                <g>
+                                    <text x="12" y="17" text-anchor="middle">[1]</text>
+                                </g>
+                            </g>
+                        </g>
+                        <g transform="translate(25,21)">
+                            <circle cx="4" cy="4" r="4" />
+                        </g>
+                        <g>
+                            <text x="29" y="17" text-anchor="middle">value[1]</text>
+                        </g>
+                    </g>
+                </g>
+                <g transform="translate(0,0)">
+                    <rect class="string-text" x="0" y="0" width="35" height="25" />
+                    <text x="4" y="21">type</text>
+                </g>
+                <g transform="translate(35,0)">
+                    <rect class="string-text" x="0" y="0" width="61" height="25" />
+                    <text x="4" y="21">program</text>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

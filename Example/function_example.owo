@@ -1,0 +1,16 @@
+waifu~chan foo(){
+    waifu x = 0;
+    x += 500;
+    x -= 250;
+    x desu;
+}
+
+catgirl~sama bar(waifu x, catgirl y){
+    (x < 10) && y desu;
+}
+
+waifu x = foo();
+
+catgirl kek = bar(x, uwu);
+
+catgirl jaj = uwu && kek;

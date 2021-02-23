@@ -77,6 +77,7 @@ def declarations(name, typeVal, isArray, type):
     else:
         raise Exception("{} has already been declared.".format(name))
 
+
     # scopes = []
     # scopes.append({"lets": {}, "consts": {}, "fns": {}})
 lets = ScopedMap()
@@ -116,12 +117,14 @@ def p_singleStatement(t):
 
 
 def p_expr(t):
-    ''' expr : ternaryOp
+    ''' expr : 
              | numExpr
              | boolExpr
              | functionCall
              | arrayExpr
-             | reference
+             | ternaryOp
+             | reference 
+
     '''
     t[0] = t[1]
 
@@ -541,7 +544,8 @@ def p_reference(t):
 
 
 def p_letReference(t):
-    '''letReference : ID '''
+    '''letReference : ID
+    '''
     _, name = t
     if (name in lets):
         t[0] = {
@@ -582,7 +586,8 @@ def p_boolExprNeg(t):
 def p_boolExpr_group(t):
     '''boolExpr : LPAREN boolExpr RPAREN
     '''
-    t[0] = {"type": 'boolExpr', "value": t[1::]}
+    t[0] = {"type": 'boolExpr', "value": t[1::]
+            if not isinstance(t[2]['value'], bool) else t[2]}
 
 
 def p_bool(t):
@@ -599,7 +604,8 @@ def p_numExpr_uminus(t):
 
 def p_numExpr_group(t):
     'numExpr : LPAREN numExpr RPAREN'
-    t[0] = {"type": 'numExpr', "value": t[1::]}
+    t[0] = {"type": 'numExpr', "value":  t[1::]
+            if not isinstance(t[2]['value'], (float, int)) else t[2]}
 
 
 def p_numExpr_number(t):
@@ -621,8 +627,8 @@ def p_type(t):
     t[0] = {'type': 'type', "value": t[1]}
 
 
-def p_error(t):
-    raise Exception("Syntax error at line", t.lineno)
+# def p_error(t):
+#     raise Exception("Syntax error at line", t.lineno)
 
 def make_parser():
     return yacc.yacc()
@@ -643,10 +649,9 @@ if __name__ == "__main__":
     argParser.add_argument(
         'FILE', help="Input file with OwOScript source code")
     args = argParser.parse_args()
-
     parser = make_parser()
-    sourceFile = open(args.FILE, 'r')
+    sourceFile = open(args.FILE)
     sourceCode = sourceFile.read()
     sourceFile.close()
-    run_parser(sourceCode, "output.json", parser)
-    
+    run_parser(sourceCode, '{}.json'.format(args.FILE), parser)
+
