@@ -1,6 +1,5 @@
 from parser import make_parser, run_parser, make_ast
 import json
-import os
 
 parser = make_parser()
 
@@ -276,52 +275,10 @@ def test_boolExpr():
 
     parser.restart() 
 
-    
-
-# def test_simple():
-#     print("============================")
-#     print("Making file:Expr example")
-#     output_to_file("expr_example.owo", "expr_output.json")
-
-# def test_arrays():
-#     print("============================")
-#     print("Making file:Arrays")
-#     sourceFile = open("array_example.owo")
-#     sourceCode = sourceFile.read()
-#     sourceFile.close()
-#     run_parser(sourceCode, "array_output.json", parser)
-
-# def test_if():
-#     print("============================")
-#     print("Making file:If statements")
-#     sourceFile = open("if_example.owo")
-#     sourceCode = sourceFile.read()
-#     sourceFile.close()
-#     run_parser(sourceCode, "if_output.json", parser)
-
-# def test_loops():
-#     print("============================")
-#     print("Making file:Loops")
-#     sourceFile = open("loop_example.owo")
-#     sourceCode = sourceFile.read()
-#     sourceFile.close()
-#     run_parser(sourceCode, "loop_output.json", parser)
-
-# def test_functions():
-#     print("============================")
-#     print("Making file:Functions")
-#     sourceFile = open("function_example.owo")
-#     sourceCode = sourceFile.read()
-#     sourceFile.close()
-#     run_parser(sourceCode, "function_output.json", parser)
 
 if __name__ == "__main__":
     test_numExpr()
     test_boolExpr()
     test_vars()
-    # test_simple()
-    # test_arrays()
-    # test_if()
-    # test_loops()
     print("Testing complete.")
 
