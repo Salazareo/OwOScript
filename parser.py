@@ -587,7 +587,7 @@ def p_boolExpr_group(t):
     '''boolExpr : LPAREN boolExpr RPAREN
     '''
     t[0] = {"type": 'boolExpr', "value": t[1::]
-            if not isinstance(t[2]['value'], bool) else t[2]}
+            if not isinstance(t[2]['value'], bool) else t[2]['value']}
 
 
 def p_bool(t):
