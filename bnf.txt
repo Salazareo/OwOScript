@@ -1,0 +1,152 @@
+program : statements
+
+statements : singleStatement
+           | statements statements
+
+singleStatement : expr ;
+                | assignment ; 
+                | declaration ; 
+                | functionDeclaration ;
+                | whileLoop 
+                | forLoop
+                | conditional
+                | returnStatement ;
+
+expr : ternaryOp
+     | numExpr
+     | boolExpr
+     | reference
+     | functionCall
+     | arrayExpr
+
+ternaryOp : boolExpr ? expr : expr
+
+arrayExpr : arrayLiteral
+          | letReference
+
+assignment : reassign
+           | initialize
+           | arrayAssign
+           | binOpAssign
+           
+binOpAssign : ID += numExpr
+            | ID -= numExpr
+            | ID /= numExpr
+            | ID *= numExpr
+            | ID ++
+            | ID --
+
+conditional : if else
+            | if
+
+if : nani ( boolExpr ) enclosure
+   | nani ( boolExpr ) singleStatement
+
+else : noU enclosure
+     | noU singleStatement
+
+whileLoop : whileU ( boolExpr ) iStudied enclosure
+
+forLoop : shi ( forTrio ) enclosure
+        | shi ( forElement ) enclosure
+
+forTrio : forAssign; boolExpr; forReassign
+
+forAssign : reassign
+          | letInitialize
+          | arrayAssign
+
+forReassign : reassign
+            | arrayAssign
+
+forElement : declaration : ID
+           | constDeclaration : ID
+
+functionDeclaration : functionHeader( argumentDeclaration ) enclosure
+
+enclosure : { }
+          | { statements }
+
+functionHeader: functionType~honorific ID
+
+arrayAssign : ID[ numExpr ] = expr
+
+reassign: ID = expr
+
+returnStatement: expr desu
+
+honorific : chan
+          | kun 
+          | san 
+          | sama
+
+functionCall : printCall
+             | ID( exprList )
+             | ID()
+
+printCall : baka( exprLst )
+
+arrayLiteral : []
+             | [ exprList ]
+
+initialize : letInitialize
+           | constInitialize
+
+letInitialize : declaration = expr
+
+constInitialize : constDeclaration = expr
+
+declaration : arrayDeclaration
+            | letDeclaration
+
+argumentDeclaration : declaration
+                    | declaration, argumentDeclaration
+                    |                                           (no arguments)
+
+constDeclaration : real arrayDeclaration
+                 | real letDeclaration
+
+arrayDeclaration : type harem ID
+
+letDeclaration : type ID
+
+
+exprList : expr
+         | expr , exprList
+
+
+boolExpr : owo
+         | uwu
+         | ( boolExpr )
+         | ! boolExpr
+         | numExpr < numExpr
+         | numExpr > numExpr
+         | numExpr >= numExpr
+         | numExpr <= numExpr
+         | expr == expr
+         | expr != expr
+         | boolExpr && boolExpr
+         | boolExpr || boolExpr
+         | reference
+
+numExpr : Number 
+        | ( numExpr )
+        | - numExpr
+        | numExpr + numExpr
+        | numExpr / numExpr
+        | numExpr - numExpr
+        | numExpr * numExpr
+        | reference
+
+reference : letReference
+          | arrayReference
+
+letReference : ID
+
+arrayReference : ID[numExpr]
+
+functionType : type
+             | yokai
+
+type : waifu
+     | catgirl

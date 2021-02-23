@@ -1,5 +1,6 @@
 waifu x = 10;
-whileU (x > 0) iStudied{
-    waifu theBlade = 5+x;
-    baka(theBlade);
-}
+
+x = 15;
+x -= 5;
+
+baka(x);
