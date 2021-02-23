@@ -33,9 +33,14 @@ tokens = [
     'SQUIGGLY',
     'MULTID',
     'PEQ',
+    'COL',
     'MEQ',
     'TEQ',
-    'DEQ'
+    'DEQ',
+    'PP',
+    'MM',
+    'QMARK',
+
 ]
 
 # Reserved words which should not match any IDs we need to add this
@@ -46,6 +51,7 @@ reserved = {
     "chan": "CHAN",
     "kun": "KUN",
     "san": "SAN",
+    "sama": "SAMA",
     "yokai": "YOKAI",
     "owo": "OWO",
     "uwu": "UWU",
@@ -55,7 +61,8 @@ reserved = {
     "noU": "NOU",
     "whileU": "WHILEU",
     "iStudied": "ISTUDIED",
-    "shi": "SHI"
+    "shi": "SHI",
+    "baka": "BAKA"
 }
 
 # Add reserved names to list of tokens
@@ -67,6 +74,8 @@ class OwOScriptLexer():
     t_ignore = ' \t'
 
     # Regular expression rule with some action code
+    t_PP = r'\+\+'
+    t_MM = r'--'
     t_PLUS = r'\+'
     t_MINUS = r'-'
     t_TIMES = r'\*'
@@ -96,12 +105,17 @@ class OwOScriptLexer():
     t_MEQ = r'\-='
     t_TEQ = r'\*='
     t_DEQ = r'\/='
+    t_COL = r'\:'
+    t_QMARK = r'\?'
 
    # A regular expression rule with some action code
     def t_NUMBER(self, t):
         # This needs to be like dynamic, it should be a float unless integer, but numbers are like a single thing so
         r'([0-9]*[.])?[0-9]+'
-        t.value = float(t.value)
+        try:
+            t.value = int(t.value)
+        except ValueError:
+            t.value = float(t.value)
         return t
 
     def t_ID(self, t):
