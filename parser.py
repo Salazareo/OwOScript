@@ -646,6 +646,11 @@ def run_parser(sourceCode, outputFileName, parser):
         f.write(json.dumps(ast, indent=2))
     print("parsing complete")
 
+def reset_parser():
+    lets = ScopedMap()
+    consts = ScopedMap()
+    fns = ScopedMap()
+
 
 if __name__ == "__main__":
     argParser = argparse.ArgumentParser(

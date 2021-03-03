@@ -1,4 +1,4 @@
-from parser import make_parser, run_parser, make_ast
+from parser import make_parser, run_parser, reset_parser, make_ast
 import json
 
 parser = make_parser()
@@ -99,7 +99,116 @@ def test_vars():
     ast = make_ast(input, parser)
     if ast != expected: print("test:Waifu reference did not pass")
 
-    parser.restart()  
+    print("Testing:Catgirl const")
+    input = "real catgirl a = uwu;"
+    expected = {
+        "type": "program",
+        "value": {
+            "type": "constInitialize",
+            "value": [
+              {
+                "type": "catgirl",
+                "value": "a"
+              },
+              "=",
+              {
+                "type": "boolExpr",
+                "value": True
+              }
+            ]
+        }
+    }
+    ast = make_ast(input, parser)
+    if ast != expected: print("test:Catgirl const did not pass")
+
+    print("Testing:Catgirl assign const")
+    input = "real catgirl b = a;"
+    expected = {
+        "type": "program",
+        "value": {
+            "type": "constInitialize",
+            "value": [
+              {
+                "type": "catgirl",
+                "value": "b"
+              },
+              "=",
+              {
+                "type": "letReference", #TODO: change the name
+                "value": {
+                  "type": "catgirl",
+                  "value": "a"
+                }
+              }
+            ]
+        }
+    }
+    ast = make_ast(input, parser)
+    if ast != expected: print("test:Catgirl assign const did not pass")
+
+    print("Testing:Catgirl 1D array declaration")
+    input = "catgirl harem A;"
+    expected = {
+        "type": "program",
+        "value": {
+            "type": "declaration",
+            "value": {
+              "type": "catgirl harem",
+              "value": "A"
+            }
+        }
+    }
+    ast = make_ast(input, parser)
+    if ast != expected: print("test:Catgirl 1D array declaration did not pass")
+
+    print("Testing:Catgirl 1D array reassignment")
+    input = "A = [uwu];"
+    expected = {
+        "type": "program",
+        "value": {
+            "type": "reassign",
+            "value": [
+              "A",
+              "=",
+              {
+                "type": "arrayLiteral",
+                "value": [
+                  "[",
+                  {
+                    "type": "boolExpr",
+                    "value": True
+                  },
+                  "]"
+                ]}]
+        }
+    }
+    ast = make_ast(input, parser)
+    if ast != expected: print("test:Catgirl array reassignment did not pass")
+
+    print("Testing:Catgirl 1D array reference")
+    input = "A[0];"
+    expected = {
+        "type": "program",
+        "value": {
+          "type": "arrayReference",
+          "value": [
+            {
+              "value": "A",
+              "type": "catgirl harem"
+            },
+            "[",
+            {
+              "type": "numExpr",
+              "value": 0
+            },
+            "]"
+          ]
+        }
+    }
+    ast = make_ast(input, parser)
+    if ast != expected: print("test:Catgirl 1D array reference did not pass")
+
+    reset_parser()  
 
 def test_numExpr():
     print("============================")
@@ -270,8 +379,8 @@ def test_boolExpr():
 
 
 if __name__ == "__main__":
+    test_vars()
     test_numExpr()
     test_boolExpr()
-    test_vars()
     print("Testing complete.")
 
