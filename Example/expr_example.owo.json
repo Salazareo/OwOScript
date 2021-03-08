@@ -5,41 +5,51 @@
       "type": "numExpr",
       "value": 1
     },
-    [
-      {
-        "type": "numExpr",
-        "value": 2
-      },
-      [
+    {
+      "type": "numExpr",
+      "value": 2
+    },
+    {
+      "type": "initialize",
+      "value": [
         {
-          "type": "initialize",
-          "value": [
-            {
-              "type": "waifu",
-              "value": "x"
-            },
-            "=",
-            {
-              "type": "numExpr",
-              "value": 2.0
-            }
-          ]
+          "type": "waifu",
+          "value": "x"
         },
+        "=",
         {
-          "type": "constInitialize",
-          "value": [
-            {
-              "type": "catgirl",
-              "value": "nyan"
-            },
-            "=",
-            {
-              "type": "boolExpr",
-              "value": true
-            }
-          ]
+          "type": "numExpr",
+          "value": 2
         }
       ]
-    ]
+    },
+    {
+      "type": "constInitialize",
+      "value": [
+        {
+          "type": "catgirl",
+          "value": "nyan"
+        },
+        "=",
+        {
+          "type": "boolExpr",
+          "value": true
+        }
+      ]
+    },
+    {
+      "type": "constInitialize",
+      "value": [
+        {
+          "type": "waifu",
+          "value": "z"
+        },
+        "=",
+        {
+          "type": "numExpr",
+          "value": 3.75
+        }
+      ]
+    }
   ]
 }
