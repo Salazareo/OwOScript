@@ -1,68 +1,14 @@
 from ply import yacc, lex
 import lexer
 import json
+
 import argparse
+from ScopedMap import ScopedMap
 tokens = lexer.tokens
 
 
 def toIntIfInt(x):
     return int(x) if x % int(x) == 0 else x
-
-
-class ScopedMap():
-
-    def __init__(self):
-        self.scopes = [{}]
-
-    def addScope(self):
-        self.scopes.append({})
-
-    def popScope(self):
-        self.scopes.pop()
-
-    def __contains__(self, key):
-        for i in range(len(self.scopes)-1, -1, -1):
-            if key in self.scopes[i]:
-                return True
-        return False
-
-    def inCurrentScope(self, key):
-        return key in self.scopes[-1]
-
-    def __getitem__(self, key):
-        for i in range(len(self.scopes)-1, -1, -1):
-            if key in self.scopes[i]:
-                return self.scopes[i][key]
-        return None
-
-    def __setitem__(self, key, val):
-        for i in range(len(self.scopes)-1, -1, -1):
-            if key in self.scopes[i]:
-                self.scopes[i][key] = val
-        self.scopes[-1][key] = val
-
-    def getScopeIndex(self, key):
-        for i in range(len(self.scopes)-1, -1, -1):
-            if key in self.scopes[i]:
-                return i
-        return None
-
-    def inScopeIndex(self, index, key):
-        return key in self.scopes[index]
-
-    def forceNew(self, key, val):
-        self.scopes[-1][key] = val
-
-    def __delitem__(self, key):
-        for i in range(len(self.scopes)-1, -1, -1):
-            if key in self.scopes[i]:
-                del self.scopes[i][key]
-
-    def __str__(self) -> str:
-        return str(self.scopes)
-
-    def toJSON(self):
-        return json.dumps(self.scopes, indent=4)
 
 
 def declarations(name, typeVal, isArray, type):
@@ -78,16 +24,15 @@ def declarations(name, typeVal, isArray, type):
         raise Exception("{} has already been declared.".format(name))
 
 
-    # scopes = []
-    # scopes.append({"lets": {}, "consts": {}, "fns": {}})
 lets = ScopedMap()
 consts = ScopedMap()
 fns = ScopedMap()
 
 precedence = (
+    ('left', 'LT', 'LEQ', 'GT', 'GEQ', 'EQOP', 'NEQ'),
     ('left', 'PLUS', 'MINUS'),
     ('left', 'TIMES', 'DIVIDE'),
-    ('right', 'UMINUS'),
+    ('right', 'UMINUS', 'NOT'),
 )
 
 
@@ -100,7 +45,7 @@ def p_statements(t):
     ''' statements : singleStatement
                    | statements statements
     '''
-    t[0] = t[1::] if len(t) > 2 else t[1]
+    t[0] = t[1] + t[2] if len(t) > 2 else [t[1]]
 
 
 def p_singleStatement(t):
@@ -113,6 +58,7 @@ def p_singleStatement(t):
                         | conditional
                         | returnStatement SEMICOL
     '''
+
     t[0] = t[1]
 
 
@@ -313,7 +259,6 @@ def p_initialize(t):
                    | constInitialize
     '''
     t[0] = t[1]
-    # else error
 
 
 def p_letInitialize(t):
@@ -514,13 +459,17 @@ def p_numExpr_binop(t):
     if isinstance(t[1]["value"], (float, int)) and isinstance(t[3]["value"], (float, int)):
         # Directly evaluates literals as optimization
         if t[2] == '+':
-            t[0] = {"type": "numExpr", "value": t[1]["value"] + t[3]["value"]}
+            t[0] = {"type": "numExpr", "value": toIntIfInt(
+                t[1]["value"] + t[3]["value"])}
         elif t[2] == '-':
-            t[0] = {"type": "numExpr", "value": t[1]["value"] - t[3]["value"]}
+            t[0] = {"type": "numExpr", "value": toIntIfInt(
+                t[1]["value"] - t[3]["value"])}
         elif t[2] == '*':
-            t[0] = {"type": "numExpr", "value": t[1]["value"] * t[3]["value"]}
+            t[0] = {"type": "numExpr", "value": toIntIfInt(
+                t[1]["value"] * t[3]["value"])}
         elif t[2] == '/':
-            t[0] = {"type": "numExpr", "value": t[1]["value"] / t[3]["value"]}
+            t[0] = {"type": "numExpr", "value": toIntIfInt(
+                t[1]["value"] / t[3]["value"])}
     else:
         t[0] = {"type": "numExpr", "value": {
             "type": t[2], "value": [t[1], t[3]]}}
@@ -645,6 +594,7 @@ def run_parser(sourceCode, outputFileName, parser):
     with open(outputFileName, 'w') as f:
         f.write(json.dumps(ast, indent=2))
     print("parsing complete")
+
 
 def reset_parser():
     lets = ScopedMap()
