@@ -12,45 +12,56 @@ singleStatement : expr ;
                 | conditional
                 | returnStatement ;
 
-expr : ternaryOp
-     | numExpr
-     | boolExpr
-     | reference
+expr : literal 
+     | arrayLiteral
+     | reference 
+     | ( expr )
+     | ternaryOp
      | functionCall
-     | arrayExpr
+     | !expr           # Bool operations
+	| expr < expr
+	| expr > expr
+	| expr >= expr
+	| expr <= expr 
+	| expr == expr 
+	| expr != expr
+	| expr && expr
+	| expr || expr
+	| - expr          # num operations
+	| expr + expr
+	| expr - expr
+	| expr * expr 
+	| expr / expr 
 
-ternaryOp : boolExpr ? expr : expr
-
-arrayExpr : arrayLiteral
-          | letReference
+ternaryOp : expr ? expr : expr
 
 assignment : reassign
            | initialize
            | arrayAssign
            | binOpAssign
 
-binOpAssign : ID += numExpr
-            | ID -= numExpr
-            | ID /= numExpr
-            | ID *= numExpr
+binOpAssign : ID += expr
+            | ID -= expr
+            | ID /= expr
+            | ID *= expr
             | ID ++
             | ID --
 
 conditional : if else
             | if
 
-if : nani ( boolExpr ) enclosure
-   | nani ( boolExpr ) singleStatement
+if : nani ( expr ) enclosure
+   | nani ( expr ) singleStatement
 
 else : noU enclosure
      | noU singleStatement
 
-whileLoop : whileU ( boolExpr ) iStudied enclosure
+whileLoop : whileU ( expr ) iStudied enclosure
 
 forLoop : shi ( forTrio ) enclosure
         | shi ( forElement ) enclosure
 
-forTrio : forAssign; boolExpr; forReassign
+forTrio : forAssign; expr; forReassign
 
 forAssign : reassign
           | letInitialize
@@ -70,7 +81,7 @@ enclosure : { }
 
 functionHeader: functionType~honorific ID
 
-arrayAssign : ID[ numExpr ] = expr
+arrayAssign : ID[ expr ] = expr
 
 reassign: ID = expr
 
@@ -111,40 +122,20 @@ arrayDeclaration : type harem ID
 
 letDeclaration : type ID
 
-
 exprList : expr
          | expr , exprList
 
 
-boolExpr : owo                   #False
-         | uwu                   #True
-         | ( boolExpr )
-         | ! boolExpr
-         | numExpr < numExpr
-         | numExpr > numExpr
-         | numExpr >= numExpr
-         | numExpr <= numExpr
-         | expr == expr
-         | expr != expr
-         | boolExpr && boolExpr
-         | boolExpr || boolExpr
-         | reference
-
-numExpr : Number                   #int/float
-        | ( numExpr )
-        | - numExpr
-        | numExpr + numExpr
-        | numExpr / numExpr
-        | numExpr - numExpr
-        | numExpr * numExpr
-        | reference
+literal : NUMBER
+	| OWO
+	| UWU
 
 reference : letReference
           | arrayReference
 
 letReference : ID
 
-arrayReference : ID[numExpr]
+arrayReference : ID[expr]
 
 functionType : type
              | yokai        #undefined/None type
