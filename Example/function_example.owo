@@ -10,7 +10,8 @@ catgirl~sama bar(waifu x, catgirl y){
 }
 
 waifu x = foo();
-
+waifu z = 1;
+z = -z;
 catgirl kek = bar(x, uwu);
 
-catgirl jaj = uwu && kek;
+catgirl jaj = !(uwu && kek);

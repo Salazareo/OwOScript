@@ -18,8 +18,8 @@
         },
         "=",
         {
-          "type": "numExpr",
-          "value": 2
+          "type": "-",
+          "value": -6
         }
       ]
     },
@@ -46,8 +46,14 @@
         },
         "=",
         {
-          "type": "numExpr",
-          "value": 3.75
+          "type": "-",
+          "value": {
+            "type": "letReference",
+            "value": {
+              "type": "waifu",
+              "value": "x"
+            }
+          }
         }
       ]
     }

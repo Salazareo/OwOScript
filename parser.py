@@ -320,8 +320,8 @@ def p_binOpAssign(t):
             t[0] = {'type': 'short_binop', 'value': t[1::]}
         else:
             raise Exception("Cannot reassign constant")
-
-    raise Exception("Variable {} not declared.".format(name))
+    else:
+        raise Exception("Variable {} not declared.".format(name))
 
 
 def p_argumentDeclaration(t):
@@ -519,7 +519,7 @@ def p_arrayReference(t):
 def p_boolExprNeg(t):
     'boolExpr : NOT boolExpr'
 
-    t[0] = {"type": t[1], "value": t[2]} if not isinstance(
+    t[0] = {"type": 'boolExpr', "value": [t[1], t[2]]} if not isinstance(
         t[2]['value'], (bool)) else {"type": "boolExpr", "value": not t[2]['value']}
     # t[0] = {"type": 'boolExpr', "value": t[1:3] if not else not t[2]["value"]}
 
@@ -540,7 +540,7 @@ def p_bool(t):
 
 def p_numExpr_uminus(t):
     'numExpr : MINUS numExpr %prec UMINUS'
-    t[0] = {"type": t[1], "value": t[2] if not isinstance(
+    t[0] = {"type": 'numExpr', "value": [t[1], t[2]] if not isinstance(
         t[2]['value'], (int, float)) else -t[2]['value']}
 
 

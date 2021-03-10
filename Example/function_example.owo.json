@@ -24,80 +24,76 @@
                   "=",
                   {
                     "type": "numExpr",
+                    "value": 0
+                  }
+                ]
+              },
+              {
+                "type": "short_binop",
+                "value": [
+                  "x",
+                  "+=",
+                  {
+                    "type": "numExpr",
+                    "value": 500
+                  }
+                ]
+              },
+              {
+                "type": "short_binop",
+                "value": [
+                  "x",
+                  "-=",
+                  {
+                    "type": "numExpr",
                     "value": 250
                   }
                 ]
               },
-              [
-                {
-                  "type": "short_binop",
-                  "value": [
-                    "x",
-                    "+=",
-                    {
-                      "type": "numExpr",
-                      "value": 500
-                    }
-                  ]
-                },
-                [
-                  {
-                    "type": "short_binop",
-                    "value": [
-                      "x",
-                      "-=",
-                      {
-                        "type": "numExpr",
-                        "value": 250
-                      }
-                    ]
-                  },
-                  {
-                    "type": "return",
-                    "value": {
-                      "type": "letReference",
-                      "value": {
-                        "type": "waifu",
-                        "value": "x"
-                      }
-                    }
+              {
+                "type": "return",
+                "value": {
+                  "type": "letReference",
+                  "value": {
+                    "type": "waifu",
+                    "value": "x"
                   }
-                ]
-              ]
+                }
+              }
             ],
             "}"
           ]
         }
       ]
     },
-    [
-      {
-        "type": "functionDeclaration",
-        "returnType": "catgirl",
-        "value": [
-          "bar",
-          "(",
-          [
-            {
-              "type": "declaration",
-              "value": {
-                "type": "catgirl",
-                "value": "y"
-              }
-            },
-            {
-              "type": "declaration",
-              "value": {
-                "type": "waifu",
-                "value": "x"
-              }
-            }
-          ],
-          ")",
+    {
+      "type": "functionDeclaration",
+      "returnType": "catgirl",
+      "value": [
+        "bar",
+        "(",
+        [
           {
-            "type": "enclosure",
-            "value": [
-              "{",
+            "type": "declaration",
+            "value": {
+              "type": "catgirl",
+              "value": "y"
+            }
+          },
+          {
+            "type": "declaration",
+            "value": {
+              "type": "waifu",
+              "value": "x"
+            }
+          }
+        ],
+        ")",
+        {
+          "type": "enclosure",
+          "value": [
+            "{",
+            [
               {
                 "type": "return",
                 "value": {
@@ -141,92 +137,137 @@
                     ]
                   }
                 }
-              },
-              "}"
-            ]
-          }
-        ]
-      },
-      [
+              }
+            ],
+            "}"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "initialize",
+      "value": [
         {
-          "type": "initialize",
+          "type": "waifu",
+          "value": "x"
+        },
+        "=",
+        {
+          "type": "functionCall",
+          "name": "foo",
           "value": [
+            "foo",
+            "(",
+            ")"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "initialize",
+      "value": [
+        {
+          "type": "waifu",
+          "value": "z"
+        },
+        "=",
+        {
+          "type": "numExpr",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "reassign",
+      "value": [
+        "z",
+        "=",
+        {
+          "type": "numExpr",
+          "value": [
+            "-",
             {
-              "type": "waifu",
-              "value": "x"
+              "type": "letReference",
+              "value": {
+                "type": "waifu",
+                "value": "z"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "initialize",
+      "value": [
+        {
+          "type": "catgirl",
+          "value": "kek"
+        },
+        "=",
+        {
+          "type": "functionCall",
+          "name": "bar",
+          "value": [
+            "bar",
+            "(",
+            {
+              "type": "boolExpr",
+              "value": true
             },
-            "=",
             {
-              "type": "functionCall",
-              "name": "foo",
+              "type": "letReference",
+              "value": {
+                "type": "waifu",
+                "value": "x"
+              }
+            },
+            ")"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "initialize",
+      "value": [
+        {
+          "type": "catgirl",
+          "value": "jaj"
+        },
+        "=",
+        {
+          "type": "boolExpr",
+          "value": [
+            "!",
+            {
+              "type": "boolExpr",
               "value": [
                 "(",
+                {
+                  "type": "boolExpr",
+                  "value": {
+                    "type": "&&",
+                    "value": [
+                      {
+                        "type": "boolExpr",
+                        "value": true
+                      },
+                      {
+                        "type": "letReference",
+                        "value": {
+                          "type": "catgirl",
+                          "value": "kek"
+                        }
+                      }
+                    ]
+                  }
+                },
                 ")"
               ]
             }
           ]
-        },
-        [
-          {
-            "type": "initialize",
-            "value": [
-              {
-                "type": "catgirl",
-                "value": "kek"
-              },
-              "=",
-              {
-                "type": "functionCall",
-                "name": "bar",
-                "value": [
-                  "(",
-                  {
-                    "type": "boolExpr",
-                    "value": true
-                  },
-                  {
-                    "type": "letReference",
-                    "value": {
-                      "type": "waifu",
-                      "value": "x"
-                    }
-                  },
-                  ")"
-                ]
-              }
-            ]
-          },
-          {
-            "type": "initialize",
-            "value": [
-              {
-                "type": "catgirl",
-                "value": "jaj"
-              },
-              "=",
-              {
-                "type": "boolExpr",
-                "value": {
-                  "type": "&&",
-                  "value": [
-                    {
-                      "type": "boolExpr",
-                      "value": true
-                    },
-                    {
-                      "type": "letReference",
-                      "value": {
-                        "type": "catgirl",
-                        "value": "kek"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        ]
+        }
       ]
-    ]
+    }
   ]
 }
