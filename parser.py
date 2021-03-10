@@ -450,7 +450,9 @@ def p_numExpr_binop(t):
     '''numExpr : numExpr PLUS numExpr
                | numExpr MINUS numExpr
                | numExpr TIMES numExpr
-               | numExpr DIVIDE numExpr'''
+               | numExpr DIVIDE numExpr
+               | numExpr MOD numExpr
+               | numExpr POW numExpr'''
     if isinstance(t[1]["value"], (float, int)) and isinstance(t[3]["value"], (float, int)):
         # Directly evaluates literals as optimization
         if t[2] == '+':
@@ -465,6 +467,12 @@ def p_numExpr_binop(t):
         elif t[2] == '/':
             t[0] = {"type": "numExpr", "value": toIntIfInt(
                 t[1]["value"] / t[3]["value"])}
+        elif t[2] == '%':
+            t[0] = {"type": "numExpr", "value": toIntIfInt(
+                t[1]["value"] % t[3]["value"])}
+        elif t[2] == '**':
+            t[0] = {"type": "numExpr", "value": toIntIfInt(
+                t[1]["value"] ** t[3]["value"])}
     else:
         t[0] = {"type": "numExpr", "value": {
             "type": t[2], "value": [t[1], t[3]]}}

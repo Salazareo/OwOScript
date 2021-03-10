@@ -11,6 +11,8 @@ tokens = [
     'MINUS',
     'TIMES',
     'DIVIDE',
+    'MOD',
+    'POW',
     'LT',
     'LEQ',
     'GT',
@@ -80,6 +82,8 @@ class OwOScriptLexer():
     t_MINUS = r'-'
     t_TIMES = r'\*'
     t_DIVIDE = r'/'
+    t_MOD = r'\%'
+    t_POW = r'\*\*'
     t_LEQ = r'\<='
     t_LT = r'\<'
     t_GEQ = r'\>='
