@@ -251,7 +251,7 @@ def p_exprList(t):
     if len(t) == 2:
         t[0] = [t[1]]
     else:
-        t[0] = t[3] + [t[1]]
+        t[0] = [t[1]] + t[3]
 
 
 def p_initialize(t):
@@ -266,7 +266,6 @@ def p_letInitialize(t):
     '''
     name = t[1]["value"]["value"]
     typeName = t[1]["value"]["type"]
-    print(t[3])
     val = t[3]
     # if (typeOf(val) == typeVal):
     t[0] = {"type": "initialize", "value": [
@@ -335,7 +334,7 @@ def p_argumentDeclaration(t):
         if len(t) == 1:
             t[0] = []
         else:
-            t[0] = t[3] + [t[1]]
+            t[0] = [t[1]] + t[3]
 
 
 def p_constDeclaration(t):

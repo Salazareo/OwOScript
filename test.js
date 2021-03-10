@@ -4,11 +4,11 @@ const foo = () => {
     x -= 250;
     return x;
 }
-const bar = (y, x) => {
-    return x < 10 && y;
+const bar = (x, y) => {
+    return (x < 10 || (false && x < 2)) && y;
 }
 let x = foo();
 let z = 1;
 z = -z;
-let kek = bar(true, x);
+let kek = bar(x, true);
 let jaj = !(true && kek);

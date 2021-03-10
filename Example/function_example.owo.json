@@ -76,15 +76,15 @@
           {
             "type": "declaration",
             "value": {
-              "type": "catgirl",
-              "value": "y"
+              "type": "waifu",
+              "value": "x"
             }
           },
           {
             "type": "declaration",
             "value": {
-              "type": "waifu",
-              "value": "x"
+              "type": "catgirl",
+              "value": "y"
             }
           }
         ],
@@ -108,18 +108,64 @@
                           {
                             "type": "boolExpr",
                             "value": {
-                              "type": "<",
+                              "type": "||",
                               "value": [
                                 {
-                                  "type": "letReference",
+                                  "type": "boolExpr",
                                   "value": {
-                                    "type": "waifu",
-                                    "value": "x"
+                                    "type": "<",
+                                    "value": [
+                                      {
+                                        "type": "letReference",
+                                        "value": {
+                                          "type": "waifu",
+                                          "value": "x"
+                                        }
+                                      },
+                                      {
+                                        "type": "numExpr",
+                                        "value": 10
+                                      }
+                                    ]
                                   }
                                 },
                                 {
-                                  "type": "numExpr",
-                                  "value": 10
+                                  "type": "boolExpr",
+                                  "value": [
+                                    "(",
+                                    {
+                                      "type": "boolExpr",
+                                      "value": {
+                                        "type": "&&",
+                                        "value": [
+                                          {
+                                            "type": "boolExpr",
+                                            "value": false
+                                          },
+                                          {
+                                            "type": "boolExpr",
+                                            "value": {
+                                              "type": "<",
+                                              "value": [
+                                                {
+                                                  "type": "letReference",
+                                                  "value": {
+                                                    "type": "waifu",
+                                                    "value": "x"
+                                                  }
+                                                },
+                                                {
+                                                  "type": "numExpr",
+                                                  "value": 2
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    ")"
+                                  ]
                                 }
                               ]
                             }
@@ -212,15 +258,15 @@
             "bar",
             "(",
             {
-              "type": "boolExpr",
-              "value": true
-            },
-            {
               "type": "letReference",
               "value": {
                 "type": "waifu",
                 "value": "x"
               }
+            },
+            {
+              "type": "boolExpr",
+              "value": true
             },
             ")"
           ]

@@ -61,8 +61,9 @@ def numExpr(val, special=False):
                 '{} {} {}'.format(typeTransfer(val1['type'], val1['value']), val['type'], typeTransfer(val2['type'], val2['value']))\
                 + (')'if isParen else '')
         else:
-            print(val)
             if isinstance(val[0], str):
+                if len(val) == 3:
+                    special = True
                 return ('({})' if special else '{}').format(
                     ('-'if val[0] == '-' else '')+typeTransfer(val[1]['type'], val[1]['value'], val[0] == '-' and val[1]['type'] == 'numExpr'))
             else:
@@ -81,8 +82,9 @@ def boolExpr(val, special=False):
                 '{} {} {}'.format(typeTransfer(val1['type'], val1['value']), val['type'], typeTransfer(val2['type'], val2['value']))\
                 + (')'if isParen else '')
         else:
-            print(val)
             if isinstance(val[0], str):
+                if len(val) == 3:
+                    special = True
                 return ('({})' if special else '{}').format(
                     ('!'if val[0] == '!'else '')+typeTransfer(val[1]['type'], val[1]['value'], val[0] == '!' and val[1]['type'] == 'boolExpr'))
             else:
@@ -136,11 +138,11 @@ def typeTransfer(typeName, val, specialCase=False):
             return fakeSwitch[typeName](val)
     except KeyError as e:
         print(e)
-        return ''
+        raise(e)
 
 
 with open('./Example/function_example.owo.json') as ast:
     astAsDict = json.load(ast)
     with open('test.js', 'w') as f:
         f.write(typeTransfer(astAsDict['type'], astAsDict['value']))
-    print("parsing complete")
+    print("compiling complete")

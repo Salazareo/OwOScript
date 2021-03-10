@@ -6,7 +6,7 @@ waifu~chan foo(){
 }
 
 catgirl~sama bar(waifu x, catgirl y){
-    (x < 10) && y desu;
+    (x < 10 || (owo&& x<2)) && y desu;
 }
 
 waifu x = foo();
