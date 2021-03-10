@@ -3,15 +3,19 @@ import json
 # we wont need this once we write straight to uhh the thing
 
 
-def convertToStr(lst):
+def convertToStr(lst, encl=False):
     out = ''
     for i in lst:
+        if encl:
+            out+= '\t'
         out += i
     return out
 
 
 def program(val):
-    statements = list(map(lambda x: typeTransfer(x['type'], x['value']), val)) if isinstance(val, list) \
+    statements = list(map( \
+        lambda x: typeTransfer(x['type'], x['value']), val)) \
+        if isinstance(val, list) \
         else [typeTransfer(val['type'], val['value'])]
     return convertToStr(statements)
 
@@ -30,7 +34,7 @@ def declaration(val, special=False):
 
 def enclosure(val):
     return '{\n' + \
-        (convertToStr(list(map(lambda x: typeTransfer(x['type'], x['value']), val[1]))) if isinstance(val[1], list)
+        (convertToStr(list(map(lambda x: typeTransfer(x['type'], x['value']), val[1])), True) if isinstance(val[1], list)
          else typeTransfer(val[1]['type'], val[1]['value'])) \
         + '}\n'
 
@@ -112,6 +116,27 @@ def functionCall(val):
 def reassign(val, special=False):
     return '{} = {}'.format(val[0], typeTransfer(val[2]['type'], val[2]['value']))+(''if special else ';\n')
 
+def ternaryOp(val, special=False):
+    val0 = typeTransfer(val[0]['type'], val[0]['value'])
+    val2 = typeTransfer(val[2]['type'], val[2]['value'])
+    val4 = typeTransfer(val[4]['type'], val[4]['value'])
+    return '{} ? {} : {}'.format(val0,val2, val4)
+
+def conditional(val, special=False):
+    val0 = typeTransfer(val[0]['type'], val[0]['value'])
+    val1 = ''
+    if len(val) > 1:
+        val1 = typeTransfer(val[1]['type'], val[1]['value'])
+    return '{}{}'.format(val0, val1)
+
+def ifstmt(val, special=False):
+    val1 = typeTransfer(val[1]['type'], val[1]['value'])
+    val2 = typeTransfer(val[3]['type'], val[3]['value'])
+    return ('if ({}) {}'.format(val1, val2))
+
+def elsestmt(val, special=False):
+    val1 = typeTransfer(val[1]['type'], val[1]['value'])
+    return 'else {}'.format(val1)
 
 fakeSwitch = {
     'functionDeclaration': functionDeclaration,
@@ -126,7 +151,11 @@ fakeSwitch = {
     'letReference': letReference,
     'return': ret,
     'functionCall': functionCall,
-    'reassign': reassign
+    'reassign': reassign,
+    'ternaryOp': ternaryOp,
+    'cond': conditional,
+    'if': ifstmt,
+    'else': elsestmt
 }
 
 
