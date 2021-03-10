@@ -224,10 +224,10 @@ def p_functionCall(t):
             # ok we need to make objects to store our data properly
             if len(elements) == 2:
                 t[0] = {"type": "functionCall",
-                        "name": fnName, "value": elements}
+                        "name": fnName, "value": [fnName]+elements}
             else:
                 t[0] = {"type": "functionCall",
-                        "name": fnName, "value": [elements[0], *elements[1], elements[2]]}
+                        "name": fnName, "value": [fnName]+[elements[0], *elements[1], elements[2]]}
         else:
             raise Exception("Undefined function name '%s'" % fnName)
 
@@ -266,6 +266,7 @@ def p_letInitialize(t):
     '''
     name = t[1]["value"]["value"]
     typeName = t[1]["value"]["type"]
+    print(t[3])
     val = t[3]
     # if (typeOf(val) == typeVal):
     t[0] = {"type": "initialize", "value": [
@@ -314,22 +315,13 @@ def p_binOpAssign(t):
     else:
         _, name, op = t
         val = 1
-    if (name in lets and name not in consts):
-        t[0] = {'type': 'short_binop', 'value': t[1::]}
-        if val != 1 and isinstance(val["value"], (float, int)):
-            lets[name]["value"]["value"] = options[op](
-                lets[name]["value"]["value"], val["value"])
-    else:
-        if (name in lets):
-            if (consts.inScopeIndex(lets.getScopeIndex(name), name)):
-                raise Exception("Cannot reassign constant")
-            else:
-                t[0] = {'type': 'short_binop', 'value': t[1::]}
-                if val != 1 and isinstance(val["value"], (float, int)):
-                    lets[name]["value"]["value"] = options[op](
-                        lets[name]["value"]["value"], val["value"])
+    if (name in lets):
+        if (name not in consts):
+            t[0] = {'type': 'short_binop', 'value': t[1::]}
         else:
-            raise Exception("Variable {} not declared.".format(name))
+            raise Exception("Cannot reassign constant")
+
+    raise Exception("Variable {} not declared.".format(name))
 
 
 def p_argumentDeclaration(t):
