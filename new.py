@@ -132,7 +132,6 @@ def p_expr(t):
 def p_paren_expr(t):
     ''' expr : LPAREN expr RPAREN
     '''
-    print(str(t))
     t[0] = {
         "type": t[2]["type"], "value": t[1::]
             if not isinstance(t[2]['value'], (bool, int, float)) else t[2]['value']
@@ -464,7 +463,8 @@ def p_binOpAssign(t):
 def p_argumentDeclaration(t):
     '''argumentDeclaration : declaration
                            | declaration COMMA argumentDeclaration
-    '''
+                           |
+    '''#Empty space is intentional
     if len(t) == 2:
         t[0] = [t[1]]
     else:
