@@ -1,68 +1,14 @@
 from ply import yacc, lex
 import lexer
 import json
+
 import argparse
+from ScopedMap import ScopedMap
 tokens = lexer.tokens
 
 
 def toIntIfInt(x):
     return int(x) if x % int(x) == 0 else x
-
-
-class ScopedMap():
-
-    def __init__(self):
-        self.scopes = [{}]
-
-    def addScope(self):
-        self.scopes.append({})
-
-    def popScope(self):
-        self.scopes.pop()
-
-    def __contains__(self, key):
-        for i in range(len(self.scopes)-1, -1, -1):
-            if key in self.scopes[i]:
-                return True
-        return False
-
-    def inCurrentScope(self, key):
-        return key in self.scopes[-1]
-
-    def __getitem__(self, key):
-        for i in range(len(self.scopes)-1, -1, -1):
-            if key in self.scopes[i]:
-                return self.scopes[i][key]
-        return None
-
-    def __setitem__(self, key, val):
-        for i in range(len(self.scopes)-1, -1, -1):
-            if key in self.scopes[i]:
-                self.scopes[i][key] = val
-        self.scopes[-1][key] = val
-
-    def getScopeIndex(self, key):
-        for i in range(len(self.scopes)-1, -1, -1):
-            if key in self.scopes[i]:
-                return i
-        return None
-
-    def inScopeIndex(self, index, key):
-        return key in self.scopes[index]
-
-    def forceNew(self, key, val):
-        self.scopes[-1][key] = val
-
-    def __delitem__(self, key):
-        for i in range(len(self.scopes)-1, -1, -1):
-            if key in self.scopes[i]:
-                del self.scopes[i][key]
-
-    def __str__(self) -> str:
-        return str(self.scopes)
-
-    def toJSON(self):
-        return json.dumps(self.scopes, indent=4)
 
 
 def declarations(name, typeVal, isArray, type):
@@ -78,32 +24,37 @@ def declarations(name, typeVal, isArray, type):
         raise Exception("{} has already been declared.".format(name))
 
 
-    # scopes = []
-    # scopes.append({"lets": {}, "consts": {}, "fns": {}})
 lets = ScopedMap()
 consts = ScopedMap()
 fns = ScopedMap()
 
 precedence = (
-    ('left', 'NOT', 'AND', 'OR'),
+    ('left', 'QMARK', 'COL'),
+    ('left', 'AND', 'OR'),
     ('left', 'NEQ', 'LEQ', 'GEQ', 'LT', 'GT', 'EQOP'),
     ('left', 'PLUS', 'MINUS'),
-    ('left', 'TIMES', 'DIVIDE'),
-    ('right', 'UMINUS'),
+    ('left', 'TIMES', 'DIVIDE', 'MOD'),
+    ('left', 'POW'),
+    ('right', 'UMINUS', 'NOT'),
     ('left', 'LPAREN', 'RPAREN')
 )
 
 
 def p_program(t):
-    ' program : statements'
+    ' program : stmts_or_empty'
     t[0] = {'type': "program", 'value': t[1]}
 
+def p_statements_or_empty(t):
+    ''' stmts_or_empty : statements
+                       | empty
+    '''
+    t[0] = t[1]
 
 def p_statements(t):
-    ''' statements : singleStatement
-                   | statements singleStatement
+    ''' statements : statements singleStatement
+                   | singleStatement
     '''
-    t[0] = t[1::] if len(t) > 2 else t[1]
+    t[0] = t[1] + [t[2]] if len(t) > 2 else [t[1]]
 
 
 def p_singleStatement(t):
@@ -143,6 +94,8 @@ def p_boolExpr(t):
              | expr MINUS expr
              | expr TIMES expr
              | expr DIVIDE expr
+             | expr MOD expr
+             | expr POW expr
              | expr NEQ expr
              | expr LEQ expr
              | expr GEQ expr
@@ -161,13 +114,23 @@ def p_boolExpr(t):
     if isinstance(t[1]["value"], (float, int)) and isinstance(t[3]["value"], (float, int)):
         # Directly evaluates literals as optimization
         if t[2] == '+':
-            t[0] = {"type": "numExpr", "value": t[1]["value"] + t[3]["value"]}
+            t[0] = {"type": "numExpr", "value": toIntIfInt(
+                t[1]["value"] + t[3]["value"])}
         elif t[2] == '-':
-            t[0] = {"type": "numExpr", "value": t[1]["value"] - t[3]["value"]}
+            t[0] = {"type": "numExpr", "value": toIntIfInt(
+                t[1]["value"] - t[3]["value"])}
         elif t[2] == '*':
-            t[0] = {"type": "numExpr", "value": t[1]["value"] * t[3]["value"]}
+            t[0] = {"type": "numExpr", "value": toIntIfInt(
+                t[1]["value"] * t[3]["value"])}
         elif t[2] == '/':
-            t[0] = {"type": "numExpr", "value": t[1]["value"] / t[3]["value"]}
+            t[0] = {"type": "numExpr", "value": toIntIfInt(
+                t[1]["value"] / t[3]["value"])}
+        elif t[2] == '%':
+            t[0] = {"type": "numExpr", "value": toIntIfInt(
+                t[1]["value"] % t[3]["value"])}
+        elif t[2] == '**':
+            t[0] = {"type": "numExpr", "value": toIntIfInt(
+                t[1]["value"] ** t[3]["value"])}
         else:
             t[0] = {"type": 'boolExpr', "value": options[op]
                 (a["value"], b["value"])}
@@ -213,7 +176,7 @@ def p_ternaryOp(t):
     ''' ternaryOp : expr QMARK expr COL expr
     '''
     if isinstance(t[1]['value'], bool):
-        t[0] = t[3] if t[1]['value'] else t[-1]
+        t[0] = t[3] if t[1]['value'] else t[5]
     else:
         t[0] = {"type": "ternaryOp", 'value': t[1::]}
 
@@ -231,7 +194,7 @@ def p_conditional(t):
     ''' conditional : if else
                     | if
     '''
-    t[0] = t[1::]
+    t[0] = {'type': 'cond', 'value' : t[1::]}
 
 
 def p_if(t):
@@ -351,10 +314,10 @@ def p_functionCall(t):
             # ok we need to make objects to store our data properly
             if len(elements) == 2:
                 t[0] = {"type": "functionCall",
-                        "name": fnName, "value": elements}
+                        "name": fnName, "value": [fnName]+elements}
             else:
                 t[0] = {"type": "functionCall",
-                        "name": fnName, "value": [elements[0], *elements[1], elements[2]]}
+                        "name": fnName, "value": [fnName]+[elements[0], *elements[1], elements[2]]}
         else:
             raise Exception("Undefined function name '%s'" % fnName)
 
@@ -378,7 +341,7 @@ def p_exprList(t):
     if len(t) == 2:
         t[0] = [t[1]]
     else:
-        t[0] = t[3] + [t[1]]
+        t[0] = [t[1]] + t[3]
 
 
 def p_initialize(t):
@@ -386,7 +349,6 @@ def p_initialize(t):
                    | constInitialize
     '''
     t[0] = t[1]
-    # else error
 
 
 def p_letInitialize(t):
@@ -442,36 +404,27 @@ def p_binOpAssign(t):
     else:
         _, name, op = t
         val = 1
-    if (name in lets and name not in consts):
-        t[0] = {'type': 'short_binop', 'value': t[1::]}
-        if val != 1 and isinstance(val["value"], (float, int)):
-            lets[name]["value"]["value"] = options[op](
-                lets[name]["value"]["value"], val["value"])
-    else:
-        if (name in lets):
-            if (consts.inScopeIndex(lets.getScopeIndex(name), name)):
-                raise Exception("Cannot reassign constant")
-            else:
-                t[0] = {'type': 'short_binop', 'value': t[1::]}
-                if val != 1 and isinstance(val["value"], (float, int)):
-                    lets[name]["value"]["value"] = options[op](
-                        lets[name]["value"]["value"], val["value"])
+    if (name in lets):
+        if (name not in consts):
+            t[0] = {'type': 'short_binop', 'value': t[1::]}
         else:
-            raise Exception("Variable {} not declared.".format(name))
+            raise Exception("Cannot reassign constant")
+    else:
+        raise Exception("Variable {} not declared.".format(name))
 
 
 def p_argumentDeclaration(t):
     '''argumentDeclaration : declaration
                            | declaration COMMA argumentDeclaration
                            |
-    '''#Empty space is intentional
+    '''
     if len(t) == 2:
         t[0] = [t[1]]
     else:
         if len(t) == 1:
             t[0] = []
         else:
-            t[0] = t[3] + [t[1]]
+            t[0] = [t[1]] + t[3]
 
 
 def p_constDeclaration(t):
@@ -616,6 +569,10 @@ def p_type(t):
     '''
     t[0] = {'type': 'type', "value": t[1]}
 
+def p_empty(t):
+    '''empty : '''
+    pass
+
 
 # def p_error(t):
 #     raise Exception("Syntax error at line", t.lineno)
@@ -634,6 +591,7 @@ def run_parser(sourceCode, outputFileName, parser):
     with open(outputFileName, 'w') as f:
         f.write(json.dumps(ast, indent=2))
     print("parsing complete")
+
 
 def reset_parser():
     lets = ScopedMap()

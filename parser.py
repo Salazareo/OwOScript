@@ -29,10 +29,14 @@ consts = ScopedMap()
 fns = ScopedMap()
 
 precedence = (
-    ('left', 'LT', 'LEQ', 'GT', 'GEQ', 'EQOP', 'NEQ'),
+    ('left', 'QMARK', 'COL'),
+    ('left', 'AND', 'OR'),
+    ('left', 'NEQ', 'LEQ', 'GEQ', 'LT', 'GT', 'EQOP'),
     ('left', 'PLUS', 'MINUS'),
-    ('left', 'TIMES', 'DIVIDE'),
+    ('left', 'TIMES', 'DIVIDE', 'MOD'),
+    ('left', 'POW'),
     ('right', 'UMINUS', 'NOT'),
+    ('left', 'LPAREN', 'RPAREN')
 )
 
 
@@ -67,32 +71,114 @@ def p_singleStatement(t):
 
 
 def p_expr(t):
-    ''' expr : 
-             | numExpr
-             | boolExpr
+    ''' expr : literal
+             | arrayLiteral
+             | reference
              | functionCall
-             | arrayExpr
              | ternaryOp
-             | reference 
 
     '''
     t[0] = t[1]
+
+def p_paren_expr(t):
+    ''' expr : LPAREN expr RPAREN
+    '''
+    t[0] = {
+        "type": t[2]["type"], "value": t[1::]
+            if not isinstance(t[2]['value'], (bool, int, float)) else t[2]['value']
+    }
+
+
+def p_boolExpr(t):
+    ''' expr : expr PLUS expr
+             | expr MINUS expr
+             | expr TIMES expr
+             | expr DIVIDE expr
+             | expr MOD expr
+             | expr POW expr
+             | expr NEQ expr
+             | expr LEQ expr
+             | expr GEQ expr
+             | expr LT expr
+             | expr GT expr
+             | expr EQOP expr
+    '''
+    _, a, op, b = t
+    options = {'<': lambda x, y: x < y,
+               '>': lambda x, y: x > y,
+               '>=': lambda x, y: x >= y,
+               '<=': lambda x, y: x <= y,
+               '==': lambda x, y: x == y,
+               '!=': lambda x, y: x != y,
+               }
+    if isinstance(t[1]["value"], (float, int)) and isinstance(t[3]["value"], (float, int)):
+        # Directly evaluates literals as optimization
+        if t[2] == '+':
+            t[0] = {"type": "numExpr", "value": toIntIfInt(
+                t[1]["value"] + t[3]["value"])}
+        elif t[2] == '-':
+            t[0] = {"type": "numExpr", "value": toIntIfInt(
+                t[1]["value"] - t[3]["value"])}
+        elif t[2] == '*':
+            t[0] = {"type": "numExpr", "value": toIntIfInt(
+                t[1]["value"] * t[3]["value"])}
+        elif t[2] == '/':
+            t[0] = {"type": "numExpr", "value": toIntIfInt(
+                t[1]["value"] / t[3]["value"])}
+        elif t[2] == '%':
+            t[0] = {"type": "numExpr", "value": toIntIfInt(
+                t[1]["value"] % t[3]["value"])}
+        elif t[2] == '**':
+            t[0] = {"type": "numExpr", "value": toIntIfInt(
+                t[1]["value"] ** t[3]["value"])}
+        else:
+            t[0] = {"type": 'boolExpr', "value": options[op]
+                (a["value"], b["value"])}
+
+    elif t[2] in ['+', '-', '*', '/']:
+        t[0] = {"type": "numExpr", "value": {
+            "type": t[2], "value": [t[1], t[3]]}}
+    else:
+        t[0] = {"type": "boolExpr", "value": {
+            "type": t[2], "value": [t[1], t[3]]}}
+
+
+def p_boolExpr_op(t):
+    ''' expr : expr AND expr
+             | expr OR expr
+    '''
+    _, a, op, b = t
+    options = {'&&': lambda x, y: x and y,
+               '||': lambda x, y: x or y
+               }
+    if isinstance(a["value"], (bool)) and isinstance(b["value"], (bool)):
+        t[0] = {"type": 'boolExpr', "value": options[op]
+                (a["value"], b["value"])}
+    else:
+        t[0] = {"type": "boolExpr", "value": {
+            "type": t[2], "value": [t[1], t[3]]}}
+
+
+def p_boolExprNeg(t):
+    'expr : NOT expr'
+
+    t[0] = {"type": t[1], "value": t[2]} if not isinstance(
+        t[2]['value'], (bool)) else {"type": "boolExpr", "value": not t[2]['value']}
+
+
+def p_numExpr_uminus(t):
+    'expr : MINUS expr %prec UMINUS'
+    t[0] = {"type": t[1], "value": t[2] if not isinstance(
+        t[2]['value'], (int, float)) else -t[2]['value']}
 
 
 def p_ternaryOp(t):
-    ''' ternaryOp : boolExpr QMARK expr COL expr
+    ''' ternaryOp : expr QMARK expr COL expr
     '''
     if isinstance(t[1]['value'], bool):
-        t[0] = t[3] if t[1]['value'] else t[-1]
+        t[0] = t[3] if t[1]['value'] else t[5]
     else:
         t[0] = {"type": "ternaryOp", 'value': t[1::]}
-
-
-def p_arrayExpr(t):
-    '''arrayExpr : arrayLiteral
-                 | letReference
-    '''
-    t[0] = t[1]
 
 
 def p_assignment(t):
@@ -112,8 +198,8 @@ def p_conditional(t):
 
 
 def p_if(t):
-    ''' if : NANI LPAREN boolExpr RPAREN newScope enclosure popScope
-           | NANI LPAREN boolExpr RPAREN newScope singleStatement popScope
+    ''' if : NANI LPAREN expr RPAREN newScope enclosure popScope
+           | NANI LPAREN expr RPAREN newScope singleStatement popScope
     '''
     t[0] = {'type': 'if', 'value': t[2:5]+[t[6]]}
 
@@ -201,7 +287,7 @@ def p_honorific(t):
 
 
 def p_arrayAssign(t):
-    ''' arrayAssign : ID LBRACK numExpr RBRACK EQ expr
+    ''' arrayAssign : ID LBRACK expr RBRACK EQ expr
     '''
     _, name, *elements = t
     if (name in lets):
@@ -299,10 +385,10 @@ def p_declaration(t):
 
 
 def p_binOpAssign(t):
-    ''' binOpAssign : ID PEQ numExpr
-                    | ID MEQ numExpr
-                    | ID TEQ numExpr
-                    | ID DEQ numExpr
+    ''' binOpAssign : ID PEQ expr
+                    | ID MEQ expr
+                    | ID TEQ expr
+                    | ID DEQ expr
                     | ID PP
                     | ID MM
     '''
@@ -367,7 +453,7 @@ def p_letDeclaration(t):
 
 
 def p_whileLoop(t):
-    '''whileLoop : WHILEU LPAREN boolExpr RPAREN ISTUDIED newScope enclosure popScope
+    '''whileLoop : WHILEU LPAREN expr RPAREN ISTUDIED newScope enclosure popScope
     '''
     _, _, _, cond, _, _, _, statements, _ = t
     t[0] = {"type": 'whileLoop', "value": t[1:6]+[statements]}
@@ -381,7 +467,7 @@ def p_forLoop(t):
 
 
 def p_forTrio(t):
-    ''' forTrio : forAssign SEMICOL boolExpr SEMICOL forReassign
+    ''' forTrio : forAssign SEMICOL expr SEMICOL forReassign
     '''
     t[0] = {'type': 'forTrio', 'value': t[1::]}
 
@@ -418,75 +504,6 @@ def p_print(t):
         elements[0], elements[1], *elements[2], elements[3]]}
 
 
-def p_boolExpr_op(t):
-    ''' boolExpr : boolExpr AND boolExpr
-                 | boolExpr OR boolExpr
-                 | expr NEQ expr
-                 | numExpr LEQ numExpr
-                 | numExpr GEQ numExpr
-                 | numExpr LT numExpr
-                 | numExpr GT numExpr
-                 | expr EQOP expr
-    '''
-    _, a, op, b = t
-    options = {'<': lambda x, y: x < y,
-               '>': lambda x, y: x > y,
-               '>=': lambda x, y: x >= y,
-               '<=': lambda x, y: x <= y,
-               '==': lambda x, y: x == y,
-               '!=': lambda x, y: x != y,
-               '&&': lambda x, y: x and y,
-               '||': lambda x, y: x or y
-               }
-    if isinstance(a["value"], (int, float, bool)) and isinstance(b["value"], (int, float, bool)):
-        t[0] = {"type": 'boolExpr', "value": options[op]
-                (a["value"], b["value"])}
-    else:
-        t[0] = {"type": "boolExpr", "value": {
-            "type": t[2], "value": [t[1], t[3]]}}
-
-
-def p_numExpr_binop(t):
-    '''numExpr : numExpr PLUS numExpr
-               | numExpr MINUS numExpr
-               | numExpr TIMES numExpr
-               | numExpr DIVIDE numExpr
-               | numExpr MOD numExpr
-               | numExpr POW numExpr'''
-    if isinstance(t[1]["value"], (float, int)) and isinstance(t[3]["value"], (float, int)):
-        # Directly evaluates literals as optimization
-        if t[2] == '+':
-            t[0] = {"type": "numExpr", "value": toIntIfInt(
-                t[1]["value"] + t[3]["value"])}
-        elif t[2] == '-':
-            t[0] = {"type": "numExpr", "value": toIntIfInt(
-                t[1]["value"] - t[3]["value"])}
-        elif t[2] == '*':
-            t[0] = {"type": "numExpr", "value": toIntIfInt(
-                t[1]["value"] * t[3]["value"])}
-        elif t[2] == '/':
-            t[0] = {"type": "numExpr", "value": toIntIfInt(
-                t[1]["value"] / t[3]["value"])}
-        elif t[2] == '%':
-            t[0] = {"type": "numExpr", "value": toIntIfInt(
-                t[1]["value"] % t[3]["value"])}
-        elif t[2] == '**':
-            t[0] = {"type": "numExpr", "value": toIntIfInt(
-                t[1]["value"] ** t[3]["value"])}
-    else:
-        t[0] = {"type": "numExpr", "value": {
-            "type": t[2], "value": [t[1], t[3]]}}
-
-
-def p_numExpr_reference(t):
-    'numExpr : reference'
-    t[0] = t[1]
-
-
-def p_boolExpr_reference(t):
-    'boolExpr : reference'
-    t[0] = t[1]
-
 
 def p_reference(t):
     '''reference : letReference
@@ -513,7 +530,7 @@ def p_letReference(t):
 
 
 def p_arrayReference(t):
-    ''' arrayReference : ID LBRACK numExpr RBRACK '''
+    ''' arrayReference : ID LBRACK expr RBRACK '''
     _, name, _, index, _ = t
     if (name in lets):
         t[0] = {"type": "arrayReference",
@@ -527,43 +544,16 @@ def p_arrayReference(t):
         raise Exception("Undefined name '%s'" % name)
 
 
-def p_boolExprNeg(t):
-    'boolExpr : NOT boolExpr'
-
-    t[0] = {"type": 'boolExpr', "value": [t[1], t[2]]} if not isinstance(
-        t[2]['value'], (bool)) else {"type": "boolExpr", "value": not t[2]['value']}
-    # t[0] = {"type": 'boolExpr', "value": t[1:3] if not else not t[2]["value"]}
-
-
-def p_boolExpr_group(t):
-    '''boolExpr : LPAREN boolExpr RPAREN
-    '''
-    t[0] = {"type": 'boolExpr', "value": t[1::]
-            if not isinstance(t[2]['value'], bool) else t[2]['value']}
+def p_numExpr_number(t):
+    'literal : NUMBER'
+    t[0] = {"type": 'numExpr', "value": t[1]}
 
 
 def p_bool(t):
-    ''' boolExpr : OWO
-                 | UWU
+    ''' literal : OWO
+                | UWU
     '''
     t[0] = {"type": "boolExpr", "value": True if t[1] == 'uwu' else False}
-
-
-def p_numExpr_uminus(t):
-    'numExpr : MINUS numExpr %prec UMINUS'
-    t[0] = {"type": 'numExpr', "value": [t[1], t[2]] if not isinstance(
-        t[2]['value'], (int, float)) else -t[2]['value']}
-
-
-def p_numExpr_group(t):
-    'numExpr : LPAREN numExpr RPAREN'
-    t[0] = {"type": 'numExpr', "value":  t[1::]
-            if not isinstance(t[2]['value'], (float, int)) else t[2]['value']}
-
-
-def p_numExpr_number(t):
-    'numExpr : NUMBER'
-    t[0] = {"type": 'numExpr', "value": t[1]}
 
 
 def p_fnType(t):
