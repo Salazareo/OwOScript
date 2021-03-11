@@ -1,3 +1,4 @@
+import argparse
 import json
 
 # we wont need this once we write straight to uhh the thing
@@ -12,180 +13,218 @@ def convertToStr(lst, encl=False):
     return out
 
 
-def program(val):
-    statements = list(map(
-        lambda x: typeTransfer(x['type'], x['value']), val)) \
-        if isinstance(val, list) \
-        else [typeTransfer(val['type'], val['value'])]
-    return convertToStr(statements)
+class JSConverter():
 
+    def __init__(self):
+        self.fakeSwitch = {
+            'functionDeclaration': self.functionDeclaration,
+            'declaration': self.declaration,
+            'constDeclaration': self.constDeclaration,
+            'enclosure': self.enclosure,
+            'initialize': self.initialize,
+            'constInitialize': self.constInitialize,
+            'program': self.program,
+            'short_binop': self.short_binop,
+            'numExpr': self.numExpr,
+            'boolExpr': self.boolExpr,
+            'letReference': self.letReference,
+            'return': self.ret,
+            'functionCall': self.functionCall,
+            'reassign': self.reassign,
+            'ternaryOp': self.ternaryOp,
+            'cond': self.conditional,
+            'if': self.ifstmt,
+            'else': self.elsestmt,
+            'whileLoop': self.whileLoop,
+            'forLoop': self.forLoop,
+            'forTrio': self.forTrio,
+            'forElement': self.forElement,
+            'arrayLiteral': self.arrayLiteral,
+            'printCall': self.printCall,
+            'arrayAssign': self.arrayAssign,
+            'arrayReference': self.arrayReference
+        }
 
-def functionDeclaration(val):
-    return 'const {} = ({}) => {}'.format(val[0],
-                                          str(list(map(lambda x: typeTransfer(x['type'], x['value'],
-                                                                              True), val[2])))[1:-1].replace('\'', ''),
-                                          typeTransfer(val[4]['type'], val[4]['value']))
+    def program(self, val):
+        statements = list(map(
+            lambda x: self.typeTransfer(x['type'], x['value']), val)) \
+            if isinstance(val, list) \
+            else [self.typeTransfer(val['type'], val['value'])]
+        return convertToStr(statements)
 
+    def functionDeclaration(self, val):
+        return 'const {} = ({}) => {}'.format(val[0],
+                                              str(list(map(lambda x: self.typeTransfer(x['type'], x['value'],
+                                                                                       True), val[2])))[1:-1].replace('\'', ''),
+                                              self.typeTransfer(val[4]['type'], val[4]['value']))
 
-def declaration(val, special=False):
-    return val['value'] if special else 'let {};\n'.format(val['value'])
+    def declaration(self, val, special=False):
+        return 'let {}'.format(val['value']) if special else 'let {};\n'.format(val['value'])
 
+    def enclosure(self, val):
+        return '{\n' + \
+            (convertToStr(list(map(lambda x: self.typeTransfer(x['type'], x['value']), val[1])), True) if isinstance(val[1], list)
+             else self.typeTransfer(val[1]['type'], val[1]['value'])) \
+            + '}\n'
 
-def enclosure(val):
-    return '{\n' + \
-        (convertToStr(list(map(lambda x: typeTransfer(x['type'], x['value']), val[1])), True) if isinstance(val[1], list)
-         else typeTransfer(val[1]['type'], val[1]['value'])) \
-        + '}\n'
+    def initialize(self, val, special=False):
+        return 'let {} = {}'.format(val[0]['value'],
+                                    self.typeTransfer(val[2]['type'], val[2]['value'])) + ('' if special else ';\n')
 
+    def constInitialize(self, val):
+        return '{} = {};\n'.format(self.typeTransfer(val[0]['type'],
+                                                     val[0]['value']), self.typeTransfer(val[2]['type'], val[2]['value']))
 
-def initialize(val, special=False):
-    return 'let {} = {}'.format(val[0]['value'],
-                                typeTransfer(val[2]['type'], val[2]['value'])) + ('' if special else ';\n')
+    def constDeclaration(self, val, _special=None):
+        return 'const {}'.format(val)
 
-
-def constInitialize(val):
-    return 'const {} = {};\n'.format(val[0]['value'], typeTransfer(val[2]['type'], val[2]['value']))
-
-
-def short_binop(val, special=False):
-    if len(val) > 2:
-        return '{} {} {}'.format(*val[0:2], typeTransfer(val[2]['type'], val[2]['value'])) \
-            + (''if special else';\n')
-    else:
-        return '{}{}'.format(*val) + (''if special else';\n')
-
-
-def numExpr(val, special=False):
-    if isinstance(val, (int, float)):
-        return str(val)
-    else:
-        if not isinstance(val, list):
-            isParen = val['value'][0] == '('
-            val1 = val['value'][0 + int(isParen)]
-            val2 = val['value'][1 + int(isParen)]
-            return ('('if isParen else '') +\
-                '{} {} {}'.format(typeTransfer(val1['type'], val1['value']), val['type'], typeTransfer(val2['type'], val2['value']))\
-                + (')'if isParen else '')
+    def short_binop(self, val, special=False):
+        if len(val) > 2:
+            return '{} {} {}'.format(*val[0:2], self.typeTransfer(val[2]['type'], val[2]['value'])) \
+                + (''if special else';\n')
         else:
-            if isinstance(val[0], str):
-                if len(val) == 3:
-                    special = True
-                return ('({})' if special else '{}').format(
-                    ('-'if val[0] == '-' else '')+typeTransfer(val[1]['type'], val[1]['value'], val[0] == '-' and val[1]['type'] == 'numExpr'))
+            return '{}{}'.format(*val) + (''if special else';\n')
+
+    def numExpr(self, val, special=False):
+        if isinstance(val, (int, float)):
+            return str(val)
+        else:
+            if not isinstance(val, list):
+                if not val['type'] in ['arrayReference', 'letReference', 'numExpr']:
+                    isParen = val['value'][0] == '('
+                    val1 = val['value'][0 + int(isParen)]
+                    val2 = val['value'][1 + int(isParen)]
+                    return ('('if isParen else '') +\
+                        '{} {} {}'.format(self.typeTransfer(val1['type'], val1['value']), val['type'], self.typeTransfer(val2['type'], val2['value']))\
+                        + (')'if isParen else '')
+                else:
+                    return self.typeTransfer(val['type'], val['value'])
             else:
-                return ('({})' if special else '{}').format(typeTransfer(val[0]['type'], val[0]['value']))
+                if isinstance(val[0], str):
+                    if len(val) == 3:
+                        special = True
+                    return ('({})' if special else '{}').format(
+                        ('-'if val[0] == '-' else '')+self.typeTransfer(val[1]['type'], val[1]['value'], val[0] == '-' and val[1]['type'] == 'numExpr'))
+                else:
+                    return ('({})' if special else '{}').format(self.typeTransfer(val[0]['type'], val[0]['value']))
 
-
-def boolExpr(val, special=False):
-    if isinstance(val, bool):
-        return str(val).lower()
-    else:
-        if not isinstance(val, list):
-            isParen = val['value'][0] == '('
-            val1 = val['value'][0 + int(isParen)]
-            val2 = val['value'][1 + int(isParen)]
-            return ('('if isParen else '') +\
-                '{} {} {}'.format(typeTransfer(val1['type'], val1['value']), val['type'], typeTransfer(val2['type'], val2['value']))\
-                + (')'if isParen else '')
+    def boolExpr(self, val, special=False):
+        if isinstance(val, bool):
+            return str(val).lower()
         else:
-            if isinstance(val[0], str):
-                if len(val) == 3:
-                    special = True
-                return ('({})' if special else '{}').format(
-                    ('!'if val[0] == '!'else '')+typeTransfer(val[1]['type'], val[1]['value'], val[0] == '!' and val[1]['type'] == 'boolExpr'))
+            if not isinstance(val, list):
+                if not val['type'] in ['arrayReference', 'letReference', 'boolExpr']:
+                    isParen = val['value'][0] == '('
+                    val1 = val['value'][0 + int(isParen)]
+                    val2 = val['value'][1 + int(isParen)]
+                    return ('('if isParen else '') +\
+                        '{} {} {}'.format(self.typeTransfer(val1['type'], val1['value']), val['type'], self.typeTransfer(val2['type'], val2['value']))\
+                        + (')'if isParen else '')
+                else:
+                    return self.typeTransfer(val['type'], val['value'])
             else:
-                return ('({})' if special else '{}').format(typeTransfer(val[0]['type'], val[0]['value']))
+                if isinstance(val[0], str):
+                    if len(val) == 3:
+                        special = True
+                    return ('({})' if special else '{}').format(
+                        ('!'if val[0] == '!'else '')+self.typeTransfer(val[1]['type'], val[1]['value'], val[0] == '!' and val[1]['type'] == 'boolExpr'))
+                else:
+                    return ('({})' if special else '{}').format(self.typeTransfer(val[0]['type'], val[0]['value']))
+
+    def letReference(self, val):
+        return val['value']
+
+    def ret(self, val):
+        return 'return {};\n'.format(self.typeTransfer(val['type'], val['value']))
+
+    def functionCall(self, val):
+        out = ''
+        for i in val:
+            if isinstance(i, str):
+                out += i
+            else:
+                out += self.typeTransfer(i['type'], i['value'])+', '
+        return out.replace(', )', ')')
+
+    def reassign(self, val, special=False):
+        return '{} = {}'.format(val[0], self.typeTransfer(val[2]['type'], val[2]['value']))+(''if special else ';\n')
+
+    def ternaryOp(self, val):
+        val0 = self.typeTransfer(val[0]['type'], val[0]['value'])
+        val2 = self.typeTransfer(val[2]['type'], val[2]['value'])
+        val4 = self.typeTransfer(val[4]['type'], val[4]['value'])
+        return '{} ? {} : {}'.format(val0, val2, val4)
+
+    def conditional(self, val):
+        val0 = self.typeTransfer(val[0]['type'], val[0]['value'])
+        val1 = ''
+        if len(val) > 1:
+            val1 = self.typeTransfer(val[1]['type'], val[1]['value'])
+        return '{}{}'.format(val0, val1)
+
+    def ifstmt(self, val):
+        val1 = self.typeTransfer(val[1]['type'], val[1]['value'])
+        val2 = self.typeTransfer(val[3]['type'], val[3]['value'])
+        return ('if ({}) {}'.format(val1, val2))
+
+    def elsestmt(self, val):
+        val1 = self.typeTransfer(val[1]['type'], val[1]['value'])
+        return 'else {}'.format(val1)
+
+    def whileLoop(self, val):
+        return 'while ({}) '.format(self.typeTransfer(val[2]['type'],
+                                                      val[2]['value'])) + self.typeTransfer(val[-1]['type'], val[-1]['value'])
+
+    def forLoop(self, val):
+        return 'for ({}) '.format(self.typeTransfer(val[2]['type'], val[2]['value'])) + self.typeTransfer(val[4]['type'], val[4]['value'])
+
+    def forTrio(self, val):
+        return '{}; {}; {}'.format(self.typeTransfer(val[0]['type'], val[0]['value'], True),
+                                   self.typeTransfer(val[2]['type'],
+                                                     val[2]['value'], True),
+                                   self.typeTransfer(val[4]['type'], val[4]['value'], True))
+
+    def forElement(self, val):
+        return '{} of {}'.format(self.typeTransfer(val[0]['type'], val[0]['value'], True),
+                                 val[2])
+
+    def arrayLiteral(self, val):
+        return str(list(map(lambda x: self.typeTransfer(x['type'], x['value']), val[1:-1]))).replace("'", '')
+
+    def arrayAssign(self, val, special=False):
+        return '{}[{}] = {}'.format(val[0],
+                                    self.typeTransfer(
+                                        val[2]['type'], val[2]['value']),
+                                    self.typeTransfer(val[5]['type'], val[5]['value'])) + (''if special else ';\n')
+
+    def arrayReference(self, val):
+        return '{}[{}]'.format(val[0]['value'],
+                               self.typeTransfer(val[2]['type'], val[2]['value']))
+
+    def printCall(self, val):
+        return 'console.log({});\n'.format(self.typeTransfer(val[2]['type'], val[2]['value']))
+
+    def typeTransfer(self, typeName, val, specialCase=False):
+        try:
+            if specialCase:
+                return self.fakeSwitch[typeName](val, specialCase)
+            else:
+                return self.fakeSwitch[typeName](val)
+        except KeyError as e:
+            print(e)
+            raise(e)
 
 
-def letReference(val):
-    return val['value']
-
-
-def ret(val):
-    return 'return {};\n'.format(typeTransfer(val['type'], val['value']))
-
-
-def functionCall(val):
-    out = ''
-    for i in val:
-        if isinstance(i, str):
-            out += i
-        else:
-            out += typeTransfer(i['type'], i['value'])+', '
-    return out.replace(', )', ')')
-
-
-def reassign(val, special=False):
-    return '{} = {}'.format(val[0], typeTransfer(val[2]['type'], val[2]['value']))+(''if special else ';\n')
-
-
-def ternaryOp(val):
-    val0 = typeTransfer(val[0]['type'], val[0]['value'])
-    val2 = typeTransfer(val[2]['type'], val[2]['value'])
-    val4 = typeTransfer(val[4]['type'], val[4]['value'])
-    return '{} ? {} : {}'.format(val0, val2, val4)
-
-
-def conditional(val):
-    val0 = typeTransfer(val[0]['type'], val[0]['value'])
-    val1 = ''
-    if len(val) > 1:
-        val1 = typeTransfer(val[1]['type'], val[1]['value'])
-    return '{}{}'.format(val0, val1)
-
-
-def ifstmt(val):
-    val1 = typeTransfer(val[1]['type'], val[1]['value'])
-    val2 = typeTransfer(val[3]['type'], val[3]['value'])
-    return ('if ({}) {}'.format(val1, val2))
-
-
-def elsestmt(val):
-    val1 = typeTransfer(val[1]['type'], val[1]['value'])
-    return 'else {}'.format(val1)
-
-
-def whileLoop(val):
-    print(val)
-    return 'while ({}) '.format(typeTransfer(val[2]['type'],
-                                             val[2]['value'])) + typeTransfer(val[-1]['type'], val[-1]['value'])
-
-
-fakeSwitch = {
-    'functionDeclaration': functionDeclaration,
-    'declaration': declaration,
-    'enclosure': enclosure,
-    'initialize': initialize,
-    'constInitialize': constInitialize,
-    'program': program,
-    'short_binop': short_binop,
-    'numExpr': numExpr,
-    'boolExpr': boolExpr,
-    'letReference': letReference,
-    'return': ret,
-    'functionCall': functionCall,
-    'reassign': reassign,
-    'ternaryOp': ternaryOp,
-    'cond': conditional,
-    'if': ifstmt,
-    'else': elsestmt,
-    'whileLoop': whileLoop
-}
-
-
-def typeTransfer(typeName, val, specialCase=False):
-    try:
-        if specialCase:
-            return fakeSwitch[typeName](val, specialCase)
-        else:
-            return fakeSwitch[typeName](val)
-    except KeyError as e:
-        print(e)
-        raise(e)
-
-
-with open('./Example/function_example.owo.json') as ast:
-    astAsDict = json.load(ast)
-    with open('test.js', 'w') as f:
-        f.write(typeTransfer(astAsDict['type'], astAsDict['value']))
-    print("compiling complete")
+if __name__ == "__main__":
+    argParser = argparse.ArgumentParser(
+        description='Take in the OwOScript ast and convert it into runnable JS code.')
+    argParser.add_argument(
+        'FILE', help="Input file with OwOScript ast")
+    args = argParser.parse_args()
+    with open(args.FILE) as ast:
+        astAsDict = json.load(ast)
+        with open('{}.js'.format(args.FILE.split('.owo')[0]), 'w') as f:
+            converter = JSConverter()
+            f.write(converter.typeTransfer(
+                astAsDict['type'], astAsDict['value']))
+            print("compiling complete")

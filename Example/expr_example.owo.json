@@ -18,7 +18,7 @@
         },
         "=",
         {
-          "type": "-",
+          "type": "numExpr",
           "value": -6
         }
       ]
@@ -46,14 +46,17 @@
         },
         "=",
         {
-          "type": "-",
-          "value": {
-            "type": "letReference",
-            "value": {
-              "type": "waifu",
-              "value": "x"
+          "type": "numExpr",
+          "value": [
+            "-",
+            {
+              "type": "letReference",
+              "value": {
+                "type": "waifu",
+                "value": "x"
+              }
             }
-          }
+          ]
         }
       ]
     }

@@ -208,7 +208,7 @@ def p_arrayAssign(t):
     if (name in lets):
         if (lets[name]['value'] != None):
             # if lets[name]["type"] == typeOf(val):
-            t[0] = {"type": "arrayAssign", "value": elements}
+            t[0] = {"type": "arrayAssign", "value": [name]+elements}
             lets[name]['value'][elements[2]] = elements[-1]
         else:
             raise Exception("Array %s uninitialized" % name)
