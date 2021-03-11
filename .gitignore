@@ -5,3 +5,4 @@ temp.py
 parsetab.py
 *.json
 parsetab.py
+Example/*.js

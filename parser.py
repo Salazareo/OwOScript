@@ -540,7 +540,7 @@ def p_arrayReference(t):
                            "type": lets[name]["type"]["value"]},
                           '[',
                           {"type": "numExpr",
-                           "value": index},
+                           "value": index['value'] if isinstance(index['value'], (int, float)) else index},
                           ']']}
     else:
         raise Exception("Undefined name '%s'" % name)
