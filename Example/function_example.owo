@@ -10,11 +10,13 @@ catgirl~sama bar(waifu x, catgirl y){
         baka(x);
         x>10 desu;
     }
-    (x < 10 || (baz(2*x) && x<2)) && y desu;
+    (x < 10 || (baz(x/2) && x<2)) && y desu;
 }
 
 baka(foo());
-waifu z = -6;
+waifu z = -12;
 z = -z;
 catgirl kek = bar(z, uwu);
 catgirl jaj = !(uwu && kek);
+baka(kek);
+baka(jaj);

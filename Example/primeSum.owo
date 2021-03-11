@@ -13,10 +13,18 @@ catgirl~chan isPrime(waifu x){
     uwu desu;
 }
 
-waifu total = 0;
-shi (waifu i = 1; i<10;i++){
-    nani (isPrime(i)){
-        total += i;
-    }
+waifu theBlade = 0;
+waifu i = 1;
+
+catgirl~chan werePartying(){
+    i<18 desu;
 }
-baka(total);
+
+whileU (werePartying()) iStudied{
+    theBlade += isPrime(i)? i :0;
+    i++;
+}
+
+real waifu meme = 11;
+
+baka(theBlade + meme);
