@@ -18,15 +18,15 @@ def test_vars():
     print("============================")
     print("Testing:Declare waifu")
     input = "waifu varName;"
-    # Note: There are shift conflicts in this test case
     expected = {
         "type": "program",
-        "value": {
+        "value": [{
             "type": "declaration",
             "value": {
                 "type": "waifu",
                 "value": "varName"
-        }}
+            }
+        }]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:Declare waifu did not pass") 
@@ -35,7 +35,7 @@ def test_vars():
     input = "waifu y = 2.5;"
     expected = {
         "type": "program",
-        "value": {
+        "value": [{
             "type": "initialize",
             "value": [
               {
@@ -47,7 +47,8 @@ def test_vars():
                 "type": "numExpr",
                 "value": 2.5
               }
-        ]}
+            ]
+        }]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:Waifu initialization did not pass") 
@@ -56,7 +57,7 @@ def test_vars():
     input = "y = 500;" # y has already been initialized previously
     expected = {
         "type": "program",
-        "value": {
+        "value": [{
             "type": "reassign",
             "value": [
                 "y",
@@ -66,7 +67,7 @@ def test_vars():
                   "value": 500
                 }
             ]
-        }
+        }]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:Waifu reassignment did not pass")
@@ -74,27 +75,30 @@ def test_vars():
     print("Testing:Waifu reference")
     input = "waifu z = 42; z;"
     expected = {
-        "type": "program",
-        "value": [{
-            "type": "initialize",
-            "value": [
-                {
-                  "type": "waifu",
-                  "value": "z"
-                },
-                "=",
-                {
-                  "type": "numExpr",
-                  "value": 42
-                }]
+      "type": "program",
+      "value": [
+        {
+          "type": "initialize",
+          "value": [
+            {
+              "type": "waifu",
+              "value": "z"
+            },
+            "=",
+            {
+              "type": "numExpr",
+              "value": 42
+            }
+          ]
         },
         {
-            "type": "letReference",
-            "value": {
-                "type": "waifu",
-                "value": "z"
-            }
-        }]
+          "type": "letReference",
+          "value": {
+            "type": "waifu",
+            "value": "z"
+          }
+        }
+      ]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:Waifu reference did not pass")
@@ -103,7 +107,7 @@ def test_vars():
     input = "real catgirl a = uwu;"
     expected = {
         "type": "program",
-        "value": {
+        "value": [{
             "type": "constInitialize",
             "value": [
               {
@@ -116,7 +120,7 @@ def test_vars():
                 "value": True
               }
             ]
-        }
+        }]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:Catgirl const did not pass")
@@ -125,7 +129,7 @@ def test_vars():
     input = "real catgirl b = a;"
     expected = {
         "type": "program",
-        "value": {
+        "value": [{
             "type": "constInitialize",
             "value": [
               {
@@ -141,7 +145,7 @@ def test_vars():
                 }
               }
             ]
-        }
+        }]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:Catgirl assign const did not pass")
@@ -150,13 +154,13 @@ def test_vars():
     input = "catgirl harem A;"
     expected = {
         "type": "program",
-        "value": {
+        "value": [{
             "type": "declaration",
             "value": {
               "type": "catgirl harem",
               "value": "A"
             }
-        }
+        }]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:Catgirl 1D array declaration did not pass")
@@ -165,7 +169,7 @@ def test_vars():
     input = "A = [uwu];"
     expected = {
         "type": "program",
-        "value": {
+        "value": [{
             "type": "reassign",
             "value": [
               "A",
@@ -180,7 +184,7 @@ def test_vars():
                   },
                   "]"
                 ]}]
-        }
+        }]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:Catgirl array reassignment did not pass")
@@ -189,7 +193,7 @@ def test_vars():
     input = "A[0];"
     expected = {
         "type": "program",
-        "value": {
+        "value": [{
           "type": "arrayReference",
           "value": [
             {
@@ -203,7 +207,7 @@ def test_vars():
             },
             "]"
           ]
-        }
+        }]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:Catgirl 1D array reference did not pass")
@@ -216,10 +220,10 @@ def test_numExpr():
     input = "9001;"
     expected = {
         "type": "program",
-        "value": {
+        "value": [{
             "type": "numExpr",
             "value": 9001
-        }
+        }]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:9001 did not pass")  
@@ -228,10 +232,10 @@ def test_numExpr():
     input = "1+ 1;"
     expected = {
         "type": "program",
-        "value": {
+        "value": [{
             "type": "numExpr",
             "value": 2 #Optimization thing
-        }
+        }]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:1 + 1 did not pass")  
@@ -240,10 +244,10 @@ def test_numExpr():
     input = "2 + 8 / 2;"
     expected = {
         "type": "program",
-        "value": {
+        "value": [{
             "type": "numExpr",
             "value": 6.0 #This type can be either an int or float
-        }
+        }]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:Order of operations did not pass")  
@@ -252,10 +256,10 @@ def test_numExpr():
     input = "(2 + 8) / 2;"
     expected = {
         "type": "program",
-        "value": {
+        "value": [{
             "type": "numExpr",
             "value": 5.0 #This type can be either an int or float
-        }
+        }]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:Brackets in numExpr did not pass")  
@@ -264,10 +268,10 @@ def test_numExpr():
     input = "-6 / 2;"
     expected = {
         "type": "program",
-        "value": {
+        "value": [{
             "type": "numExpr",
             "value": -3.0 #This type can be either an int or float
-        }
+        }]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:Negative numbers did not pass")  
@@ -281,10 +285,10 @@ def test_boolExpr():
     input = "uwu;"
     expected = {
         "type": "program",
-        "value": {
+        "value": [{
             "type": "boolExpr",
             "value": True
-        }
+        }]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:uwu did not pass")  
@@ -293,10 +297,10 @@ def test_boolExpr():
     input = "(owo);"
     expected = {
         "type": "program",
-        "value": {
+        "value": [{
             "type": "boolExpr",
             "value": False
-        }
+        }]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:brackets in boolExpr did not pass")  
@@ -305,10 +309,10 @@ def test_boolExpr():
     input = "!owo;"
     expected = {
         "type": "program",
-        "value": {
+        "value": [{
             "type": "boolExpr",
             "value": True
-        }
+        }]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:! boolExpr did not pass")  
@@ -317,10 +321,10 @@ def test_boolExpr():
     input = "1 <2;"
     expected = {
         "type": "program",
-        "value": {
+        "value": [{
             "type": "boolExpr",
             "value": True
-        }
+        }]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:1 < 2 did not pass")  
@@ -330,10 +334,10 @@ def test_boolExpr():
     input = "1 == uwu;"
     expected = {
         "type": "program",
-        "value": {
+        "value": [{
             "type": "boolExpr",
             "value": True
-        }
+        }]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:1 == uwu did not pass")  
@@ -343,10 +347,10 @@ def test_boolExpr():
     input = "1 != uwu;"
     expected = {
         "type": "program",
-        "value": {
+        "value": [{
             "type": "boolExpr",
             "value": False
-        }
+        }]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:1 != uwu did not pass")  
@@ -355,25 +359,25 @@ def test_boolExpr():
     input = "uwu || owo;"
     expected = {
         "type": "program",
-        "value": {
+        "value": [{
             "type": "boolExpr",
             "value": True
-        }
+        }]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:uwu || owo did not pass")  
 
-    # print("Testing:Chaining boolExpr")
-    # input = "uwu && (1 < 5 || uwu);"
-    # expected = {
-    #     "type": "program",
-    #     "value": {
-    #         "type": "boolExpr",
-    #         "value": True
-    #     }
-    # }
-    # ast = make_ast(input, parser)
-    # if ast != expected: print("test:Chaining boolExpr did not pass") 
+    print("Testing:Chaining boolExpr")
+    input = "uwu && (1 < 5 || uwu);"
+    expected = {
+        "type": "program",
+        "value": [{
+            "type": "boolExpr",
+            "value": True
+        }]
+    }
+    ast = make_ast(input, parser)
+    if ast != expected: print("test:Chaining boolExpr did not pass") 
 
     parser.restart() 
 
