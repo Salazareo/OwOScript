@@ -57,6 +57,13 @@ class JSConverter():
             'arrayReference': self.arrayReference
         }
 
+    # def writeToFile(self,f,lst):
+    #     for i in lst:
+    #         if not isinstance(i, (dict,list)):
+    #             f.write(i)
+    #         else:
+    #             self.writeToFile(f,)
+
     def program(self, val):
         statements = list(map(
             lambda x: self.typeTransfer(x['type'], x['value']), val)) \

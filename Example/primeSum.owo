@@ -15,6 +15,7 @@ catgirl~chan isPrime(waifu x){
 
 waifu theBlade = 0;
 waifu i = 1;
+real waifu harem allPrimes = [2,3,5,7,11,13,17];
 
 catgirl~chan werePartying(){
     i<18 desu;
@@ -28,3 +29,10 @@ whileU (werePartying()) iStudied{
 real waifu meme = 11;
 
 baka(theBlade + meme);
+
+shi (real waifu prime : allPrimes){
+   theBlade -= prime; 
+}
+
+real catgirl shouldBeZero = theBlade == 0;
+baka(shouldBeZero);
