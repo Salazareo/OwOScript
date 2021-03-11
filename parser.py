@@ -82,12 +82,13 @@ def p_expr(t):
     '''
     t[0] = t[1]
 
+
 def p_paren_expr(t):
     ''' expr : LPAREN expr RPAREN
     '''
     t[0] = {
         "type": t[2]["type"], "value": t[1::]
-            if not isinstance(t[2]['value'], (bool, int, float)) else t[2]['value']
+        if not isinstance(t[2]['value'], (bool, int, float)) else t[2]['value']
     }
 
 
@@ -135,7 +136,7 @@ def p_boolExpr(t):
                 t[1]["value"] ** t[3]["value"])}
         else:
             t[0] = {"type": 'boolExpr', "value": options[op]
-                (a["value"], b["value"])}
+                    (a["value"], b["value"])}
 
     elif t[2] in ['+', '-', '*', '/']:
         t[0] = {"type": "numExpr", "value": {
@@ -164,13 +165,13 @@ def p_boolExpr_op(t):
 def p_boolExprNeg(t):
     'expr : NOT expr'
 
-    t[0] = {"type": t[1], "value": t[2]} if not isinstance(
+    t[0] = {"type": "boolExpr", "value": [t[1], t[2]]} if not isinstance(
         t[2]['value'], (bool)) else {"type": "boolExpr", "value": not t[2]['value']}
 
 
 def p_numExpr_uminus(t):
     'expr : MINUS expr %prec UMINUS'
-    t[0] = {"type": t[1], "value": t[2] if not isinstance(
+    t[0] = {"type": 'numExpr', "value": [t[1], t[2]] if not isinstance(
         t[2]['value'], (int, float)) else -t[2]['value']}
 
 
@@ -504,7 +505,6 @@ def p_print(t):
     _, *elements = t
     t[0] = {"type": "printCall", "value": [
         elements[0], elements[1], *elements[2], elements[3]]}
-
 
 
 def p_reference(t):
