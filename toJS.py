@@ -7,13 +7,13 @@ def convertToStr(lst, encl=False):
     out = ''
     for i in lst:
         if encl:
-            out+= '\t'
+            out += '\t'
         out += i
     return out
 
 
 def program(val):
-    statements = list(map( \
+    statements = list(map(
         lambda x: typeTransfer(x['type'], x['value']), val)) \
         if isinstance(val, list) \
         else [typeTransfer(val['type'], val['value'])]
@@ -28,7 +28,6 @@ def functionDeclaration(val):
 
 
 def declaration(val, special=False):
-    # print(val['value'], special)
     return val['value'] if special else 'let {};\n'.format(val['value'])
 
 
@@ -49,8 +48,11 @@ def constInitialize(val):
 
 
 def short_binop(val, special=False):
-    return '{} {} {}'.format(*val[0:2], typeTransfer(val[2]['type'], val[2]['value'])) \
-        + (''if special else';\n')
+    if len(val) > 2:
+        return '{} {} {}'.format(*val[0:2], typeTransfer(val[2]['type'], val[2]['value'])) \
+            + (''if special else';\n')
+    else:
+        return '{}{}'.format(*val) + (''if special else';\n')
 
 
 def numExpr(val, special=False):
@@ -116,27 +118,38 @@ def functionCall(val):
 def reassign(val, special=False):
     return '{} = {}'.format(val[0], typeTransfer(val[2]['type'], val[2]['value']))+(''if special else ';\n')
 
-def ternaryOp(val, special=False):
+
+def ternaryOp(val):
     val0 = typeTransfer(val[0]['type'], val[0]['value'])
     val2 = typeTransfer(val[2]['type'], val[2]['value'])
     val4 = typeTransfer(val[4]['type'], val[4]['value'])
-    return '{} ? {} : {}'.format(val0,val2, val4)
+    return '{} ? {} : {}'.format(val0, val2, val4)
 
-def conditional(val, special=False):
+
+def conditional(val):
     val0 = typeTransfer(val[0]['type'], val[0]['value'])
     val1 = ''
     if len(val) > 1:
         val1 = typeTransfer(val[1]['type'], val[1]['value'])
     return '{}{}'.format(val0, val1)
 
-def ifstmt(val, special=False):
+
+def ifstmt(val):
     val1 = typeTransfer(val[1]['type'], val[1]['value'])
     val2 = typeTransfer(val[3]['type'], val[3]['value'])
     return ('if ({}) {}'.format(val1, val2))
 
-def elsestmt(val, special=False):
+
+def elsestmt(val):
     val1 = typeTransfer(val[1]['type'], val[1]['value'])
     return 'else {}'.format(val1)
+
+
+def whileLoop(val):
+    print(val)
+    return 'while ({}) '.format(typeTransfer(val[2]['type'],
+                                             val[2]['value'])) + typeTransfer(val[-1]['type'], val[-1]['value'])
+
 
 fakeSwitch = {
     'functionDeclaration': functionDeclaration,
@@ -155,7 +168,8 @@ fakeSwitch = {
     'ternaryOp': ternaryOp,
     'cond': conditional,
     'if': ifstmt,
-    'else': elsestmt
+    'else': elsestmt,
+    'whileLoop': whileLoop
 }
 
 
