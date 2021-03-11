@@ -1,16 +1,28 @@
 import argparse
 import json
+import re
 
 # we wont need this once we write straight to uhh the thing
 
 
 def convertToStr(lst, encl=False):
     out = ''
-    for i in lst:
+    for i in prune(lst):
         if encl:
             out += '\t'
         out += i
     return out
+
+
+def prune(lst):
+    ret = []
+    digit = re.compile(r'([0-9]*[.])?[0-9]+')
+    for i in lst:
+        if digit.match(i) or i in ['true', 'false']:
+            pass
+        else:
+            ret.append(i)
+    return ret
 
 
 class JSConverter():
@@ -50,6 +62,7 @@ class JSConverter():
             lambda x: self.typeTransfer(x['type'], x['value']), val)) \
             if isinstance(val, list) \
             else [self.typeTransfer(val['type'], val['value'])]
+
         return convertToStr(statements)
 
     def functionDeclaration(self, val):
@@ -59,7 +72,7 @@ class JSConverter():
                                               self.typeTransfer(val[4]['type'], val[4]['value']))
 
     def declaration(self, val, special=False):
-        return 'let {}'.format(val['value']) if special else 'let {};\n'.format(val['value'])
+        return '{}'.format(val['value']) if special == True else ('let {}'.format(val['value']) if special == 2 else'let {};\n'.format(val['value']))
 
     def enclosure(self, val):
         return '{\n' + \
@@ -72,8 +85,7 @@ class JSConverter():
                                     self.typeTransfer(val[2]['type'], val[2]['value'])) + ('' if special else ';\n')
 
     def constInitialize(self, val):
-        return '{} = {};\n'.format(self.typeTransfer(val[0]['type'],
-                                                     val[0]['value']), self.typeTransfer(val[2]['type'], val[2]['value']))
+        return '{} = {};\n'.format(val[0]['value'], self.typeTransfer(val[2]['type'], val[2]['value']))
 
     def constDeclaration(self, val, _special=None):
         return 'const {}'.format(val)
@@ -179,13 +191,13 @@ class JSConverter():
         return 'for ({}) '.format(self.typeTransfer(val[2]['type'], val[2]['value'])) + self.typeTransfer(val[4]['type'], val[4]['value'])
 
     def forTrio(self, val):
-        return '{}; {}; {}'.format(self.typeTransfer(val[0]['type'], val[0]['value'], True),
+        return '{}; {}; {}'.format(self.typeTransfer(val[0]['type'], val[0]['value'], 2),
                                    self.typeTransfer(val[2]['type'],
                                                      val[2]['value'], True),
                                    self.typeTransfer(val[4]['type'], val[4]['value'], True))
 
     def forElement(self, val):
-        return '{} of {}'.format(self.typeTransfer(val[0]['type'], val[0]['value'], True),
+        return '{} of {}'.format(self.typeTransfer(val[0]['type'], val[0]['value'], 2),
                                  val[2])
 
     def arrayLiteral(self, val):
