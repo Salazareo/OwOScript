@@ -44,11 +44,13 @@ def p_program(t):
     ' program : stmts_or_empty'
     t[0] = {'type': "program", 'value': t[1]}
 
+
 def p_statements_or_empty(t):
     ''' stmts_or_empty : statements
                        | empty
     '''
     t[0] = t[1]
+
 
 def p_statements(t):
     ''' statements : statements singleStatement
@@ -194,7 +196,7 @@ def p_conditional(t):
     ''' conditional : if else
                     | if
     '''
-    t[0] = {'type': 'cond', 'value' : t[1::]}
+    t[0] = {'type': 'cond', 'value': t[1::]}
 
 
 def p_if(t):
@@ -568,6 +570,7 @@ def p_type(t):
             | CATGIRL
     '''
     t[0] = {'type': 'type', "value": t[1]}
+
 
 def p_empty(t):
     '''empty : '''
