@@ -15,210 +15,210 @@
         }
       ]
     },
-    [
-      {
-        "type": "whileLoop",
-        "value": [
-          "whileU",
-          "(",
-          {
-            "type": "boolExpr",
-            "value": {
-              "type": "<",
-              "value": [
-                {
-                  "type": "letReference",
-                  "value": {
-                    "type": "waifu",
-                    "value": "x"
-                  }
-                },
-                {
-                  "type": "numExpr",
-                  "value": 10
-                }
-              ]
-            }
-          },
-          ")",
-          "iStudied",
-          {
-            "type": "enclosure",
+    {
+      "type": "whileLoop",
+      "value": [
+        "whileU",
+        "(",
+        {
+          "type": "boolExpr",
+          "value": {
+            "type": "<",
             "value": [
-              "{",
+              {
+                "type": "letReference",
+                "value": {
+                  "type": "waifu",
+                  "value": "x"
+                }
+              },
+              {
+                "type": "numExpr",
+                "value": 10
+              }
+            ]
+          }
+        },
+        ")",
+        "iStudied",
+        {
+          "type": "enclosure",
+          "value": [
+            "{",
+            [
               {
                 "type": "short_binop",
                 "value": [
                   "x",
                   "++"
                 ]
-              },
-              "}"
-            ]
-          }
-        ]
-      },
-      [
+              }
+            ],
+            "}"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "forLoop",
+      "value": [
+        "shi",
+        "(",
         {
-          "type": "forLoop",
+          "type": "forTrio",
           "value": [
-            "shi",
-            "(",
             {
-              "type": "forTrio",
+              "type": "initialize",
               "value": [
                 {
-                  "type": "initialize",
-                  "value": [
-                    {
-                      "type": "waifu",
-                      "value": "y"
-                    },
-                    "=",
-                    {
-                      "type": "numExpr",
-                      "value": 0
-                    }
-                  ]
+                  "type": "waifu",
+                  "value": "y"
                 },
-                ";",
+                "=",
                 {
-                  "type": "boolExpr",
-                  "value": {
-                    "type": "<",
-                    "value": [
-                      {
-                        "type": "letReference",
-                        "value": {
-                          "type": "waifu",
-                          "value": "y"
-                        }
-                      },
-                      {
-                        "type": "letReference",
-                        "value": {
-                          "type": "waifu",
-                          "value": "x"
-                        }
-                      }
-                    ]
-                  }
-                },
-                ";",
-                {
-                  "type": "short_binop",
-                  "value": [
-                    "y",
-                    "++"
-                  ]
+                  "type": "numExpr",
+                  "value": 0
                 }
               ]
             },
-            ")",
+            ";",
             {
-              "type": "enclosure",
+              "type": "boolExpr",
+              "value": {
+                "type": "<",
+                "value": [
+                  {
+                    "type": "letReference",
+                    "value": {
+                      "type": "waifu",
+                      "value": "y"
+                    }
+                  },
+                  {
+                    "type": "letReference",
+                    "value": {
+                      "type": "waifu",
+                      "value": "x"
+                    }
+                  }
+                ]
+              }
+            },
+            ";",
+            {
+              "type": "short_binop",
               "value": [
-                "{",
-                {
-                  "type": "short_binop",
-                  "value": [
-                    "x",
-                    "--"
-                  ]
-                },
-                "}"
+                "y",
+                "++"
               ]
             }
           ]
         },
-        [
-          {
-            "type": "initialize",
-            "value": [
+        ")",
+        {
+          "type": "enclosure",
+          "value": [
+            "{",
+            [
               {
-                "type": "waifu harem",
-                "value": "y"
-              },
-              "=",
-              {
-                "type": "arrayLiteral",
+                "type": "short_binop",
                 "value": [
-                  "[",
-                  {
-                    "type": "numExpr",
-                    "value": 6
-                  },
-                  {
-                    "type": "numExpr",
-                    "value": 5
-                  },
-                  {
-                    "type": "numExpr",
-                    "value": 4
-                  },
-                  {
-                    "type": "numExpr",
-                    "value": 3
-                  },
-                  {
-                    "type": "numExpr",
-                    "value": 2
-                  },
-                  {
-                    "type": "numExpr",
-                    "value": 1
-                  },
-                  "]"
+                  "x",
+                  "--"
                 ]
               }
-            ]
-          },
-          {
-            "type": "forLoop",
-            "value": [
-              "shi",
-              "(",
+            ],
+            "}"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "initialize",
+      "value": [
+        {
+          "type": "waifu harem",
+          "value": "y"
+        },
+        "=",
+        {
+          "type": "arrayLiteral",
+          "value": [
+            "[",
+            {
+              "type": "numExpr",
+              "value": 1
+            },
+            {
+              "type": "numExpr",
+              "value": 2
+            },
+            {
+              "type": "numExpr",
+              "value": 3
+            },
+            {
+              "type": "numExpr",
+              "value": 4
+            },
+            {
+              "type": "numExpr",
+              "value": 5
+            },
+            {
+              "type": "numExpr",
+              "value": 6
+            },
+            "]"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "forLoop",
+      "value": [
+        "shi",
+        "(",
+        {
+          "type": "forElement",
+          "value": [
+            {
+              "type": "declaration",
+              "value": {
+                "type": "waifu",
+                "value": "i"
+              }
+            },
+            ":",
+            "y"
+          ]
+        },
+        ")",
+        {
+          "type": "enclosure",
+          "value": [
+            "{",
+            [
               {
-                "type": "forElement",
+                "type": "printCall",
                 "value": [
+                  "baka",
+                  "(",
                   {
-                    "type": "declaration",
+                    "type": "letReference",
                     "value": {
                       "type": "waifu",
                       "value": "i"
                     }
                   },
-                  ":",
-                  "y"
-                ]
-              },
-              ")",
-              {
-                "type": "enclosure",
-                "value": [
-                  "{",
-                  {
-                    "type": "printCall",
-                    "value": [
-                      "baka",
-                      "(",
-                      {
-                        "type": "letReference",
-                        "value": {
-                          "type": "waifu harem",
-                          "value": "y"
-                        }
-                      },
-                      ")"
-                    ]
-                  },
-                  "}"
+                  ")"
                 ]
               }
-            ]
-          }
-        ]
+            ],
+            "}"
+          ]
+        }
       ]
-    ]
+    }
   ]
 }

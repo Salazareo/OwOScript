@@ -15,7 +15,7 @@
             "[",
             {
               "type": "numExpr",
-              "value": 3
+              "value": 1
             },
             {
               "type": "numExpr",
@@ -23,7 +23,7 @@
             },
             {
               "type": "numExpr",
-              "value": 1
+              "value": 3
             },
             "]"
           ],
@@ -34,57 +34,61 @@
         }
       ]
     },
-    [
-      {
-        "type": "initialize",
-        "value": [
-          {
-            "type": "catgirl harem",
-            "value": "bools"
-          },
-          "=",
-          {
-            "type": "arrayLiteral",
-            "value": [
-              "[",
-              {
-                "type": "boolExpr",
-                "value": true
-              },
-              {
-                "type": "boolExpr",
-                "value": false
-              },
-              {
-                "type": "boolExpr",
-                "value": true
-              },
-              {
-                "type": "boolExpr",
-                "value": false
-              },
-              "]"
-            ]
-          }
-        ]
-      },
-      [
+    {
+      "type": "initialize",
+      "value": [
         {
-          "type": "arrayAssign",
+          "type": "catgirl harem",
+          "value": "bools"
+        },
+        "=",
+        {
+          "type": "arrayLiteral",
           "value": [
             "[",
             {
-              "type": "numExpr",
-              "value": 0
+              "type": "boolExpr",
+              "value": false
             },
-            "]",
-            "=",
             {
-              "type": "numExpr",
-              "value": 7
-            }
+              "type": "boolExpr",
+              "value": true
+            },
+            {
+              "type": "boolExpr",
+              "value": false
+            },
+            {
+              "type": "boolExpr",
+              "value": true
+            },
+            "]"
           ]
+        }
+      ]
+    },
+    {
+      "type": "arrayAssign",
+      "value": [
+        "lst",
+        "[",
+        {
+          "type": "numExpr",
+          "value": 0
         },
+        "]",
+        "=",
+        {
+          "type": "numExpr",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "type": "printCall",
+      "value": [
+        "baka",
+        "(",
         {
           "type": "boolExpr",
           "value": {
@@ -116,7 +120,7 @@
                           "type": "numExpr",
                           "value": {
                             "type": "numExpr",
-                            "value": 3
+                            "value": 2
                           }
                         },
                         "]"
@@ -128,8 +132,9 @@
               }
             ]
           }
-        }
+        },
+        ")"
       ]
-    ]
+    }
   ]
 }

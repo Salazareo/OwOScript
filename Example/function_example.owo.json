@@ -2,195 +2,6 @@
   "type": "program",
   "value": [
     {
-      "type": "functionDeclaration",
-      "returnType": "waifu",
-      "value": [
-        "foo",
-        "(",
-        [],
-        ")",
-        {
-          "type": "enclosure",
-          "value": [
-            "{",
-            [
-              {
-                "type": "initialize",
-                "value": [
-                  {
-                    "type": "waifu",
-                    "value": "x"
-                  },
-                  "=",
-                  {
-                    "type": "numExpr",
-                    "value": 0
-                  }
-                ]
-              },
-              {
-                "type": "short_binop",
-                "value": [
-                  "x",
-                  "+=",
-                  {
-                    "type": "numExpr",
-                    "value": 500
-                  }
-                ]
-              },
-              {
-                "type": "short_binop",
-                "value": [
-                  "x",
-                  "-=",
-                  {
-                    "type": "numExpr",
-                    "value": 250
-                  }
-                ]
-              },
-              {
-                "type": "return",
-                "value": {
-                  "type": "letReference",
-                  "value": {
-                    "type": "waifu",
-                    "value": "x"
-                  }
-                }
-              }
-            ],
-            "}"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "functionDeclaration",
-      "returnType": "catgirl",
-      "value": [
-        "bar",
-        "(",
-        [
-          {
-            "type": "declaration",
-            "value": {
-              "type": "waifu",
-              "value": "x"
-            }
-          },
-          {
-            "type": "declaration",
-            "value": {
-              "type": "catgirl",
-              "value": "y"
-            }
-          }
-        ],
-        ")",
-        {
-          "type": "enclosure",
-          "value": [
-            "{",
-            [
-              {
-                "type": "return",
-                "value": {
-                  "type": "boolExpr",
-                  "value": {
-                    "type": "&&",
-                    "value": [
-                      {
-                        "type": "boolExpr",
-                        "value": [
-                          "(",
-                          {
-                            "type": "boolExpr",
-                            "value": {
-                              "type": "||",
-                              "value": [
-                                {
-                                  "type": "boolExpr",
-                                  "value": {
-                                    "type": "<",
-                                    "value": [
-                                      {
-                                        "type": "letReference",
-                                        "value": {
-                                          "type": "waifu",
-                                          "value": "x"
-                                        }
-                                      },
-                                      {
-                                        "type": "numExpr",
-                                        "value": 10
-                                      }
-                                    ]
-                                  }
-                                },
-                                {
-                                  "type": "boolExpr",
-                                  "value": [
-                                    "(",
-                                    {
-                                      "type": "boolExpr",
-                                      "value": {
-                                        "type": "&&",
-                                        "value": [
-                                          {
-                                            "type": "boolExpr",
-                                            "value": false
-                                          },
-                                          {
-                                            "type": "boolExpr",
-                                            "value": {
-                                              "type": "<",
-                                              "value": [
-                                                {
-                                                  "type": "letReference",
-                                                  "value": {
-                                                    "type": "waifu",
-                                                    "value": "x"
-                                                  }
-                                                },
-                                                {
-                                                  "type": "numExpr",
-                                                  "value": 2
-                                                }
-                                              ]
-                                            }
-                                          }
-                                        ]
-                                      }
-                                    },
-                                    ")"
-                                  ]
-                                }
-                              ]
-                            }
-                          },
-                          ")"
-                        ]
-                      },
-                      {
-                        "type": "letReference",
-                        "value": {
-                          "type": "catgirl",
-                          "value": "y"
-                        }
-                      }
-                    ]
-                  }
-                }
-              }
-            ],
-            "}"
-          ]
-        }
-      ]
-    },
-    {
       "type": "initialize",
       "value": [
         {
@@ -199,118 +10,51 @@
         },
         "=",
         {
-          "type": "functionCall",
-          "name": "foo",
-          "value": [
-            "foo",
-            "(",
-            ")"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "initialize",
-      "value": [
-        {
-          "type": "waifu",
-          "value": "z"
-        },
-        "=",
-        {
           "type": "numExpr",
-          "value": 1
+          "value": 0
         }
       ]
     },
     {
-      "type": "reassign",
+      "type": "whileLoop",
       "value": [
-        "z",
-        "=",
-        {
-          "type": "numExpr",
-          "value": [
-            "-",
-            {
-              "type": "letReference",
-              "value": {
-                "type": "waifu",
-                "value": "z"
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "initialize",
-      "value": [
-        {
-          "type": "catgirl",
-          "value": "kek"
-        },
-        "=",
-        {
-          "type": "functionCall",
-          "name": "bar",
-          "value": [
-            "bar",
-            "(",
-            {
-              "type": "letReference",
-              "value": {
-                "type": "waifu",
-                "value": "x"
-              }
-            },
-            {
-              "type": "boolExpr",
-              "value": true
-            },
-            ")"
-          ]
-        }
-      ]
-    },
-    {
-      "type": "initialize",
-      "value": [
-        {
-          "type": "catgirl",
-          "value": "jaj"
-        },
-        "=",
+        "whileU",
+        "(",
         {
           "type": "boolExpr",
+          "value": {
+            "type": "<",
+            "value": [
+              {
+                "type": "letReference",
+                "value": {
+                  "type": "waifu",
+                  "value": "x"
+                }
+              },
+              {
+                "type": "numExpr",
+                "value": 10
+              }
+            ]
+          }
+        },
+        ")",
+        "iStudied",
+        {
+          "type": "enclosure",
           "value": [
-            "!",
-            {
-              "type": "boolExpr",
-              "value": [
-                "(",
-                {
-                  "type": "boolExpr",
-                  "value": {
-                    "type": "&&",
-                    "value": [
-                      {
-                        "type": "boolExpr",
-                        "value": true
-                      },
-                      {
-                        "type": "letReference",
-                        "value": {
-                          "type": "catgirl",
-                          "value": "kek"
-                        }
-                      }
-                    ]
-                  }
-                },
-                ")"
-              ]
-            }
+            "{",
+            [
+              {
+                "type": "short_binop",
+                "value": [
+                  "x",
+                  "++"
+                ]
+              }
+            ],
+            "}"
           ]
         }
       ]
