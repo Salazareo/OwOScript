@@ -1,0 +1,22 @@
+catgirl~chan isPrime(waifu x){
+    nani (x <= 1){
+        owo desu;
+    }
+    nani(x == 2){
+        uwu desu;
+    }
+    shi(waifu i = 2; i<(x**(1/2))+1; i++){
+        nani (x%i == 0){
+             owo desu;
+        }
+    }
+    uwu desu;
+}
+
+waifu total = 0;
+shi (waifu i = 1; i<10;i++){
+    nani (isPrime(i)){
+        total += i;
+    }
+}
+baka(total);

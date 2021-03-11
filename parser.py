@@ -8,7 +8,7 @@ tokens = lexer.tokens
 
 
 def toIntIfInt(x):
-    return int(x) if x % int(x) == 0 else x
+    return x
 
 
 def declarations(name, typeVal, isArray, type):

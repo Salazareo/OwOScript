@@ -5,3 +5,4 @@
 sourceCode=$1
 python ./parser.py $sourceCode || python3 ./parser.py $sourceCode
 python ./toJS.py "$sourceCode.json" || python3 ./toJS.py "$sourceCode.json"
+rm "$sourceCode.json"

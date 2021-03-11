@@ -85,10 +85,10 @@ class JSConverter():
                                     self.typeTransfer(val[2]['type'], val[2]['value'])) + ('' if special else ';\n')
 
     def constInitialize(self, val):
-        return '{} = {};\n'.format(val[0]['value'], self.typeTransfer(val[2]['type'], val[2]['value']))
+        return 'const {} = {};\n'.format(val[0]['value'], self.typeTransfer(val[2]['type'], val[2]['value']))
 
     def constDeclaration(self, val, _special=None):
-        return 'const {}'.format(val)
+        return 'const {}'.format(val['value'])
 
     def short_binop(self, val, special=False):
         if len(val) > 2:
@@ -127,10 +127,11 @@ class JSConverter():
             if not isinstance(val, list):
                 if not val['type'] in ['arrayReference', 'letReference', 'boolExpr']:
                     isParen = val['value'][0] == '('
+                    op = val['type'].replace('==', '===')
                     val1 = val['value'][0 + int(isParen)]
                     val2 = val['value'][1 + int(isParen)]
                     return ('('if isParen else '') +\
-                        '{} {} {}'.format(self.typeTransfer(val1['type'], val1['value']), val['type'], self.typeTransfer(val2['type'], val2['value']))\
+                        '{} {} {}'.format(self.typeTransfer(val1['type'], val1['value']), op, self.typeTransfer(val2['type'], val2['value']))\
                         + (')'if isParen else '')
                 else:
                     return self.typeTransfer(val['type'], val['value'])

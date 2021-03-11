@@ -7,9 +7,9 @@ whileU (x < 10) iStudied{
 shi (waifu y = 0; y < x; y++) {
     x--;
 }
-
+real waifu w = 2;
 waifu harem y = [1,2,3,4,5,6];
 
-shi (waifu i : y){
-    baka(i);
+shi (real waifu i : y){
+    baka(i+w);
 }

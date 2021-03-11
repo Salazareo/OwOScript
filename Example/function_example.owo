@@ -1,5 +1,20 @@
-waifu x = 0;
-
-whileU (x < 10) iStudied{
-    x++;
+waifu~chan foo(){
+    waifu x = 0;
+    x += 500;
+    x -= 250;
+    x desu;
 }
+
+catgirl~sama bar(waifu x, catgirl y){
+    catgirl~san baz(waifu x){
+        baka(x);
+        x>10 desu;
+    }
+    (x < 10 || (baz(2*x) && x<2)) && y desu;
+}
+
+baka(foo());
+waifu z = -6;
+z = -z;
+catgirl kek = bar(z, uwu);
+catgirl jaj = !(uwu && kek);
