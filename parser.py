@@ -37,15 +37,20 @@ precedence = (
 
 
 def p_program(t):
-    ' program : statements'
+    ' program : stmts_or_empty'
     t[0] = {'type': "program", 'value': t[1]}
 
+def p_statements_or_empty(t):
+    ''' stmts_or_empty : statements
+                       | empty
+    '''
+    t[0] = t[1]
 
 def p_statements(t):
-    ''' statements : singleStatement
-                   | statements statements
+    ''' statements : statements singleStatement
+                   | singleStatement
     '''
-    t[0] = t[1] + t[2] if len(t) > 2 else [t[1]]
+    t[0] = t[1] + [t[2]] if len(t) > 2 else [t[1]]
 
 
 def p_singleStatement(t):
@@ -58,7 +63,6 @@ def p_singleStatement(t):
                         | conditional
                         | returnStatement SEMICOL
     '''
-
     t[0] = t[1]
 
 
@@ -104,7 +108,7 @@ def p_conditional(t):
     ''' conditional : if else
                     | if
     '''
-    t[0] = t[1::]
+    t[0] = {'type': 'cond', 'value' : t[1::]}
 
 
 def p_if(t):
@@ -224,10 +228,10 @@ def p_functionCall(t):
             # ok we need to make objects to store our data properly
             if len(elements) == 2:
                 t[0] = {"type": "functionCall",
-                        "name": fnName, "value": elements}
+                        "name": fnName, "value": [fnName]+elements}
             else:
                 t[0] = {"type": "functionCall",
-                        "name": fnName, "value": [elements[0], *elements[1], elements[2]]}
+                        "name": fnName, "value": [fnName]+[elements[0], *elements[1], elements[2]]}
         else:
             raise Exception("Undefined function name '%s'" % fnName)
 
@@ -251,7 +255,7 @@ def p_exprList(t):
     if len(t) == 2:
         t[0] = [t[1]]
     else:
-        t[0] = t[3] + [t[1]]
+        t[0] = [t[1]] + t[3]
 
 
 def p_initialize(t):
@@ -314,22 +318,13 @@ def p_binOpAssign(t):
     else:
         _, name, op = t
         val = 1
-    if (name in lets and name not in consts):
-        t[0] = {'type': 'short_binop', 'value': t[1::]}
-        if val != 1 and isinstance(val["value"], (float, int)):
-            lets[name]["value"]["value"] = options[op](
-                lets[name]["value"]["value"], val["value"])
-    else:
-        if (name in lets):
-            if (consts.inScopeIndex(lets.getScopeIndex(name), name)):
-                raise Exception("Cannot reassign constant")
-            else:
-                t[0] = {'type': 'short_binop', 'value': t[1::]}
-                if val != 1 and isinstance(val["value"], (float, int)):
-                    lets[name]["value"]["value"] = options[op](
-                        lets[name]["value"]["value"], val["value"])
+    if (name in lets):
+        if (name not in consts):
+            t[0] = {'type': 'short_binop', 'value': t[1::]}
         else:
-            raise Exception("Variable {} not declared.".format(name))
+            raise Exception("Cannot reassign constant")
+    else:
+        raise Exception("Variable {} not declared.".format(name))
 
 
 def p_argumentDeclaration(t):
@@ -343,7 +338,7 @@ def p_argumentDeclaration(t):
         if len(t) == 1:
             t[0] = []
         else:
-            t[0] = t[3] + [t[1]]
+            t[0] = [t[1]] + t[3]
 
 
 def p_constDeclaration(t):
@@ -455,7 +450,9 @@ def p_numExpr_binop(t):
     '''numExpr : numExpr PLUS numExpr
                | numExpr MINUS numExpr
                | numExpr TIMES numExpr
-               | numExpr DIVIDE numExpr'''
+               | numExpr DIVIDE numExpr
+               | numExpr MOD numExpr
+               | numExpr POW numExpr'''
     if isinstance(t[1]["value"], (float, int)) and isinstance(t[3]["value"], (float, int)):
         # Directly evaluates literals as optimization
         if t[2] == '+':
@@ -470,6 +467,12 @@ def p_numExpr_binop(t):
         elif t[2] == '/':
             t[0] = {"type": "numExpr", "value": toIntIfInt(
                 t[1]["value"] / t[3]["value"])}
+        elif t[2] == '%':
+            t[0] = {"type": "numExpr", "value": toIntIfInt(
+                t[1]["value"] % t[3]["value"])}
+        elif t[2] == '**':
+            t[0] = {"type": "numExpr", "value": toIntIfInt(
+                t[1]["value"] ** t[3]["value"])}
     else:
         t[0] = {"type": "numExpr", "value": {
             "type": t[2], "value": [t[1], t[3]]}}
@@ -527,7 +530,7 @@ def p_arrayReference(t):
 def p_boolExprNeg(t):
     'boolExpr : NOT boolExpr'
 
-    t[0] = {"type": t[1], "value": t[2]} if not isinstance(
+    t[0] = {"type": 'boolExpr', "value": [t[1], t[2]]} if not isinstance(
         t[2]['value'], (bool)) else {"type": "boolExpr", "value": not t[2]['value']}
     # t[0] = {"type": 'boolExpr', "value": t[1:3] if not else not t[2]["value"]}
 
@@ -548,7 +551,7 @@ def p_bool(t):
 
 def p_numExpr_uminus(t):
     'numExpr : MINUS numExpr %prec UMINUS'
-    t[0] = {"type": t[1], "value": t[2] if not isinstance(
+    t[0] = {"type": 'numExpr', "value": [t[1], t[2]] if not isinstance(
         t[2]['value'], (int, float)) else -t[2]['value']}
 
 
@@ -575,6 +578,10 @@ def p_type(t):
             | CATGIRL
     '''
     t[0] = {'type': 'type', "value": t[1]}
+
+def p_empty(t):
+    '''empty : '''
+    pass
 
 
 # def p_error(t):
