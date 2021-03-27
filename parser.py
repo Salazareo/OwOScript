@@ -143,7 +143,6 @@ def p_boolExpr(t):
         '**': lambda x, y: x ** y,
         '%': lambda x, y: x % y,
     }
-    print(expr1, op, expr2, '\n')
     if typeConv[expr1["returnType"]] not in ("waifu", "senpai") or typeConv[expr1["returnType"]] != typeConv[expr2["returnType"]]:
         raise Exception("TypeError")
 
@@ -647,38 +646,40 @@ def p_letReference(t):
     else:
         raise Exception("Undefined name '%s' at line %s" % (name, t.lineno(1)))
 
-# def p_strIndex(t):
-#     ''' expr : expr LBRACK expr RBRACK
-#     '''
-#     _, strObj, _, index, _ = t
-#     t[0] = {"type": "strExpr",
-#             "value": [strObj, '[', {"type": "numExpr",
-#                                     "value": index['value'] if isinstance(index['value'], (int, float)) else index},
-#                       ']']}
-
 
 def p_arrayReference(t):
-    ''' reference : expr LBRACK expr RBRACK '''
+    ''' expr : expr LBRACK expr RBRACK '''
     _, lst, _, index, _ = t
     if index["returnType"] != "waifu":
         raise Exception("Expected type waifu for the index")
     if typeConv[lst['returnType']] == "senpai":
-        t[0] = {"type": "strExpr",
-                "value": [lst['value'], '[', {"type": "numExpr",
-                                              "value": index['value'] if isinstance(index['value'], (int, float)) else index},
-                          ']'],
-                "line": t.lineno(1)}
+        if isinstance(lst['value'], str) and isinstance(index['value'], (int, float)):
+            t[0] = {"type": "strExpr",
+                    "value": lst['value'][index['value']],
+                    'returnType': 'senpai',
+                    "line": t.lineno(1)}
+        else:
+            t[0] = {"type": "strReference",
+                    "value": [lst,
+                              '[',
+                              {"type": "numExpr",
+                               "value": index['value'] if isinstance(index['value'], (int, float)) else index},
+                              ']'],
+                    'returnType': 'senpai',
+                    "line": t.lineno(1)}
     else:
-        print(lst)
-        t[0] = {"type": "arrayReference",
-                "returnType": rreplace(lst["returnType"], ' harem', ''),
-                "value": [lst,
-                          '[',
-                          {"type": "numExpr",
-                           "returnType": "waifu",
-                           "value": index['value'] if isinstance(index['value'], (int, float)) else index},
-                          ']'],
-                "line": t.lineno(1)}
+        if lst["type"] == 'arrayLiteral' and isinstance(index['value'], (int, float)):
+            t[0] = lst["value"][index['value']+1]
+        else:
+            t[0] = {"type": "arrayReference",
+                    "returnType": rreplace(lst["returnType"], ' harem', ''),
+                    "value": [lst,
+                              '[',
+                              {"type": "numExpr",
+                               "returnType": "waifu",
+                               "value": index['value'] if isinstance(index['value'], (int, float)) else index},
+                              ']'],
+                    "line": t.lineno(1)}
 
 
 def p_numExpr_number(t):
@@ -729,12 +730,12 @@ def p_empty(t):
     pass
 
 
-def p_error(t):
-    if t:
-        raise SyntaxError('invalid syntax', (None, t.lineno, None, t.value))
-    else:
-        raise SyntaxError('unexpected EOF while parsing',
-                          (None, None, None, None))
+# def p_error(t):
+#     if t:
+#         raise SyntaxError('invalid syntax', (None, t.lineno, None, t.value))
+#     else:
+#         raise SyntaxError('unexpected EOF while parsing',
+#                           (None, None, None, None))
 
 
 def make_parser():

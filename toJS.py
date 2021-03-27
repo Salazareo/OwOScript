@@ -54,7 +54,9 @@ class JSConverter():
             'arrayLiteral': self.arrayLiteral,
             'printCall': self.printCall,
             'arrayAssign': self.arrayAssign,
-            'arrayReference': self.arrayReference
+            'arrayReference': self.arrayReference,
+            'strExpr': self.strExpr,
+            'strReference': self.strReference
         }
 
     # def writeToFile(self,f,lst):
@@ -71,6 +73,20 @@ class JSConverter():
             else [self.typeTransfer(val['type'], val['value'])]
 
         return convertToStr(statements)
+
+    def strExpr(self, val):
+
+        if isinstance(val, str):
+            return "'{}'".format(val)
+        else:
+            return '{} + {}'.format(self.typeTransfer(val['value'][0]['type'],
+                                                      val['value'][0]['value'], True), self.typeTransfer(val['value'][1]['type'],
+                                                                                                         val['value'][1]['value'], True))
+
+    def strReference(self, val):
+        return '{}[{}]'.format(self.typeTransfer(val[0]['type'],
+                                                 val[0]['value'], True), self.typeTransfer(val[2]['type'],
+                                                                                           val[2]['value'], True))
 
     def functionDeclaration(self, val):
         return 'const {} = ({}) => {}'.format(val[0],
@@ -117,7 +133,7 @@ class JSConverter():
                         '{} {} {}'.format(self.typeTransfer(val1['type'], val1['value']), val['type'], self.typeTransfer(val2['type'], val2['value']))\
                         + (')'if isParen else '')
                 else:
-                    return self.typeTransfer(val['type'], val['value'])
+                    return self.typeTransfer(val['type'], val['value'], True)
             else:
                 if isinstance(val[0], str):
                     if len(val) == 3:
@@ -138,10 +154,10 @@ class JSConverter():
                     val1 = val['value'][0 + int(isParen)]
                     val2 = val['value'][1 + int(isParen)]
                     return ('('if isParen else '') +\
-                        '{} {} {}'.format(self.typeTransfer(val1['type'], val1['value']), op, self.typeTransfer(val2['type'], val2['value']))\
+                        '{} {} {}'.format(self.typeTransfer(val1['type'], val1['value'], True), op, self.typeTransfer(val2['type'], val2['value'], True))\
                         + (')'if isParen else '')
                 else:
-                    return self.typeTransfer(val['type'], val['value'])
+                    return self.typeTransfer(val['type'], val['value'], True)
             else:
                 if isinstance(val[0], str):
                     if len(val) == 3:
@@ -218,8 +234,8 @@ class JSConverter():
                                     self.typeTransfer(val[5]['type'], val[5]['value'])) + (''if special else ';\n')
 
     def arrayReference(self, val, special=False):
-        return '{}[{}]'.format(self.typeTransfer(val[0]['type'], val[0]['value']),
-                               self.typeTransfer(val[2]['type'], val[2]['value'])) + (';'if special else '')
+        return '{}[{}]'.format(self.typeTransfer(val[0]['type'], val[0]['value'], True),
+                               self.typeTransfer(val[2]['type'], val[2]['value'], True)) + ('' if special else ';\n')
 
     def printCall(self, val):
         return 'console.log({});\n'.format(self.typeTransfer(val[2]['type'], val[2]['value']))
