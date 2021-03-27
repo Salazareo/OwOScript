@@ -22,6 +22,7 @@ def test_vars():
         "type": "program",
         "value": [{
             "type": "declaration",
+            "returnType": "waifu",
             "value": {
                 "type": "waifu",
                 "value": "varName"
@@ -45,6 +46,7 @@ def test_vars():
               "=",
               {
                 "type": "numExpr",
+                "returnType": "waifu",
                 "value": 2.5
               }
             ]
@@ -64,6 +66,7 @@ def test_vars():
                 "=",
                 {
                   "type": "numExpr",
+                  "returnType": "waifu",
                   "value": 500
                 }
             ]
@@ -87,12 +90,14 @@ def test_vars():
             "=",
             {
               "type": "numExpr",
+              "returnType": "waifu",
               "value": 42
             }
           ]
         },
         {
           "type": "letReference",
+          "returnType": "waifu",
           "value": {
             "type": "waifu",
             "value": "z"
@@ -117,6 +122,7 @@ def test_vars():
               "=",
               {
                 "type": "boolExpr",
+                "returnType": "catgirl",
                 "value": True
               }
             ]
@@ -138,7 +144,8 @@ def test_vars():
               },
               "=",
               {
-                "type": "letReference", #TODO: change the name
+                "type": "letReference", 
+                "returnType": "catgirl",
                 "value": {
                   "type": "catgirl",
                   "value": "a"
@@ -156,8 +163,9 @@ def test_vars():
         "type": "program",
         "value": [{
             "type": "declaration",
+            "returnType": "catgirl harem",
             "value": {
-              "type": "catgirl harem",
+              "type": "catgirl harem", #TODO: Eliminate nesting?
               "value": "A"
             }
         }]
@@ -176,10 +184,12 @@ def test_vars():
               "=",
               {
                 "type": "arrayLiteral",
+                "returnType": "catgirl harem",
                 "value": [
                   "[",
                   {
                     "type": "boolExpr",
+                    "returnType": "catgirl",
                     "value": True
                   },
                   "]"
@@ -195,14 +205,16 @@ def test_vars():
         "type": "program",
         "value": [{
           "type": "arrayReference",
+          "returnType": "catgirl",
           "value": [
             {
               "value": "A",
-              "type": "catgirl harem"
+              "type": "catgirl harem",
             },
             "[",
             {
               "type": "numExpr",
+              "returnType": "waifu",
               "value": 0
             },
             "]"
@@ -222,6 +234,7 @@ def test_numExpr():
         "type": "program",
         "value": [{
             "type": "numExpr",
+            "returnType": "waifu",
             "value": 9001
         }]
     }
@@ -234,6 +247,7 @@ def test_numExpr():
         "type": "program",
         "value": [{
             "type": "numExpr",
+            "returnType": "waifu",
             "value": 2 #Optimization thing
         }]
     }
@@ -246,6 +260,7 @@ def test_numExpr():
         "type": "program",
         "value": [{
             "type": "numExpr",
+            "returnType": "waifu",
             "value": 6.0 #This type can be either an int or float
         }]
     }
@@ -258,6 +273,7 @@ def test_numExpr():
         "type": "program",
         "value": [{
             "type": "numExpr",
+            "returnType": "waifu",
             "value": 5.0 #This type can be either an int or float
         }]
     }
@@ -270,12 +286,14 @@ def test_numExpr():
         "type": "program",
         "value": [{
             "type": "numExpr",
+            "returnType": "waifu",
             "value": -3.0 #This type can be either an int or float
         }]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:Negative numbers did not pass")  
     
+    #TODO: Add 2 binops, pow, mod
     parser.restart() 
 
 
@@ -287,6 +305,7 @@ def test_boolExpr():
         "type": "program",
         "value": [{
             "type": "boolExpr",
+            "returnType": "catgirl",
             "value": True
         }]
     }
@@ -299,6 +318,7 @@ def test_boolExpr():
         "type": "program",
         "value": [{
             "type": "boolExpr",
+            "returnType": "catgirl",
             "value": False
         }]
     }
@@ -311,6 +331,7 @@ def test_boolExpr():
         "type": "program",
         "value": [{
             "type": "boolExpr",
+            "returnType": "catgirl",
             "value": True
         }]
     }
@@ -323,37 +344,25 @@ def test_boolExpr():
         "type": "program",
         "value": [{
             "type": "boolExpr",
+            "returnType": "catgirl",
             "value": True
         }]
     }
     ast = make_ast(input, parser)
     if ast != expected: print("test:1 < 2 did not pass")  
 
-    print("Testing:1 == uwu") 
-    #This may need to be modified in the future due to how Python works
-    input = "1 == uwu;"
-    expected = {
-        "type": "program",
-        "value": [{
-            "type": "boolExpr",
-            "value": True
-        }]
-    }
-    ast = make_ast(input, parser)
-    if ast != expected: print("test:1 == uwu did not pass")  
-
-    print("Testing:1 != uwu")
-    #This may need to be modified in the future due to how Python works
-    input = "1 != uwu;"
-    expected = {
-        "type": "program",
-        "value": [{
-            "type": "boolExpr",
-            "value": False
-        }]
-    }
-    ast = make_ast(input, parser)
-    if ast != expected: print("test:1 != uwu did not pass")  
+    # print("Testing:1 != uwu")
+    # #This may need to be modified in the future due to how Python works
+    # input = "1 != uwu;"
+    # expected = {
+    #     "type": "program",
+    #     "value": [{
+    #         "type": "boolExpr",
+    #         "value": False
+    #     }]
+    # }
+    # ast = make_ast(input, parser)
+    # if ast != expected: print("test:1 != uwu did not pass")  
 
     print("Testing:uwu || owo")
     input = "uwu || owo;"
@@ -361,6 +370,7 @@ def test_boolExpr():
         "type": "program",
         "value": [{
             "type": "boolExpr",
+            "returnType": "catgirl",
             "value": True
         }]
     }
@@ -373,6 +383,7 @@ def test_boolExpr():
         "type": "program",
         "value": [{
             "type": "boolExpr",
+            "returnType": "catgirl",
             "value": True
         }]
     }

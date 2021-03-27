@@ -32,6 +32,8 @@ expr : literal
 	| expr - expr
 	| expr * expr 
 	| expr / expr 
+     | expr ^ expr
+     | expr % expr
 
 ternaryOp : expr ? expr : expr
 

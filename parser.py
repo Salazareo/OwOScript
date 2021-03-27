@@ -15,10 +15,11 @@ def declarations(name, typeVal, isArray, type):
     if (not lets.inCurrentScope(name) and not fns.inCurrentScope(name)):
         lets.forceNew(name, {
             "type": typeVal,
+            "returnType": typeVal["returnType"],
             "array": isArray,
             "value": None
         })
-        return {"type": type, "value": {
+        return {"type": type, "returnType": typeVal["returnType"], "value": {
             "type": typeVal["value"], "value": name}}
     else:
         raise Exception("{} has already been declared.".format(name))
@@ -87,7 +88,7 @@ def p_paren_expr(t):
     ''' expr : LPAREN expr RPAREN
     '''
     t[0] = {
-        "type": t[2]["type"], "value": t[1::]
+        "type": t[2]["type"], "returnType":t[2]["returnType"], "value": t[1::]
         if not isinstance(t[2]['value'], (bool, int, float)) else t[2]['value']
     }
 
@@ -99,89 +100,118 @@ def p_boolExpr(t):
              | expr DIVIDE expr
              | expr MOD expr
              | expr POW expr
-             | expr NEQ expr
              | expr LEQ expr
              | expr GEQ expr
              | expr LT expr
              | expr GT expr
-             | expr EQOP expr
     '''
-    _, a, op, b = t
-    options = {'<': lambda x, y: x < y,
+    _, expr1, op, expr2 = t
+    boolOptions = {'<': lambda x, y: x < y,
                '>': lambda x, y: x > y,
                '>=': lambda x, y: x >= y,
                '<=': lambda x, y: x <= y,
-               '==': lambda x, y: x == y,
+               }
+    numOptions = {
+        '+': lambda x, y: x + y,
+        '-': lambda x, y: x - y,
+        '*': lambda x, y: x * y,
+        '/': lambda x, y: x / y,
+        '^': lambda x, y: x ** y,
+        '%': lambda x, y: x % y,
+    }
+    if expr1["returnType"] != "waifu" or expr2["returnType"] != "waifu":
+        raise Exception("Expected type waifu")
+
+    elif isinstance(expr1["value"], (float, int)) and isinstance(expr2["value"], (float, int)):
+        # Directly evaluates literals as optimization
+        if op in numOptions:
+            t[0] = {
+                "type": "numExpr", 
+                "value": toIntIfInt(numOptions[op](expr1["value"], expr2["value"]))
+            }
+        else:
+            t[0] = {"type": 'boolExpr', "value": boolOptions[op]
+                    (expr1["value"], expr2["value"])}
+
+    elif op in numOptions: #Does not have literals
+        t[0] = {"type": "numExpr", "value": {
+            "type": op, "value": [expr1, expr2]}}
+            
+    else:
+        t[0] = {"type": "boolExpr", "value": {"type": op, "value": [expr1, expr2]}}
+
+    
+    t[0]["returnType"] = "catgirl" if t[0]["type"] == "boolExpr" else "waifu"
+
+def p_equality_op(t): #Because both bools and nums can use it
+    ''' expr : expr EQOP expr
+             | expr NEQ expr
+    '''
+    _, expr1, op, expr2 = t
+    options = {'==': lambda x, y: x == y,
                '!=': lambda x, y: x != y,
                }
-    if isinstance(t[1]["value"], (float, int)) and isinstance(t[3]["value"], (float, int)):
-        # Directly evaluates literals as optimization
-        if t[2] == '+':
-            t[0] = {"type": "numExpr", "value": toIntIfInt(
-                t[1]["value"] + t[3]["value"])}
-        elif t[2] == '-':
-            t[0] = {"type": "numExpr", "value": toIntIfInt(
-                t[1]["value"] - t[3]["value"])}
-        elif t[2] == '*':
-            t[0] = {"type": "numExpr", "value": toIntIfInt(
-                t[1]["value"] * t[3]["value"])}
-        elif t[2] == '/':
-            t[0] = {"type": "numExpr", "value": toIntIfInt(
-                t[1]["value"] / t[3]["value"])}
-        elif t[2] == '%':
-            t[0] = {"type": "numExpr", "value": toIntIfInt(
-                t[1]["value"] % t[3]["value"])}
-        elif t[2] == '**':
-            t[0] = {"type": "numExpr", "value": toIntIfInt(
-                t[1]["value"] ** t[3]["value"])}
-        else:
-            t[0] = {"type": 'boolExpr', "value": options[op]
-                    (a["value"], b["value"])}
-
-    elif t[2] in ['+', '-', '*', '/']:
-        t[0] = {"type": "numExpr", "value": {
-            "type": t[2], "value": [t[1], t[3]]}}
+    # Check that both expr have the same types
+    if expr1["returnType"] != expr2["returnType"]:
+        raise Exception("Incomparable types")
+    if isinstance(expr1["value"], (int, float)) and isinstance(expr2["value"], (int, float)):
+        t[0] = {"value": options[op](expr1["value"], expr2["value"])}
     else:
-        t[0] = {"type": "boolExpr", "value": {
-            "type": t[2], "value": [t[1], t[3]]}}
-
+        t[0] = {"value": {"type": op, "value": [expr1, expr2]}}
+    t[0]["type"] = "boolExpr"
+    t[0]["returnType"] = "catgirl"
 
 def p_boolExpr_op(t):
     ''' expr : expr AND expr
              | expr OR expr
     '''
-    _, a, op, b = t
+    _, expr1, op, expr2 = t
     options = {'&&': lambda x, y: x and y,
                '||': lambda x, y: x or y
                }
-    if isinstance(a["value"], (bool)) and isinstance(b["value"], (bool)):
-        t[0] = {"type": 'boolExpr', "value": options[op]
-                (a["value"], b["value"])}
+    if expr1["returnType"] != "catgirl" and expr2["returnType"] != "catgirl":
+        raise Exception("Expected type catgirl")
+    elif isinstance(expr1["value"], (bool)) and isinstance(expr2["value"], (bool)):
+        # Directly evaluate literals for optimization
+        t[0] = {"value": options[op](expr1["value"], expr2["value"])}
     else:
-        t[0] = {"type": "boolExpr", "value": {
-            "type": t[2], "value": [t[1], t[3]]}}
+        t[0] = {"value": {"type": op, "value": [expr1, expr2]}}
+    t[0]["type"] = "boolExpr"
+    t[0]["returnType"] = "catgirl"
 
 
 def p_boolExprNeg(t):
     'expr : NOT expr'
-
-    t[0] = {"type": "boolExpr", "value": [t[1], t[2]]} if not isinstance(
-        t[2]['value'], (bool)) else {"type": "boolExpr", "value": not t[2]['value']}
+    if t[2]["returnType"] != "catgirl":
+        raise Exception("Expected type catgirl");
+    t[0] = {"value": [t[1], t[2]]} if not isinstance(t[2]['value'], (bool)) \
+        else {"value": not t[2]['value']}
+    t[0]["type"] = "boolExpr"
+    t[0]["returnType"] = "catgirl"
 
 
 def p_numExpr_uminus(t):
     'expr : MINUS expr %prec UMINUS'
-    t[0] = {"type": 'numExpr', "value": [t[1], t[2]] if not isinstance(
-        t[2]['value'], (int, float)) else -t[2]['value']}
+    if t[2]["returnType"] != "waifu":
+        raise Exception("Expected type waifu");
+    t[0] = {"value": [t[1], t[2]] if not isinstance(t[2]['value'], (int, float)) \
+        else -t[2]['value']}
+    t[0]["type"] = "numExpr"
+    t[0]["returnType"] = "waifu"
 
 
 def p_ternaryOp(t):
     ''' ternaryOp : expr QMARK expr COL expr
     '''
-    if isinstance(t[1]['value'], bool):
-        t[0] = t[3] if t[1]['value'] else t[5]
+    _, condition, _, expr1, _, expr2 = t
+    if condition["returnType"] != "catgirl":
+        raise Exception("Expected type catgirl for the condition")
+    elif expr1["returnType"] != expr2["returnType"]:
+        raise Exception("Expressions do not have the same type")
+    elif isinstance(condition['value'], bool):
+        t[0] = expr1 if condition['value'] else expr2
     else:
-        t[0] = {"type": "ternaryOp", 'value': t[1::]}
+        t[0] = {"type": "ternaryOp", "returnType": expr1["returnType"], 'value': t[1::]}
 
 
 def p_assignment(t):
@@ -204,6 +234,8 @@ def p_if(t):
     ''' if : NANI LPAREN expr RPAREN newScope enclosure popScope
            | NANI LPAREN expr RPAREN newScope singleStatement popScope
     '''
+    if t[3]["returnType"] != "catgirl":
+        raise Exception("Expected type catgirl")
     t[0] = {'type': 'if', 'value': t[2:5]+[t[6]]}
 
 
@@ -218,19 +250,16 @@ def p_reassign(t):
     ''' reassign : ID EQ expr
     '''
     _, name, _, val = t
-    if (name in lets and name not in consts):
-        t[0] = {'type': 'reassign', 'value': t[1::]}
-        lets[name]["value"] = val
-    else:
-        if (name in lets):
-            if (consts.inScopeIndex(lets.getScopeIndex(name), name)):
-                raise Exception("Cannot reassign constant")
-            else:
-                t[0] = {'type': 'reassign', 'value': t[1::]}
-                lets[name]["value"] = val
+    if name in lets:
+        if lets[name]["returnType"] != val["returnType"]:
+            raise Exception("Incompatible types for reassignment")
+        elif name not in consts or not (consts.inScopeIndex(lets.getScopeIndex(name), name)):
+            t[0] = {'type': 'reassign', 'value': t[1::]}
+            lets[name]["value"] = val
         else:
-            raise Exception("Variable {} not declared.".format(name))
-        # error here
+            raise Exception("Cannot reassign constant")
+    else:
+        raise Exception("Variable {} not declared.".format(name))
 
 
 def p_functionDeclaration(t):
@@ -269,6 +298,7 @@ def p_returnStatement(t):
     ''' returnStatement : expr DESU
     '''
     # future error check, can only return in a function.
+    #TODO: Same as above but type check for correct return type
     t[0] = {'type': 'return', 'value': t[1]}
 
 
@@ -293,9 +323,12 @@ def p_arrayAssign(t):
     ''' arrayAssign : ID LBRACK expr RBRACK EQ expr
     '''
     _, name, *elements = t
+    if t[3]["returnType"] != 'waifu':
+        raise Exception("Expected type waifu") 
     if (name in lets):
-        if (lets[name]['value'] != None):
-            # if lets[name]["type"] == typeOf(val):
+        if lets[name]["returnType"] != t[6]["returnType"]:
+            raise Exception("Assignment type does not match array type")
+        elif (lets[name]['value'] != None):
             t[0] = {"type": "arrayAssign", "value": [name]+elements}
             lets[name]['value'][elements[2]] = elements[-1]
         else:
@@ -304,25 +337,26 @@ def p_arrayAssign(t):
         raise Exception("Undefined name '%s'" % name)
 
 
-def p_functionCall(t):
-    ''' functionCall : printCall
-                     | ID LPAREN exprLst RPAREN
+def p_printCall(t): 
+    ''' functionCall : printCall '''
+    t[0] = t[1]
+
+def p_functionCall(t): 
+    ''' functionCall : ID LPAREN exprLst RPAREN
                      | ID LPAREN RPAREN
     '''
-    if len(t) == 2:
-        t[0] = t[1]
-    else:
-        _, fnName, *elements = t
-        if (fnName in fns):
-            # ok we need to make objects to store our data properly
-            if len(elements) == 2:
-                t[0] = {"type": "functionCall",
-                        "name": fnName, "value": [fnName]+elements}
-            else:
-                t[0] = {"type": "functionCall",
-                        "name": fnName, "value": [fnName]+[elements[0], *elements[1], elements[2]]}
+    _, fnName, *elements = t
+    if (fnName in fns):
+        if len(elements) == 2: #Empty brackets
+            t[0] = {"type": "functionCall",
+                    "returnType": fns[fnName][0]["value"],
+                    "name": fnName, "value": [fnName]+elements}
         else:
-            raise Exception("Undefined function name '%s'" % fnName)
+            t[0] = {"type": "functionCall",
+                    "returnType": fns[fnName][0]["value"],
+                    "name": fnName, "value": [fnName]+[elements[0], *elements[1], elements[2]]}
+    else:
+        raise Exception("Undefined function name '%s'" % fnName)
 
 
 def p_arrayLiteral(t):
@@ -330,11 +364,21 @@ def p_arrayLiteral(t):
                      | LBRACK exprLst RBRACK
     '''
     _, *elements = t
-    if len(t) == 3:
-        t[0] = {"type": "arrayLiteral", "value": elements}
+    if len(t) == 3: #Empty array
+        t[0] = {"type": "arrayLiteral", "returnType": "empty harem", "value": elements}
     else:
-        t[0] = {"type": "arrayLiteral", "value": [
-            elements[0], *elements[1], elements[2]]}
+        #Check if all elements are the same type
+        exprList = elements[1]
+        arrayType = exprList[0]["returnType"]
+        for i in range(1, len(exprList)):
+            if arrayType != exprList[i]["returnType"]:
+                raise Exception("Harem members are not the same type")
+        
+        t[0] = {
+            "type": "arrayLiteral", 
+            "returnType": arrayType + " harem", 
+            "value": [elements[0], *elements[1], elements[2]]
+        }
 
 
 def p_exprList(t):
@@ -360,11 +404,13 @@ def p_letInitialize(t):
     name = t[1]["value"]["value"]
     typeName = t[1]["value"]["type"]
     val = t[3]
-    # if (typeOf(val) == typeVal):
-    t[0] = {"type": "initialize", "value": [
-        {"type": typeName, "value": name}, '=', t[3]]}
-    lets[name]["value"] = val
-    # else error
+    if typeName == val["returnType"] or \
+    ("harem" in typeName and val["returnType"] == "empty harem"):
+        t[0] = {"type": "initialize", "value": [
+            {"type": typeName, "value": name}, '=', t[3]]}
+        lets[name]["value"] = val
+    else:
+        raise Exception("Expression type does not match variable type")
 
 
 def p_constInitialize(t):
@@ -373,10 +419,14 @@ def p_constInitialize(t):
     name = t[1]["value"]["value"]
     typeName = t[1]["value"]["type"]
     val = t[3]
-    # if (typeOf(val) == typeVal):
-    t[0] = {"type": "constInitialize", "value": [
-        {"type": typeName, "value": name}, '=', t[3]]}
-    lets[name]["value"] = val
+
+    if typeName == val["returnType"] or \
+    ("harem" in typeName and val["returnType"] == "empty harem"):
+        t[0] = {"type": "constInitialize", "value": [
+            {"type": typeName, "value": name}, '=', t[3]]}
+        lets[name]["value"] = val
+    else:
+        raise Exception("Expression type does not match variable type")
 
 
 def p_declaration(t):
@@ -404,10 +454,14 @@ def p_binOpAssign(t):
                }
     if len(t) == 4:
         _, name, op, val = t
+        if val["returnType"] != "waifu":
+            raise Exception("Expected type waifu")
     else:
         _, name, op = t
         val = 1
     if (name in lets):
+        if lets[name]["returnType"] != "waifu":
+            raise Exception("Expected type waifu")
         if (name not in consts):
             t[0] = {'type': 'short_binop', 'value': t[1::]}
         else:
@@ -443,15 +497,17 @@ def p_arrayDeclaration(t):
     'arrayDeclaration : type HAREM ID'
     _, typeVal, _,  name = t
 
-    # [typeVal + ' harem', name]
+    returnType = typeVal["value"] + " harem"
     t[0] = declarations(
-        name, {"type": 'type', "value": typeVal["value"] + " harem"}, True, 'declaration')
+        name, {"type": 'type', "returnType": returnType, "value": returnType}, \
+        True, 'declaration')
 
 
 def p_letDeclaration(t):
     '''letDeclaration : type ID'''
 
     _, typeVal, name = t
+    typeVal["returnType"] = typeVal["value"]
     t[0] = declarations(name, typeVal, False, 'declaration')
 
 
@@ -459,6 +515,8 @@ def p_whileLoop(t):
     '''whileLoop : WHILEU LPAREN expr RPAREN ISTUDIED newScope enclosure popScope
     '''
     _, _, _, cond, _, _, _, statements, _ = t
+    if cond["returnType"] != "catgirl":
+        raise Exception("Expected type catgirl")
     t[0] = {"type": 'whileLoop', "value": t[1:6]+[statements]}
 
 
@@ -472,6 +530,8 @@ def p_forLoop(t):
 def p_forTrio(t):
     ''' forTrio : forAssign SEMICOL expr SEMICOL forReassign
     '''
+    if t[3]["returnType"] != "catgirl":
+        raise Exception("Expected type catgirl")
     t[0] = {'type': 'forTrio', 'value': t[1::]}
 
 
@@ -521,6 +581,7 @@ def p_letReference(t):
     if (name in lets):
         t[0] = {
             "type": "letReference",
+            "returnType": lets[name]["returnType"],
             "value":
                 {
                     "type": lets[name]["type"]["value"],
@@ -534,12 +595,16 @@ def p_letReference(t):
 def p_arrayReference(t):
     ''' arrayReference : ID LBRACK expr RBRACK '''
     _, name, _, index, _ = t
+    if index["returnType"] != "waifu":
+        raise Exception("Expected type waifu for the index")
     if (name in lets):
         t[0] = {"type": "arrayReference",
+                "returnType": lets[name]["returnType"].replace(' harem',''),
                 "value": [{"value": name,
                            "type": lets[name]["type"]["value"]},
                           '[',
                           {"type": "numExpr",
+                           "returnType": "waifu",
                            "value": index['value'] if isinstance(index['value'], (int, float)) else index},
                           ']']}
     else:
@@ -548,14 +613,18 @@ def p_arrayReference(t):
 
 def p_numExpr_number(t):
     'literal : NUMBER'
-    t[0] = {"type": 'numExpr', "value": t[1]}
+    t[0] = {"type": 'numExpr',"returnType": "waifu", "value": t[1]}
 
 
 def p_bool(t):
     ''' literal : OWO
                 | UWU
     '''
-    t[0] = {"type": "boolExpr", "value": True if t[1] == 'uwu' else False}
+    t[0] = {
+        "type": "boolExpr", 
+        "returnType": "catgirl",
+        "value": True if t[1] == 'uwu' else False
+    }
 
 
 def p_fnType(t):
@@ -577,8 +646,11 @@ def p_empty(t):
     pass
 
 
-# def p_error(t):
-#     raise Exception("Syntax error at line", t.lineno)
+def p_error(t):
+    if t:
+        raise SyntaxError('invalid syntax', (None, t.lineno, None, t.value))
+    else:
+        raise SyntaxError('unexpected EOF while parsing', (None, None, None, None))
 
 def make_parser():
     return yacc.yacc()
