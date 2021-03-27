@@ -1,3 +1,3 @@
-waifu z = 42; z;
-waifu x = 5;
-
+senpai z = "AAAA";
+z = z +"BBBBB";
+"AAAAA" + "BBBB";

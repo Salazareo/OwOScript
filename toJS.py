@@ -217,9 +217,9 @@ class JSConverter():
                                         val[2]['type'], val[2]['value']),
                                     self.typeTransfer(val[5]['type'], val[5]['value'])) + (''if special else ';\n')
 
-    def arrayReference(self, val):
-        return '{}[{}]'.format(val[0]['value'],
-                               self.typeTransfer(val[2]['type'], val[2]['value']))
+    def arrayReference(self, val, special=False):
+        return '{}[{}]'.format(self.typeTransfer(val[0]['type'], val[0]['value']),
+                               self.typeTransfer(val[2]['type'], val[2]['value'])) + (';'if special else '')
 
     def printCall(self, val):
         return 'console.log({});\n'.format(self.typeTransfer(val[2]['type'], val[2]['value']))
@@ -227,7 +227,10 @@ class JSConverter():
     def typeTransfer(self, typeName, val, specialCase=False):
         try:
             if specialCase:
-                return self.fakeSwitch[typeName](val, specialCase)
+                try:
+                    return self.fakeSwitch[typeName](val, specialCase)
+                except TypeError:
+                    return self.fakeSwitch[typeName](val)
             else:
                 return self.fakeSwitch[typeName](val)
         except KeyError as e:
