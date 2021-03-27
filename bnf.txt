@@ -1,7 +1,10 @@
 program : statements
+        | empty
+
+empty :            #For a program with no code
 
 statements : singleStatement
-           | statements statements
+           | statements singleStatement
 
 singleStatement : expr ;
                 | assignment ; 
@@ -15,25 +18,26 @@ singleStatement : expr ;
 expr : literal 
      | arrayLiteral
      | reference 
-     | ( expr )
-     | ternaryOp
      | functionCall
-     | !expr           # Bool operations
-	| expr < expr
-	| expr > expr
-	| expr >= expr
-	| expr <= expr 
-	| expr == expr 
-	| expr != expr
-	| expr && expr
-	| expr || expr
-	| - expr          # num operations
+     | ternaryOp
+     | ( expr )
 	| expr + expr
 	| expr - expr
 	| expr * expr 
 	| expr / expr 
-     | expr ^ expr
      | expr % expr
+     | expr ^ expr
+	| expr < expr
+	| expr > expr
+	| expr <= expr 
+	| expr >= expr
+	| expr == expr 
+	| expr != expr
+	| expr && expr
+	| expr || expr
+     | !expr          
+	| - expr          
+
 
 ternaryOp : expr ? expr : expr
 
@@ -44,8 +48,8 @@ assignment : reassign
 
 binOpAssign : ID += expr
             | ID -= expr
-            | ID /= expr
             | ID *= expr
+            | ID /= expr
             | ID ++
             | ID --
 
@@ -72,6 +76,7 @@ forAssign : reassign
 
 forReassign : reassign
             | arrayAssign
+            | binOpAssign
 
 forElement : declaration : ID
            | constDeclaration : ID
@@ -129,8 +134,8 @@ exprList : expr
 
 
 literal : NUMBER
-	| OWO
-	| UWU
+	   | OWO
+	   | UWU
 
 reference : letReference
           | arrayReference

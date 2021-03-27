@@ -100,10 +100,10 @@ def p_boolExpr(t):
              | expr DIVIDE expr
              | expr MOD expr
              | expr POW expr
-             | expr LEQ expr
-             | expr GEQ expr
              | expr LT expr
              | expr GT expr
+             | expr LEQ expr
+             | expr GEQ expr
     '''
     _, expr1, op, expr2 = t
     boolOptions = {'<': lambda x, y: x < y,
@@ -223,6 +223,39 @@ def p_assignment(t):
     t[0] = t[1]
 
 
+def p_binOpAssign(t):
+    ''' binOpAssign : ID PEQ expr
+                    | ID MEQ expr
+                    | ID TEQ expr
+                    | ID DEQ expr
+                    | ID PP
+                    | ID MM
+    '''
+    options = {'+=': lambda x, y: x + y,
+               '-=': lambda x, y: x - y,
+               '*=': lambda x, y: x * y,
+               '/=': lambda x, y: x / y,
+               '++': lambda x, y: x + 1,
+               '--': lambda x, y: x - 1
+               }
+    if len(t) == 4:
+        _, name, op, val = t
+        if val["returnType"] != "waifu":
+            raise Exception("Expected type waifu")
+    else:
+        _, name, op = t
+        val = 1
+    if (name in lets):
+        if lets[name]["returnType"] != "waifu":
+            raise Exception("Expected type waifu")
+        if (name not in consts):
+            t[0] = {'type': 'short_binop', 'value': t[1::]}
+        else:
+            raise Exception("Cannot reassign constant")
+    else:
+        raise Exception("Variable {} not declared.".format(name))
+
+
 def p_conditional(t):
     ''' conditional : if else
                     | if
@@ -263,10 +296,10 @@ def p_reassign(t):
 
 
 def p_functionDeclaration(t):
-    ''' functionDeclaration : newFn newScope LPAREN argumentDeclaration RPAREN enclosure popScope
+    ''' functionDeclaration : fnHeader newScope LPAREN argumentDeclaration RPAREN enclosure popScope
     '''
-    _, newFn, _, l, args, r, enclosure, _ = t
-    returnType, _, honorific, fnName = newFn
+    _, fnHeader, _, l, args, r, enclosure, _ = t
+    returnType, _, honorific, fnName = fnHeader
     t[0] = {'type': 'functionDeclaration',
             'returnType': returnType['value'], 'value': [fnName, l, args, r, enclosure]}
     fns[fnName][1] = (args, enclosure)
@@ -279,8 +312,8 @@ def p_enclosure(t):
     t[0] = {'type': 'enclosure', 'value': t[1::]}
 
 
-def p_newFn(t):
-    'newFn : fnType SQUIGGLY honorific ID'
+def p_functionHeader(t):
+    'fnHeader : fnType SQUIGGLY honorific ID'
     _, typeVal, _, _, name = t
     fns.forceNew(name, [typeVal, None])
     t[0] = t[1::]
@@ -435,39 +468,6 @@ def p_declaration(t):
     '''
     # note const declaration cannot go here, we have to assign when we do that
     t[0] = t[1]
-
-
-def p_binOpAssign(t):
-    ''' binOpAssign : ID PEQ expr
-                    | ID MEQ expr
-                    | ID TEQ expr
-                    | ID DEQ expr
-                    | ID PP
-                    | ID MM
-    '''
-    options = {'+=': lambda x, y: x + y,
-               '-=': lambda x, y: x - y,
-               '*=': lambda x, y: x * y,
-               '/=': lambda x, y: x / y,
-               '++': lambda x, y: x + 1,
-               '--': lambda x, y: x - 1
-               }
-    if len(t) == 4:
-        _, name, op, val = t
-        if val["returnType"] != "waifu":
-            raise Exception("Expected type waifu")
-    else:
-        _, name, op = t
-        val = 1
-    if (name in lets):
-        if lets[name]["returnType"] != "waifu":
-            raise Exception("Expected type waifu")
-        if (name not in consts):
-            t[0] = {'type': 'short_binop', 'value': t[1::]}
-        else:
-            raise Exception("Cannot reassign constant")
-    else:
-        raise Exception("Variable {} not declared.".format(name))
 
 
 def p_argumentDeclaration(t):
