@@ -20,7 +20,7 @@ class TypeConvervter():
             "waifu": "waifu",
             "husbando": "waifu",
             "catgirl": "catgirl",
-            "catboy": "catboy",
+            "catboy": "catgirl",
         }
 
     def __getitem__(self, key):
