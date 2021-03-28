@@ -1,11 +1,19 @@
 from ply import yacc
 import lexer
 import json
+import logging
 
 import argparse
 from ScopedMap import ScopedMap
 tokens = lexer.tokens
 
+logging.basicConfig(
+    level = logging.DEBUG,
+    filename = "parselog.txt",
+    filemode = "w",
+    format = "%(filename)10s:%(lineno)4d:%(message)s"
+)
+log = logging.getLogger()
 
 def rreplace(s: str, old: str, new: str, occurrence=1):
     li = s.rsplit(old, occurrence)
@@ -61,7 +69,6 @@ precedence = (
     ('right', 'UMINUS', 'NOT'),
     ('left', 'LPAREN', 'RPAREN'),
     ('left', 'LBRACK', 'RBRACK'),
-
 )
 
 
@@ -648,11 +655,28 @@ def p_letReference(t):
 
 
 def p_arrayReference(t):
-    ''' expr : expr LBRACK expr RBRACK '''
+    ''' expr : expr LBRACK expr RBRACK 
+             | ID LBRACK expr RBRACK
+    '''
     _, lst, _, index, _ = t
+
     if index["returnType"] != "waifu":
         raise Exception("Expected type waifu for the index")
-    if typeConv[lst['returnType']] == "senpai":
+    if isinstance(lst, str):
+        name = lst
+        if (name in lets):
+            t[0] = {"type": "arrayReference",
+                    "returnType": lets[name]["returnType"].replace(' harem', ''),
+                    "value": [{"value": name,
+                            "type": lets[name]["type"]["value"]},
+                            '[',
+                            {"type": "numExpr",
+                            "returnType": "waifu",
+                            "value": index['value'] if isinstance(index['value'], (int, float)) else index},
+                            ']'], "line": t.lineno(1)}
+        else:
+            raise Exception("Undefined name '%s' at line %s" % (name, t.lineno(1)))
+    elif typeConv[lst['returnType']] == "senpai":
         if isinstance(lst['value'], str) and isinstance(index['value'], (int, float)):
             t[0] = {"type": "strExpr",
                     "value": lst['value'][index['value']],
@@ -743,7 +767,7 @@ def make_parser():
 
 
 def make_ast(sourceCode, parser):
-    return parser.parse(sourceCode)
+    return parser.parse(sourceCode, debug=log)
 
 
 def run_parser(sourceCode, outputFileName, parser):

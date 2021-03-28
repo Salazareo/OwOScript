@@ -1,3 +1,6 @@
-senpai z = "AAAA";
-z = z +"BBBBB";
-"AAAAA" + "BBBB";
+waifu harem lst = [1,2,3];
+lst[0] = 7;
+lst[0];
+[1,2,3][0];
+catgirl harem bools = [owo, uwu, owo, uwu];
+baka(uwu && bools[lst[2]]);
