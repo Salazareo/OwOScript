@@ -32,9 +32,13 @@ class TypeConvervter():
             "catboy": "catgirl",
         }
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str):
         try:
-            return self.dic[key]
+            typ = key.split(' ', 1)
+            if len(typ > 1):
+                return self.dic[typ[0]] + typ[1]
+            else:
+                return self.dic[key]
         except Exception:
             return key
 
@@ -53,7 +57,8 @@ def declarations(name, typeVal, isArray, type, t):
         return {"type": type, "returnType": typeConv[typeVal["returnType"]], "value": {
             "type": typeVal["value"], "value": name}}
     else:
-        raise Exception("%s has already been declared at line %s" % (name, t.lineno(1)))
+        raise Exception("%s has already been declared at line %s" %
+                        (name, t.lineno(1)))
 
 
 lets = ScopedMap()
@@ -260,9 +265,11 @@ def p_ternaryOp(t):
     '''
     _, condition, _, expr1, _, expr2 = t
     if typeConv[condition["returnType"]] != "catgirl":
-        raise Exception("Expected type catgirl for the condition at line %s" % t.lineno(1))
+        raise Exception(
+            "Expected type catgirl for the condition at line %s" % t.lineno(1))
     elif typeConv[expr1["returnType"]] != typeConv[expr2["returnType"]]:
-        raise Exception("Expressions do not have the same type at line %s" % t.lineno(1))
+        raise Exception(
+            "Expressions do not have the same type at line %s" % t.lineno(1))
     elif isinstance(condition['value'], bool):
         t[0] = expr1 if condition['value'] else expr2
     else:
@@ -308,9 +315,11 @@ def p_binOpAssign(t):
             t[0] = {'type': 'short_binop',
                     'value': t[1::], "line": t.lineno(1)}
         else:
-            raise Exception("Cannot reassign constant at line %s" % t.lineno(1))
+            raise Exception(
+                "Cannot reassign constant at line %s" % t.lineno(1))
     else:
-        raise Exception("Variable %s not declared at line %s" % (name, t.lineno(1)))
+        raise Exception("Variable %s not declared at line %s" %
+                        (name, t.lineno(1)))
 
 
 def p_conditional(t):
@@ -342,14 +351,17 @@ def p_reassign(t):
     _, name, _, val = t
     if name in lets:
         if typeConv[lets[name]["returnType"]] != typeConv[val["returnType"]]:
-            raise Exception("Incompatible types for reassignment at line %s" % t.lineno(1))
+            raise Exception(
+                "Incompatible types for reassignment at line %s" % t.lineno(1))
         elif name not in consts or not (consts.inScopeIndex(lets.getScopeIndex(name), name)):
             t[0] = {'type': 'reassign', 'value': t[1::], "line": t.lineno(1)}
             lets[name]["value"] = val
         else:
-            raise Exception("Cannot reassign constant at line %s" % t.lineno(1))
+            raise Exception(
+                "Cannot reassign constant at line %s" % t.lineno(1))
     else:
-        raise Exception("Variable %s not declared at line %s" % (t.lineno(1), name))
+        raise Exception("Variable %s not declared at line %s" %
+                        (t.lineno(1), name))
 
 
 def p_functionDeclaration(t):
@@ -398,7 +410,7 @@ def p_returnStatement(t):
     if fns.currentlyInFunction():
         returnType = fns.getFunctionInfo()["returnType"]
         if t[1]["returnType"] != returnType:
-            raise Exception("Incorrect return type, expected type %s but received type %s at line %s" % 
+            raise Exception("Incorrect return type, expected type %s but received type %s at line %s" %
                             (returnType, t[1]["returnType"], t.lineno(1)))
         t[0] = {'type': 'return', 'value': t[1], "line": t.lineno(1)}
     else:
@@ -428,10 +440,12 @@ def p_arrayAssign(t):
     '''  # Before: ID [ expr ] = expr
     _, name, *elements = t
     if name['type'] != "arrayReference":
-        raise Exception("Expected a harem to be referenced at line %s" % t.lineno(1))
+        raise Exception(
+            "Expected a harem to be referenced at line %s" % t.lineno(1))
 
     if typeConv[name["returnType"]] != typeConv[t[3]["returnType"]]:
-        raise Exception("Assignment type does not match array type at line %s" % t.lineno(1))
+        raise Exception(
+            "Assignment type does not match array type at line %s" % t.lineno(1))
     elif (name['value'] != None):
         varName = name['value'][0]['value']['value']  # why
         t[0] = {
@@ -462,7 +476,7 @@ def p_functionCall(t):
                     "name": fnName, "value": [fnName]+elements, "line": t.lineno(1)}
         else:
             params = fns[fnName][1][0]
-            if len(params) != len(t[3]): 
+            if len(params) != len(t[3]):
                 raise Exception("Incorrect number of arguments, expected %s and received %s arguments at line %s" %
                                 (len(fns[fnName][1][0]), len(elements)-2, str(t.lineno(1))))
             # Check if argument types match
@@ -470,7 +484,7 @@ def p_functionCall(t):
                 if params[i]["returnType"] != t[3][i]["returnType"]:
                     raise Exception("Argument type %s does not match expected type %s at line %s" %
                                     (t[3][i]["returnType"], params[i]["returnType"], t.lineno(1)))
-                
+
             t[0] = {"type": "functionCall",
                     "returnType": fns[fnName][0]["value"],
                     "name": fnName, "value": [fnName]+[elements[0], *elements[1], elements[2]], "line": t.lineno(1)}
@@ -493,7 +507,8 @@ def p_arrayLiteral(t):
         arrayType = typeConv[exprList[0]["returnType"]]
         for i in range(1, len(exprList)):
             if arrayType != typeConv[exprList[i]["returnType"]]:
-                raise Exception("Harem members are not the same type at line %s" % t.lineno(1))
+                raise Exception(
+                    "Harem members are not the same type at line %s" % t.lineno(1))
 
         t[0] = {
             "type": "arrayLiteral",
@@ -532,7 +547,8 @@ def p_letInitialize(t):
             {"type": typeName, "value": name}, '=', t[3]], "line": t.lineno(1)}
         lets[name]["value"] = val
     else:
-        raise Exception("Expression type does not match variable type at line %s" % t.lineno(1))
+        raise Exception(
+            "Expression type does not match variable type at line %s" % t.lineno(1))
 
 
 def p_constInitialize(t):
@@ -548,7 +564,8 @@ def p_constInitialize(t):
             {"type": typeName, "value": name}, '=', t[3]], "line": t.lineno(1)}
         lets[name]["value"] = val
     else:
-        raise Exception("Expression type does not match variable type at line %s" % t.lineno(1))
+        raise Exception(
+            "Expression type does not match variable type at line %s" % t.lineno(1))
 
 
 def p_declaration(t):
@@ -694,7 +711,8 @@ def p_arrayReference(t):
     _, lst, _, index, _ = t
 
     if index["returnType"] != "waifu":
-        raise Exception("Expected type waifu for the index at line %s" % t.lineno(1))
+        raise Exception(
+            "Expected type waifu for the index at line %s" % t.lineno(1))
     if isinstance(lst, str):
         name = lst
         if (name in lets):
