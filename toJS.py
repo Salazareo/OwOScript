@@ -85,7 +85,7 @@ class JSConverter():
     def strExpr(self, val, special=False):
 
         if isinstance(val, str):
-            return "'{}'".format(val.replace("'", "\'"))
+            return "'{}'".format(val.replace("'", "\\'"))
         else:
             return '{} + {}'.format(self.typeTransfer(val['value'][0]['type'],
                                                       val['value'][0]['value'], True), self.typeTransfer(val['value'][1]['type'],
