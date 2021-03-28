@@ -6,8 +6,20 @@ class ScopedMap():
     def __init__(self):
         self.scopes = [{}]
 
-    def addScope(self):
-        self.scopes.append({})
+    def addScope(self, functionInfo=None):
+        self.scopes.append({"-FUNCTION-": functionInfo})
+
+    def currentlyInFunction(self):
+        for i in range(len(self.scopes)-1, -1, -1):
+            if self.scopes[i]['-FUNCTION-'] != None:
+                return True
+        return False
+
+    def getFunctionInfo(self):
+        for i in range(len(self.scopes)-1, -1, -1):
+            if self.scopes[i]['-FUNCTION-'] != None:
+                return self.scopes[i]['-FUNCTION-']
+        return False
 
     def popScope(self):
         self.scopes.pop()

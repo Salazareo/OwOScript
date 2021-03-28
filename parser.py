@@ -353,7 +353,7 @@ def p_reassign(t):
 
 
 def p_functionDeclaration(t):
-    ''' functionDeclaration : fnHeader newScope LPAREN argumentDeclaration RPAREN enclosure popScope
+    ''' functionDeclaration : fnHeader LPAREN argumentDeclaration RPAREN enclosure popScope
     '''
     _, fnHeader, _, l, args, r, enclosure, _ = t
     returnType, _, honorific, fnName = fnHeader
@@ -373,6 +373,11 @@ def p_functionHeader(t):
     'fnHeader : fnType SQUIGGLY honorific ID'
     _, typeVal, _, _, name = t
     fns.forceNew(name, [typeVal, None])
+
+    lets.addScope()
+    consts.addScope()
+    fns.addScope()
+
     t[0] = t[1::]
 
 
