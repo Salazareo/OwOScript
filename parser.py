@@ -124,7 +124,7 @@ def p_paren_expr(t):
     ''' expr : LPAREN expr RPAREN
     '''
     t[0] = {
-        "type": t[2]["type"], "returnType": t[2]["returnType"], "value": t[1::]
+        "type": t[2]["type"], "returnType": typeConv[t[2]["returnType"]], "value": t[1::]
         if not isinstance(t[2]['value'], (bool, int, float)) else t[2]['value'],
         "line": t.lineno(1)
     }
@@ -273,7 +273,7 @@ def p_ternaryOp(t):
     elif isinstance(condition['value'], bool):
         t[0] = expr1 if condition['value'] else expr2
     else:
-        t[0] = {"type": "ternaryOp", "returnType": expr1["returnType"],
+        t[0] = {"type": "ternaryOp", "returnType": typeConv[expr1["returnType"]],
                 'value': t[1::], "line": t.lineno(1)}
 
 
@@ -408,10 +408,10 @@ def p_returnStatement(t):
     ''' returnStatement : expr DESU
     '''
     if fns.currentlyInFunction():
-        returnType = fns.getFunctionInfo()["returnType"]
-        if t[1]["returnType"] != returnType:
+        returnType = typeConv[fns.getFunctionInfo()["returnType"]]
+        if typeConv[t[1]["returnType"]] != returnType:
             raise Exception("Incorrect return type, expected type %s but received type %s at line %s" %
-                            (returnType, t[1]["returnType"], t.lineno(1)))
+                            (returnType, typeConv[t[1]["returnType"]], t.lineno(1)))
         t[0] = {'type': 'return', 'value': t[1], "line": t.lineno(1)}
     else:
         raise Exception("Return statement is not inside a function at line %s" %
@@ -481,9 +481,9 @@ def p_functionCall(t):
                                 (len(fns[fnName][1][0]), len(elements)-2, str(t.lineno(1))))
             # Check if argument types match
             for i in range(len(params)):
-                if params[i]["returnType"] != t[3][i]["returnType"]:
+                if typeConv[params[i]["returnType"]] != typeConv[t[3][i]["returnType"]]:
                     raise Exception("Argument type %s does not match expected type %s at line %s" %
-                                    (t[3][i]["returnType"], params[i]["returnType"], t.lineno(1)))
+                                    (typeConv[t[3][i]["returnType"]], typeConv[params[i]["returnType"]], t.lineno(1)))
 
             t[0] = {"type": "functionCall",
                     "returnType": fns[fnName][0]["value"],
@@ -558,7 +558,7 @@ def p_constInitialize(t):
     typeName = t[1]["value"]["type"]
     val = t[3]
 
-    if typeName == val["returnType"] or \
+    if typeName == typeConv[val["returnType"]] or \
             ("harem" in typeName and val["returnType"] == "empty harem"):
         t[0] = {"type": "constInitialize", "value": [
             {"type": typeName, "value": name}, '=', t[3]], "line": t.lineno(1)}
@@ -623,7 +623,7 @@ def p_whileLoop(t):
     '''whileLoop : WHILEU LPAREN expr RPAREN ISTUDIED newScope enclosure popScope
     '''
     _, _, _, cond, _, _, _, statements, _ = t
-    if cond["returnType"] != "catgirl":
+    if typeConv[cond["returnType"]] != "catgirl":
         raise Exception("Expected type catgirl at line %s" % t.lineno(1))
     t[0] = {"type": 'whileLoop', "value": t[1:6] +
             [statements], "line": t.lineno(1)}
@@ -639,7 +639,7 @@ def p_forLoop(t):
 def p_forTrio(t):
     ''' forTrio : forAssign SEMICOL expr SEMICOL forReassign
     '''
-    if t[3]["returnType"] != "catgirl":
+    if typeConv[t[3]["returnType"]] != "catgirl":
         raise Exception("Expected type catgirl at line %s" % t.lineno(1))
     t[0] = {'type': 'forTrio', 'value': t[1::], "line": t.lineno(1)}
 
@@ -692,7 +692,7 @@ def p_letReference(t):
     if (name in lets):
         t[0] = {
             "type": "letReference",
-            "returnType": lets[name]["returnType"],
+            "returnType": typeConv[lets[name]["returnType"]],
             "value":
                 {
                     "type": lets[name]["type"]["value"],
@@ -710,7 +710,7 @@ def p_arrayReference(t):
     '''
     _, lst, _, index, _ = t
 
-    if index["returnType"] != "waifu":
+    if typeConv[index["returnType"]] != "waifu":
         raise Exception(
             "Expected type waifu for the index at line %s" % t.lineno(1))
     if isinstance(lst, str):
@@ -787,8 +787,11 @@ def p_fnType(t):
                | type
                | type HAREM
     '''
-    t[0] = {'type': 'type', "value": t[1],
+    t[0] = {'type': 'type',
+            "value": t[1] + " harem" if len(t) == 3 else t[1],
             "line": t.lineno(1)} if t[1] == 'yokai' else t[1]
+    t[0]["value"] = typeConv[t[0]["value"]] + \
+        " harem" if len(t) == 3 else t[0]["value"]
 
 
 def p_type(t):
@@ -821,6 +824,7 @@ def make_parser():
 
 def make_ast(sourceCode, parser):
     return parser.parse(sourceCode)
+    # return parser.parse(sourceCode, debug=log) #For debugging the parser
 
 
 def run_parser(sourceCode, outputFileName, parser):
