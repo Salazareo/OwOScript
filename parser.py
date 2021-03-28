@@ -25,7 +25,7 @@ class TypeConvervter():
     def __init__(self):
         self.dic = {
             "senpai": "senpai",
-            "kohai": "senpai",
+            "kouhai": "senpai",
             "waifu": "waifu",
             "husbando": "waifu",
             "catgirl": "catgirl",
@@ -35,11 +35,11 @@ class TypeConvervter():
     def __getitem__(self, key: str):
         try:
             typ = key.split(' ', 1)
-            if len(typ > 1):
+            if len(typ) > 1:
                 return self.dic[typ[0]] + typ[1]
             else:
-                return self.dic[key]
-        except Exception:
+                return self.dic[typ[0]]
+        except Exception as e:
             return key
 
 
@@ -361,7 +361,7 @@ def p_reassign(t):
                 "Cannot reassign constant at line %s" % t.lineno(1))
     else:
         raise Exception("Variable %s not declared at line %s" %
-                        (t.lineno(1), name))
+                        (name, t.lineno(1)))
 
 
 def p_functionDeclaration(t):
@@ -555,9 +555,8 @@ def p_constInitialize(t):
     ''' constInitialize : constDeclaration EQ expr
     '''
     name = t[1]["value"]["value"]
-    typeName = t[1]["value"]["type"]
+    typeName = typeConv[t[1]["value"]["type"]]
     val = t[3]
-
     if typeName == typeConv[val["returnType"]] or \
             ("harem" in typeName and val["returnType"] == "empty harem"):
         t[0] = {"type": "constInitialize", "value": [

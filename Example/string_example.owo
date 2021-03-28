@@ -1,0 +1,3 @@
+real kouhai x = "Hi, this is my own special message, including this thing \" and the single one'";
+baka(x);
+senpai y = "========" +x;
