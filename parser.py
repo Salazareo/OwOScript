@@ -68,7 +68,7 @@ precedence = (
     ('left', 'POW'),
     ('right', 'UMINUS', 'NOT'),
     ('left', 'LPAREN', 'RPAREN'),
-    ('left', 'LBRACK', 'RBRACK'),
+    ('left', 'ID', 'LBRACK', 'RBRACK'),
 )
 
 
@@ -404,23 +404,21 @@ def p_honorific(t):
 
 
 def p_arrayAssign(t):
-    ''' arrayAssign : ID LBRACK expr RBRACK EQ expr
-    '''
+    ''' arrayAssign : arrayReference EQ expr
+    ''' # Before: ID [ expr ] = expr
     _, name, *elements = t
-    if typeConv[t[3]["returnType"]] != 'waifu':
-        raise Exception("Expected type waifu")
-    if (name in lets):
-        if typeConv[rreplace(lets[name]["returnType"], ' harem', '')] != typeConv[t[6]["returnType"]]:
-            raise Exception("Assignment type does not match array type")
-        elif (lets[name]['value'] != None):
-            t[0] = {"type": "arrayAssign", "value": [
-                name]+elements, "line": t.lineno(1)}
-            lets[name]['value'][elements[2]] = elements[-1]
-        else:
-            raise Exception("Array %s at line %s uninitialized" %
-                            (name, t.lineno(1)))
+    if name['type'] != "arrayReference":
+        raise Exception("Expected a harem to be referenced")
+
+    if typeConv[name["returnType"]] != typeConv[t[3]["returnType"]]:
+        raise Exception("Assignment type does not match array type")
+    elif (name['value'] != None):
+        t[0] = {"type": "arrayAssign", "value": [
+            name]+elements, "line": t.lineno(1)}
+        #name['value'][elements[2]] = elements[-1]
     else:
-        raise Exception("Undefined name '%s' at line %s" % (name, t.lineno(1)))
+        raise Exception("Array %s at line %s uninitialized" %
+                        (name, t.lineno(1)))
 
 
 def p_printCall(t):
@@ -631,6 +629,7 @@ def p_print(t):
 
 def p_reference(t):
     ''' reference : letReference
+                  | arrayReference
     '''
     t[0] = t[1]
 
@@ -655,8 +654,8 @@ def p_letReference(t):
 
 
 def p_arrayReference(t):
-    ''' expr : expr LBRACK expr RBRACK 
-             | ID LBRACK expr RBRACK
+    ''' arrayReference : expr LBRACK expr RBRACK 
+                       | ID LBRACK expr RBRACK
     '''
     _, lst, _, index, _ = t
 
