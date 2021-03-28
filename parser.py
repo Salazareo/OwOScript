@@ -446,6 +446,16 @@ def p_functionCall(t):
                     "returnType": fns[fnName][0]["value"],
                     "name": fnName, "value": [fnName]+elements, "line": t.lineno(1)}
         else:
+            params = fns[fnName][1][0]
+            if len(params) != len(t[3]): 
+                raise Exception("Incorrect number of arguments, expected %s and received %s arguments at line %s" %
+                                (len(fns[fnName][1][0]), len(elements)-2, str(t.lineno(1))))
+            # Check if argument types match
+            for i in range(len(params)):
+                if params[i]["returnType"] != t[3][i]["returnType"]:
+                    raise Exception("Argument type %s does not match expected type %s at line %s" %
+                                    (t[3][i]["returnType"], params[i]["returnType"], t.lineno(1)))
+                
             t[0] = {"type": "functionCall",
                     "returnType": fns[fnName][0]["value"],
                     "name": fnName, "value": [fnName]+[elements[0], *elements[1], elements[2]], "line": t.lineno(1)}
