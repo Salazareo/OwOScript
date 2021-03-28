@@ -413,9 +413,13 @@ def p_arrayAssign(t):
     if typeConv[name["returnType"]] != typeConv[t[3]["returnType"]]:
         raise Exception("Assignment type does not match array type")
     elif (name['value'] != None):
-        t[0] = {"type": "arrayAssign", "value": [
-            name]+elements, "line": t.lineno(1)}
-        #name['value'][elements[2]] = elements[-1]
+        varName = name['value'][0]['value']['value'] #why
+        t[0] = {
+            "type": "arrayAssign", 
+            "value": [varName] + name["value"][1:] + ["=", t[3]], 
+            "line": t.lineno(1)
+        }
+        t[0]["value"][2]["line"] = t[0]["value"][5]["line"]
     else:
         raise Exception("Array %s at line %s uninitialized" %
                         (name, t.lineno(1)))
