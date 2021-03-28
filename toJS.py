@@ -56,7 +56,8 @@ class JSConverter():
             'arrayAssign': self.arrayAssign,
             'arrayReference': self.arrayReference,
             'strExpr': self.strExpr,
-            'strReference': self.strReference
+            'strReference': self.strReference,
+            'arrExpr': self.arrExpr,
         }
 
     # def writeToFile(self,f,lst):
@@ -82,6 +83,11 @@ class JSConverter():
             return '{} + {}'.format(self.typeTransfer(val['value'][0]['type'],
                                                       val['value'][0]['value'], True), self.typeTransfer(val['value'][1]['type'],
                                                                                                          val['value'][1]['value'], True))
+
+    def arrExpr(self, val):
+        return '{} + {}'.format(self.typeTransfer(val['value'][0]['type'],
+                                                  val['value'][0]['value'], True), self.typeTransfer(val['value'][1]['type'],
+                                                                                                     val['value'][1]['value'], True))
 
     def strReference(self, val):
         return '{}[{}]'.format(self.typeTransfer(val[0]['type'],
