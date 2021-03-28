@@ -799,9 +799,10 @@ def p_empty(t):
 
 def p_error(t):
     if t:
-        raise SyntaxError('invalid syntax', (None, t.lexer.lineno, None, t.value))
+        raise SyntaxError(
+            "Syntax Error at line {}".format(int(t.lexer.lineno)))
     else:
-        raise SyntaxError('unexpected EOF while parsing',
+        raise SyntaxError('Unexpected EOF while parsing',
                           (None, None, None, None))
 
 
