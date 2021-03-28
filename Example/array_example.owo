@@ -1,9 +1,5 @@
 waifu harem lst = [1,2,3];
 catgirl harem bools = [owo, uwu, owo, uwu];
+"This is a comme'nt";
 
-senpai s = "AAAAA";
-s = "C" + s + "ssssssss";
-baka(s);
-lst[0] = 7;
-lst = lst +[2];
 baka(uwu && bools[lst[2]]);

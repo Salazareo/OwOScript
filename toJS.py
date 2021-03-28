@@ -18,7 +18,9 @@ def prune(lst):
     ret = []
     digit = re.compile(r'([0-9]*[.])?[0-9]+')
     for i in lst:
-        if digit.match(i) or i in ['true', 'false']:
+        if digit.match(i) or i in ['true', 'false'] \
+            or i.startswith("'")\
+                or i.startswith("["):
             pass
         else:
             ret.append(i)
@@ -75,10 +77,10 @@ class JSConverter():
 
         return convertToStr(statements)
 
-    def strExpr(self, val):
+    def strExpr(self, val, special=False):
 
         if isinstance(val, str):
-            return "'{}'".format(val)
+            return "'{}'".format(val.replace("'", "\'"))
         else:
             return '{} + {}'.format(self.typeTransfer(val['value'][0]['type'],
                                                       val['value'][0]['value'], True), self.typeTransfer(val['value'][1]['type'],
