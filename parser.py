@@ -805,6 +805,7 @@ def make_parser():
 
 def make_ast(sourceCode, parser):
     return parser.parse(sourceCode)
+    #return parser.parse(sourceCode, debug=log) #For debugging the parser
 
 
 def run_parser(sourceCode, outputFileName, parser):
