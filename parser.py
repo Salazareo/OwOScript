@@ -709,6 +709,7 @@ def p_bool(t):
 def p_fnType(t):
     ''' fnType : YOKAI
                | type
+               | type HAREM
     '''
     t[0] = {'type': 'type', "value": t[1],
             "line": t.lineno(1)} if t[1] == 'yokai' else t[1]
