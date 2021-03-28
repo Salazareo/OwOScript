@@ -355,7 +355,7 @@ def p_reassign(t):
 def p_functionDeclaration(t):
     ''' functionDeclaration : fnHeader LPAREN argumentDeclaration RPAREN enclosure popScope
     '''
-    _, fnHeader, _, l, args, r, enclosure, _ = t
+    _, fnHeader, l, args, r, enclosure, _ = t
     returnType, _, honorific, fnName = fnHeader
     t[0] = {'type': 'functionDeclaration',
             'returnType': returnType['value'], 'value': [fnName, l, args, r, enclosure], "line": t.lineno(1)}
@@ -376,7 +376,10 @@ def p_functionHeader(t):
 
     lets.addScope()
     consts.addScope()
-    fns.addScope()
+    fns.addScope({
+        "name": name,
+        "returnType": typeVal["value"]
+    })
 
     t[0] = t[1::]
 
@@ -392,9 +395,15 @@ def p_newScope(t):
 def p_returnStatement(t):
     ''' returnStatement : expr DESU
     '''
-    # future error check, can only return in a function.
-    # TODO: Same as above but type check for correct return type
-    t[0] = {'type': 'return', 'value': t[1], "line": t.lineno(1)}
+    if fns.currentlyInFunction():
+        returnType = fns.getFunctionInfo()["returnType"]
+        if t[1]["returnType"] != returnType:
+            raise Exception("Incorrect return type, expected type %s but received type %s at line %s" % 
+                            (returnType, t[1]["returnType"], t.lineno(1)))
+        t[0] = {'type': 'return', 'value': t[1], "line": t.lineno(1)}
+    else:
+        raise Exception("Return statement is not inside a function at line %s" %
+                        t.lineno(1))
 
 
 def p_popScope(t):
@@ -452,6 +461,16 @@ def p_functionCall(t):
                     "returnType": fns[fnName][0]["value"],
                     "name": fnName, "value": [fnName]+elements, "line": t.lineno(1)}
         else:
+            params = fns[fnName][1][0]
+            if len(params) != len(t[3]): 
+                raise Exception("Incorrect number of arguments, expected %s and received %s arguments at line %s" %
+                                (len(fns[fnName][1][0]), len(elements)-2, str(t.lineno(1))))
+            # Check if argument types match
+            for i in range(len(params)):
+                if params[i]["returnType"] != t[3][i]["returnType"]:
+                    raise Exception("Argument type %s does not match expected type %s at line %s" %
+                                    (t[3][i]["returnType"], params[i]["returnType"], t.lineno(1)))
+                
             t[0] = {"type": "functionCall",
                     "returnType": fns[fnName][0]["value"],
                     "name": fnName, "value": [fnName]+[elements[0], *elements[1], elements[2]], "line": t.lineno(1)}
