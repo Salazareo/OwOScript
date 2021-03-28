@@ -8,12 +8,13 @@ from ScopedMap import ScopedMap
 tokens = lexer.tokens
 
 logging.basicConfig(
-    level = logging.DEBUG,
-    filename = "parselog.txt",
-    filemode = "w",
-    format = "%(filename)10s:%(lineno)4d:%(message)s"
+    level=logging.DEBUG,
+    filename="parselog.txt",
+    filemode="w",
+    format="%(filename)10s:%(lineno)4d:%(message)s"
 )
 log = logging.getLogger()
+
 
 def rreplace(s: str, old: str, new: str, occurrence=1):
     li = s.rsplit(old, occurrence)
@@ -352,7 +353,7 @@ def p_reassign(t):
 
 
 def p_functionDeclaration(t):
-    ''' functionDeclaration : fnHeader newScope LPAREN argumentDeclaration RPAREN enclosure popScope
+    ''' functionDeclaration : fnHeader LPAREN argumentDeclaration RPAREN enclosure popScope
     '''
     _, fnHeader, _, l, args, r, enclosure, _ = t
     returnType, _, honorific, fnName = fnHeader
@@ -372,6 +373,11 @@ def p_functionHeader(t):
     'fnHeader : fnType SQUIGGLY honorific ID'
     _, typeVal, _, _, name = t
     fns.forceNew(name, [typeVal, None])
+
+    lets.addScope()
+    consts.addScope()
+    fns.addScope()
+
     t[0] = t[1::]
 
 
@@ -410,7 +416,7 @@ def p_honorific(t):
 
 def p_arrayAssign(t):
     ''' arrayAssign : arrayReference EQ expr
-    ''' # Before: ID [ expr ] = expr
+    '''  # Before: ID [ expr ] = expr
     _, name, *elements = t
     if name['type'] != "arrayReference":
         raise Exception("Expected a harem to be referenced")
@@ -418,10 +424,10 @@ def p_arrayAssign(t):
     if typeConv[name["returnType"]] != typeConv[t[3]["returnType"]]:
         raise Exception("Assignment type does not match array type")
     elif (name['value'] != None):
-        varName = name['value'][0]['value']['value'] #why
+        varName = name['value'][0]['value']['value']  # why
         t[0] = {
-            "type": "arrayAssign", 
-            "value": [varName] + name["value"][1:] + ["=", t[3]], 
+            "type": "arrayAssign",
+            "value": [varName] + name["value"][1:] + ["=", t[3]],
             "line": t.lineno(1)
         }
         t[0]["value"][2]["line"] = t[0]["value"][5]["line"]
@@ -686,14 +692,15 @@ def p_arrayReference(t):
             t[0] = {"type": "arrayReference",
                     "returnType": lets[name]["returnType"].replace(' harem', ''),
                     "value": [{"value": name,
-                            "type": lets[name]["type"]["value"]},
-                            '[',
-                            {"type": "numExpr",
-                            "returnType": "waifu",
-                            "value": index['value'] if isinstance(index['value'], (int, float)) else index},
-                            ']'], "line": t.lineno(1)}
+                               "type": lets[name]["type"]["value"]},
+                              '[',
+                              {"type": "numExpr",
+                               "returnType": "waifu",
+                               "value": index['value'] if isinstance(index['value'], (int, float)) else index},
+                              ']'], "line": t.lineno(1)}
         else:
-            raise Exception("Undefined name '%s' at line %s" % (name, t.lineno(1)))
+            raise Exception("Undefined name '%s' at line %s" %
+                            (name, t.lineno(1)))
     elif typeConv[lst['returnType']] == "senpai":
         if isinstance(lst['value'], str) and isinstance(index['value'], (int, float)):
             t[0] = {"type": "strExpr",
@@ -786,7 +793,7 @@ def make_parser():
 
 
 def make_ast(sourceCode, parser):
-    return parser.parse(sourceCode, debug=log)
+    return parser.parse(sourceCode)
 
 
 def run_parser(sourceCode, outputFileName, parser):
