@@ -13,6 +13,14 @@ catgirl~sama bar(waifu x, catgirl y){
     (x < 10 || (baz(x/2) && x<2)) && y desu;
 }
 
+husbando harem~kun range(waifu x){
+    husbando harem bruh = [];
+    shi (waifu y = 0; y < x; y++) {
+        bruh = bruh + [y];
+    }
+    bruh desu;
+}
+
 baka(foo());
 waifu z = -12;
 z = -z;
