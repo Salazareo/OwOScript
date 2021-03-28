@@ -70,10 +70,15 @@ class JSConverter():
     #             self.writeToFile(f,)
 
     def program(self, val):
-        statements = list(map(
-            lambda x: self.typeTransfer(x['type'], x['value']), val)) \
-            if isinstance(val, list) \
-            else [self.typeTransfer(val['type'], val['value'])]
+        def mapper(x):
+            return self.typeTransfer(x['type'], x['value'])
+        statements = []
+        if isinstance(val, list):
+            statements = list(map(mapper, val))
+        else:
+            if val == None:
+                return ''
+            statements = [self.typeTransfer(val['type'], val['value'])]
 
         return convertToStr(statements)
 
@@ -86,10 +91,10 @@ class JSConverter():
                                                       val['value'][0]['value'], True), self.typeTransfer(val['value'][1]['type'],
                                                                                                          val['value'][1]['value'], True))
 
-    def arrExpr(self, val):
-        return '{} + {}'.format(self.typeTransfer(val['value'][0]['type'],
-                                                  val['value'][0]['value'], True), self.typeTransfer(val['value'][1]['type'],
-                                                                                                     val['value'][1]['value'], True))
+    def arrExpr(self, val, special=False):
+        return '{}.concat({})'.format(self.typeTransfer(val['value'][0]['type'],
+                                                        val['value'][0]['value'], True), self.typeTransfer(val['value'][1]['type'],
+                                                                                                           val['value'][1]['value'], True)) + ('' if special else ';\n')
 
     def strReference(self, val):
         return '{}[{}]'.format(self.typeTransfer(val[0]['type'],
@@ -113,10 +118,10 @@ class JSConverter():
 
     def initialize(self, val, special=False):
         return 'let {} = {}'.format(val[0]['value'],
-                                    self.typeTransfer(val[2]['type'], val[2]['value'])) + ('' if special else ';\n')
+                                    self.typeTransfer(val[2]['type'], val[2]['value'], True)) + ('' if special else ';\n')
 
     def constInitialize(self, val):
-        return 'const {} = {};\n'.format(val[0]['value'], self.typeTransfer(val[2]['type'], val[2]['value']))
+        return 'const {} = {};\n'.format(val[0]['value'], self.typeTransfer(val[2]['type'], val[2]['value'], True))
 
     def constDeclaration(self, val, _special=None):
         return 'const {}'.format(val['value'])
@@ -191,7 +196,7 @@ class JSConverter():
         return out.replace(', )', ')')
 
     def reassign(self, val, special=False):
-        return '{} = {}'.format(val[0], self.typeTransfer(val[2]['type'], val[2]['value']))+(''if special else ';\n')
+        return '{} = {}'.format(val[0], self.typeTransfer(val[2]['type'], val[2]['value'], True))+(''if special else ';\n')
 
     def ternaryOp(self, val):
         val0 = self.typeTransfer(val[0]['type'], val[0]['value'])
@@ -239,7 +244,7 @@ class JSConverter():
         return '{}[{}] = {}'.format(val[0],
                                     self.typeTransfer(
                                         val[2]['type'], val[2]['value']),
-                                    self.typeTransfer(val[5]['type'], val[5]['value'])) + (''if special else ';\n')
+                                    self.typeTransfer(val[5]['type'], val[5]['value'], True)) + (''if special else ';\n')
 
     def arrayReference(self, val, special=False):
         return '{}[{}]'.format(self.typeTransfer(val[0]['type'], val[0]['value'], True),

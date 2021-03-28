@@ -1,5 +1,8 @@
 waifu harem lst = [1,2,3];
 catgirl harem bools = [owo, uwu, owo, uwu];
-"This is a comme'nt";
+
+bools = bools + [1>2];
+bools + [uwu];
+real catgirl harem newJoint = [uwu] + bools;
 
 baka(uwu && bools[lst[2]]);
