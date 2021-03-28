@@ -57,8 +57,7 @@ def declarations(name, typeVal, isArray, type, t):
         return {"type": type, "returnType": typeConv[typeVal["returnType"]], "value": {
             "type": typeVal["value"], "value": name}}
     else:
-        raise Exception("%s has already been declared at line %s" %
-                        (name, t.lineno(1)))
+        raise Exception("%s has already been declared at line %s" % (name, t.lexer.lineno))
 
 
 lets = ScopedMap()
@@ -80,7 +79,7 @@ precedence = (
 
 def p_program(t):
     ' program : stmts_or_empty'
-    t[0] = {'type': "program", 'value': t[1], "line": t.lineno(1)}
+    t[0] = {'type': "program", 'value': t[1]}
 
 
 def p_statements_or_empty(t):
@@ -126,7 +125,7 @@ def p_paren_expr(t):
     t[0] = {
         "type": t[2]["type"], "returnType": t[2]["returnType"], "value": t[1::]
         if not isinstance(t[2]['value'], (bool, int, float)) else t[2]['value'],
-        "line": t.lineno(1)
+        "line": t.lexer.lineno
     }
 
 
@@ -158,10 +157,10 @@ def p_boolExpr(t):
     }
     if (typeConv[expr1["returnType"]] not in ("waifu", "senpai") and 'harem' not in typeConv[expr1["returnType"]])\
             or typeConv[expr1["returnType"]] != typeConv[expr2["returnType"]]:
-        raise Exception("TypeError at line %s" % t.lineno(1))
+        raise Exception("TypeError at line %s" % t.lexer.lineno)
 
     if (typeConv[expr1["returnType"]] == "senpai" or 'harem' in typeConv[expr1["returnType"]]) and op != '+':
-        raise Exception("Operand not supported at line %s" % t.lineno(1))
+        raise Exception("Operand not supported at line %s" % t.lexer.lineno)
 
     if isinstance(expr1["value"], str) and isinstance(expr2["value"], str):
         t[0] = {
@@ -195,7 +194,7 @@ def p_boolExpr(t):
         else:
             t[0] = {"type": "boolExpr", "value": {"type": op,
                                                   "value": [expr1, expr2]}}
-    t[0]["line"] = t.lineno(1)
+    t[0]["line"] = t.lexer.lineno
     t[0]["returnType"] = "catgirl" if t[0]["type"] == "boolExpr"\
         else typeConv[expr1["returnType"]]
 
@@ -210,7 +209,7 @@ def p_equality_op(t):  # Because both bools and nums can use it
                }
     # Check that both expr have the same types
     if typeConv[expr1["returnType"]] != typeConv[expr2["returnType"]]:
-        raise Exception("Incomparable types at line %s" % t.lineno(1))
+        raise Exception("Incomparable types at line %s" % t.lexer.lineno)
     if isinstance(expr1["value"], (int, float)) and isinstance(expr2["value"], (int, float)):
         t[0] = {"value": options[op](expr1["value"], expr2["value"])}
     else:
@@ -228,14 +227,14 @@ def p_boolExpr_op(t):
                '||': lambda x, y: x or y
                }
     if typeConv[expr1["returnType"]] != "catgirl" and typeConv[expr2["returnType"]] != "catgirl":
-        raise Exception("Expected type catgirl at line %s" % t.lineno(1))
+        raise Exception("Expected type catgirl at line %s" % t.lexer.lineno)
     elif isinstance(expr1["value"], (bool)) and isinstance(expr2["value"], (bool)):
         # Directly evaluate literals for optimization
         t[0] = {"value": options[op](
-            expr1["value"], expr2["value"]), "line": t.lineno(1)}
+            expr1["value"], expr2["value"])}
     else:
         t[0] = {"value": {"type": op, "value": [
-            expr1, expr2]}, "line": t.lineno(1)}
+            expr1, expr2]}}
     t[0]["type"] = "boolExpr"
     t[0]["returnType"] = "catgirl"
 
@@ -243,9 +242,9 @@ def p_boolExpr_op(t):
 def p_boolExprNeg(t):
     'expr : NOT expr'
     if typeConv[t[2]["returnType"]] != "catgirl":
-        raise Exception("Expected type catgirl at line %s" % t.lineno(1))
+        raise Exception("Expected type catgirl at line %s" % t.lexer.lineno)
     t[0] = {"value": [t[1], t[2]]} if not isinstance(t[2]['value'], (bool)) \
-        else {"value": not t[2]['value'], "line": t.lineno(1)}
+        else {"value": not t[2]['value']}
     t[0]["type"] = "boolExpr"
     t[0]["returnType"] = "catgirl"
 
@@ -253,9 +252,9 @@ def p_boolExprNeg(t):
 def p_numExpr_uminus(t):
     'expr : MINUS expr %prec UMINUS'
     if typeConv[t[2]["returnType"]] != "waifu":
-        raise Exception("Expected type waifu at line %s" % t.lineno(1))
+        raise Exception("Expected type waifu at line %s" % t.lexer.lineno)
     t[0] = {"value": [t[1], t[2]] if not isinstance(t[2]['value'], (int, float))
-            else -t[2]['value'], "line": t.lineno(1)}
+            else -t[2]['value']}
     t[0]["type"] = "numExpr"
     t[0]["returnType"] = "waifu"
 
@@ -265,16 +264,14 @@ def p_ternaryOp(t):
     '''
     _, condition, _, expr1, _, expr2 = t
     if typeConv[condition["returnType"]] != "catgirl":
-        raise Exception(
-            "Expected type catgirl for the condition at line %s" % t.lineno(1))
+        raise Exception("Expected type catgirl for the condition at line %s" % t.lexer.lineno)
     elif typeConv[expr1["returnType"]] != typeConv[expr2["returnType"]]:
-        raise Exception(
-            "Expressions do not have the same type at line %s" % t.lineno(1))
+        raise Exception("Expressions do not have the same type at line %s" % t.lexer.lineno)
     elif isinstance(condition['value'], bool):
         t[0] = expr1 if condition['value'] else expr2
     else:
         t[0] = {"type": "ternaryOp", "returnType": expr1["returnType"],
-                'value': t[1::], "line": t.lineno(1)}
+                'value': t[1::]}
 
 
 def p_assignment(t):
@@ -304,29 +301,27 @@ def p_binOpAssign(t):
     if len(t) == 4:
         _, name, op, val = t
         if typeConv[val["returnType"]] != "waifu":
-            raise Exception("Expected type waifu at line %s" % t.lineno(1))
+            raise Exception("Expected type waifu at line %s" % t.lexer.lineno)
     else:
         _, name, op = t
         val = 1
     if (name in lets):
         if typeConv[lets[name]["returnType"]] != "waifu":
-            raise Exception("Expected type waifu at line %s" % t.lineno(1))
+            raise Exception("Expected type waifu at line %s" % t.lexer.lineno)
         if (name not in consts):
             t[0] = {'type': 'short_binop',
-                    'value': t[1::], "line": t.lineno(1)}
+                    'value': t[1::]}
         else:
-            raise Exception(
-                "Cannot reassign constant at line %s" % t.lineno(1))
+            raise Exception("Cannot reassign constant at line %s" % t.lexer.lineno)
     else:
-        raise Exception("Variable %s not declared at line %s" %
-                        (name, t.lineno(1)))
+        raise Exception("Variable %s not declared at line %s" % (name, t.lexer.lineno))
 
 
 def p_conditional(t):
     ''' conditional : if else
                     | if
     '''
-    t[0] = {'type': 'cond', 'value': t[1::], "line": t.lineno(1)}
+    t[0] = {'type': 'cond', 'value': t[1::]}
 
 
 def p_if(t):
@@ -334,15 +329,15 @@ def p_if(t):
            | NANI LPAREN expr RPAREN newScope singleStatement popScope
     '''
     if typeConv[t[3]["returnType"]] != "catgirl":
-        raise Exception("Expected type catgirl at line %s" % t.lineno(1))
-    t[0] = {'type': 'if', 'value': t[2:5]+[t[6]], "line": t.lineno(1)}
+        raise Exception("Expected type catgirl at line %s" % t.lexer.lineno)
+    t[0] = {'type': 'if', 'value': t[2:5]+[t[6]]}
 
 
 def p_else(t):
     ''' else : NOU newScope enclosure popScope
              | NOU newScope singleStatement popScope
     '''
-    t[0] = {'type': 'else', 'value': [t[1]]+[t[3]], "line": t.lineno(1)}
+    t[0] = {'type': 'else', 'value': [t[1]]+[t[3]]}
 
 
 def p_reassign(t):
@@ -351,17 +346,14 @@ def p_reassign(t):
     _, name, _, val = t
     if name in lets:
         if typeConv[lets[name]["returnType"]] != typeConv[val["returnType"]]:
-            raise Exception(
-                "Incompatible types for reassignment at line %s" % t.lineno(1))
+            raise Exception("Incompatible types for reassignment at line %s" % t.lexer.lineno)
         elif name not in consts or not (consts.inScopeIndex(lets.getScopeIndex(name), name)):
-            t[0] = {'type': 'reassign', 'value': t[1::], "line": t.lineno(1)}
+            t[0] = {'type': 'reassign', 'value': t[1::]}
             lets[name]["value"] = val
         else:
-            raise Exception(
-                "Cannot reassign constant at line %s" % t.lineno(1))
+            raise Exception("Cannot reassign constant at line %s" % t.lexer.lineno)
     else:
-        raise Exception("Variable %s not declared at line %s" %
-                        (t.lineno(1), name))
+        raise Exception("Variable %s not declared at line %s" % (t.lexer.lineno, name))
 
 
 def p_functionDeclaration(t):
@@ -370,7 +362,7 @@ def p_functionDeclaration(t):
     _, fnHeader, l, args, r, enclosure, _ = t
     returnType, _, honorific, fnName = fnHeader
     t[0] = {'type': 'functionDeclaration',
-            'returnType': returnType['value'], 'value': [fnName, l, args, r, enclosure], "line": t.lineno(1)}
+            'returnType': returnType['value'], 'value': [fnName, l, args, r, enclosure]}
     fns[fnName][1] = (args, enclosure)
 
 
@@ -378,7 +370,7 @@ def p_enclosure(t):
     ''' enclosure : LBRACE RBRACE
                   | LBRACE statements RBRACE
     '''
-    t[0] = {'type': 'enclosure', 'value': t[1::], "line": t.lineno(1)}
+    t[0] = {'type': 'enclosure', 'value': t[1::]}
 
 
 def p_functionHeader(t):
@@ -410,12 +402,12 @@ def p_returnStatement(t):
     if fns.currentlyInFunction():
         returnType = fns.getFunctionInfo()["returnType"]
         if t[1]["returnType"] != returnType:
-            raise Exception("Incorrect return type, expected type %s but received type %s at line %s" %
-                            (returnType, t[1]["returnType"], t.lineno(1)))
-        t[0] = {'type': 'return', 'value': t[1], "line": t.lineno(1)}
+            raise Exception("Incorrect return type, expected type %s but received type %s at line %s" % 
+                            (returnType, t[1]["returnType"], t.lexer.lineno))
+        t[0] = {'type': 'return', 'value': t[1]}
     else:
         raise Exception("Return statement is not inside a function at line %s" %
-                        t.lineno(1))
+                        t.lexer.lineno)
 
 
 def p_popScope(t):
@@ -440,23 +432,21 @@ def p_arrayAssign(t):
     '''  # Before: ID [ expr ] = expr
     _, name, *elements = t
     if name['type'] != "arrayReference":
-        raise Exception(
-            "Expected a harem to be referenced at line %s" % t.lineno(1))
+        raise Exception("Expected a harem to be referenced at line %s" % t.lexer.lineno)
 
     if typeConv[name["returnType"]] != typeConv[t[3]["returnType"]]:
-        raise Exception(
-            "Assignment type does not match array type at line %s" % t.lineno(1))
+        raise Exception("Assignment type does not match array type at line %s" % t.lexer.lineno)
     elif (name['value'] != None):
         varName = name['value'][0]['value']['value']  # why
         t[0] = {
             "type": "arrayAssign",
             "value": [varName] + name["value"][1:] + ["=", t[3]],
-            "line": t.lineno(1)
+            "line": t.lexer.lineno
         }
         t[0]["value"][2]["line"] = t[0]["value"][5]["line"]
     else:
         raise Exception("Array %s at line %s uninitialized" %
-                        (name, t.lineno(1)))
+                        (name, t.lexer.lineno))
 
 
 def p_printCall(t):
@@ -473,24 +463,24 @@ def p_functionCall(t):
         if len(elements) == 2:  # Empty brackets
             t[0] = {"type": "functionCall",
                     "returnType": fns[fnName][0]["value"],
-                    "name": fnName, "value": [fnName]+elements, "line": t.lineno(1)}
+                    "name": fnName, "value": [fnName]+elements}
         else:
             params = fns[fnName][1][0]
-            if len(params) != len(t[3]):
+            if len(params) != len(t[3]): 
                 raise Exception("Incorrect number of arguments, expected %s and received %s arguments at line %s" %
-                                (len(fns[fnName][1][0]), len(elements)-2, str(t.lineno(1))))
+                                (len(fns[fnName][1][0]), len(elements)-2, str(t.lexer.lineno)))
             # Check if argument types match
             for i in range(len(params)):
                 if params[i]["returnType"] != t[3][i]["returnType"]:
                     raise Exception("Argument type %s does not match expected type %s at line %s" %
-                                    (t[3][i]["returnType"], params[i]["returnType"], t.lineno(1)))
-
+                                    (t[3][i]["returnType"], params[i]["returnType"], t.lexer.lineno))
+                
             t[0] = {"type": "functionCall",
                     "returnType": fns[fnName][0]["value"],
-                    "name": fnName, "value": [fnName]+[elements[0], *elements[1], elements[2]], "line": t.lineno(1)}
+                    "name": fnName, "value": [fnName]+[elements[0], *elements[1], elements[2]]}
     else:
         raise Exception("Undefined function name '%s' at line %s" %
-                        (fnName, t.lineno(1)))
+                        (fnName, t.lexer.lineno))
 
 
 def p_arrayLiteral(t):
@@ -507,14 +497,13 @@ def p_arrayLiteral(t):
         arrayType = typeConv[exprList[0]["returnType"]]
         for i in range(1, len(exprList)):
             if arrayType != typeConv[exprList[i]["returnType"]]:
-                raise Exception(
-                    "Harem members are not the same type at line %s" % t.lineno(1))
+                raise Exception("Harem members are not the same type at line %s" % t.lexer.lineno)
 
         t[0] = {
             "type": "arrayLiteral",
             "returnType": arrayType + " harem",
             "value": [elements[0], *elements[1], elements[2]],
-            "line": t.lineno(1)
+            "line": t.lexer.lineno
         }
 
 
@@ -544,11 +533,10 @@ def p_letInitialize(t):
     if typeName == typeConv[val["returnType"]] or \
             ("harem" in typeName and val["returnType"] == "empty harem"):
         t[0] = {"type": "initialize", "value": [
-            {"type": typeName, "value": name}, '=', t[3]], "line": t.lineno(1)}
+            {"type": typeName, "value": name}, '=', t[3]]}
         lets[name]["value"] = val
     else:
-        raise Exception(
-            "Expression type does not match variable type at line %s" % t.lineno(1))
+        raise Exception("Expression type does not match variable type at line %s" % t.lexer.lineno)
 
 
 def p_constInitialize(t):
@@ -561,11 +549,10 @@ def p_constInitialize(t):
     if typeName == val["returnType"] or \
             ("harem" in typeName and val["returnType"] == "empty harem"):
         t[0] = {"type": "constInitialize", "value": [
-            {"type": typeName, "value": name}, '=', t[3]], "line": t.lineno(1)}
+            {"type": typeName, "value": name}, '=', t[3]]}
         lets[name]["value"] = val
     else:
-        raise Exception(
-            "Expression type does not match variable type at line %s" % t.lineno(1))
+        raise Exception("Expression type does not match variable type at line %s" % t.lexer.lineno)
 
 
 def p_declaration(t):
@@ -596,7 +583,7 @@ def p_constDeclaration(t):
     '''
     name = t[2]["value"]["value"]
     t[0] = {"type": "constDeclaration",
-            "value": t[2]["value"], "line": t.lineno(1)}
+            "value": t[2]["value"]}
     consts.forceNew(name, True)
 
 
@@ -608,7 +595,7 @@ def p_arrayDeclaration(t):
     t[0] = declarations(
         name, {"type": 'type', "returnType": returnType, "value": returnType},
         True, 'declaration', t)
-    t[0]["line"] = t.lineno(1)
+    t[0]["line"] = t.lexer.lineno
 
 
 def p_letDeclaration(t):
@@ -624,24 +611,24 @@ def p_whileLoop(t):
     '''
     _, _, _, cond, _, _, _, statements, _ = t
     if cond["returnType"] != "catgirl":
-        raise Exception("Expected type catgirl at line %s" % t.lineno(1))
+        raise Exception("Expected type catgirl at line %s" % t.lexer.lineno)
     t[0] = {"type": 'whileLoop', "value": t[1:6] +
-            [statements], "line": t.lineno(1)}
+            [statements]}
 
 
 def p_forLoop(t):
     '''forLoop : SHI newScope LPAREN forTrio RPAREN enclosure popScope
                | SHI newScope LPAREN forElement RPAREN enclosure popScope
     '''
-    t[0] = {"type": 'forLoop', "value": [t[1]]+t[3:7], "line": t.lineno(1)}
+    t[0] = {"type": 'forLoop', "value": [t[1]]+t[3:7]}
 
 
 def p_forTrio(t):
     ''' forTrio : forAssign SEMICOL expr SEMICOL forReassign
     '''
     if t[3]["returnType"] != "catgirl":
-        raise Exception("Expected type catgirl at line %s" % t.lineno(1))
-    t[0] = {'type': 'forTrio', 'value': t[1::], "line": t.lineno(1)}
+        raise Exception("Expected type catgirl at line %s" % t.lexer.lineno)
+    t[0] = {'type': 'forTrio', 'value': t[1::]}
 
 
 def p_forAssign(t):
@@ -666,7 +653,7 @@ def p_forElement(t):
                    | constDeclaration COL ID
     '''
     #  need to error check
-    t[0] = {'type': 'forElement', 'value': t[1::], "line": t.lineno(1)}
+    t[0] = {'type': 'forElement', 'value': t[1::]}
 
 
 def p_print(t):
@@ -674,7 +661,7 @@ def p_print(t):
     _, *elements = t
     t[0] = {"type": "printCall", "value": [
         elements[0], elements[1], *elements[2], elements[3]],
-        "line": t.lineno(1)
+        "line": t.lineno
     }
 
 
@@ -698,10 +685,10 @@ def p_letReference(t):
                     "type": lets[name]["type"]["value"],
                     "value": name,
             },
-            "line": t.lineno(1)
+            "line": t.lexer.lineno
         }
     else:
-        raise Exception("Undefined name '%s' at line %s" % (name, t.lineno(1)))
+        raise Exception("Undefined name '%s' at line %s" % (name, t.lexer.lineno))
 
 
 def p_arrayReference(t):
@@ -711,8 +698,7 @@ def p_arrayReference(t):
     _, lst, _, index, _ = t
 
     if index["returnType"] != "waifu":
-        raise Exception(
-            "Expected type waifu for the index at line %s" % t.lineno(1))
+        raise Exception("Expected type waifu for the index at line %s" % t.lexer.lineno)
     if isinstance(lst, str):
         name = lst
         if (name in lets):
@@ -724,16 +710,16 @@ def p_arrayReference(t):
                               {"type": "numExpr",
                                "returnType": "waifu",
                                "value": index['value'] if isinstance(index['value'], (int, float)) else index},
-                              ']'], "line": t.lineno(1)}
+                              ']']}
         else:
             raise Exception("Undefined name '%s' at line %s" %
-                            (name, t.lineno(1)))
+                            (name, t.lexer.lineno))
     elif typeConv[lst['returnType']] == "senpai":
         if isinstance(lst['value'], str) and isinstance(index['value'], (int, float)):
             t[0] = {"type": "strExpr",
                     "value": lst['value'][index['value']],
                     'returnType': 'senpai',
-                    "line": t.lineno(1)}
+                    "line": t.lexer.lineno}
         else:
             t[0] = {"type": "strReference",
                     "value": [lst,
@@ -742,7 +728,7 @@ def p_arrayReference(t):
                                "value": index['value'] if isinstance(index['value'], (int, float)) else index},
                               ']'],
                     'returnType': 'senpai',
-                    "line": t.lineno(1)}
+                    "line": t.lexer.lineno}
     else:
         if lst["type"] == 'arrayLiteral' and isinstance(index['value'], (int, float)):
             t[0] = lst["value"][index['value']+1]
@@ -755,19 +741,19 @@ def p_arrayReference(t):
                                "returnType": "waifu",
                                "value": index['value'] if isinstance(index['value'], (int, float)) else index},
                               ']'],
-                    "line": t.lineno(1)}
+                    "line": t.lexer.lineno}
 
 
 def p_numExpr_number(t):
     'literal : NUMBER'
     t[0] = {"type": 'numExpr', "returnType": "waifu",
-            "value": t[1], "line": t.lineno(1)}
+            "value": t[1]}
 
 
 def p_strExpr(t):
     'literal : STRING'
     t[0] = {"type": 'strExpr', "returnType": "senpai",
-            "value": t[1][1:-1], "line": t.lineno(1)}
+            "value": t[1][1:-1]}
 
 
 def p_bool(t):
@@ -778,7 +764,7 @@ def p_bool(t):
         "type": "boolExpr",
         "returnType": "catgirl",
         "value": True if t[1] == 'uwu' else False,
-        "line": t.lineno(1)
+        "line": t.lexer.lineno
     }
 
 
@@ -788,7 +774,7 @@ def p_fnType(t):
                | type HAREM
     '''
     t[0] = {'type': 'type', "value": t[1],
-            "line": t.lineno(1)} if t[1] == 'yokai' else t[1]
+            "line": t.lexer.lineno} if t[1] == 'yokai' else t[1]
 
 
 def p_type(t):
@@ -799,7 +785,7 @@ def p_type(t):
              | SENPAI
              | KOUHAI
     '''
-    t[0] = {'type': 'type', "value": t[1], "line": t.lineno(1)}
+    t[0] = {'type': 'type', "value": t[1]}
 
 
 def p_empty(t):
@@ -809,7 +795,7 @@ def p_empty(t):
 
 # def p_error(t):
 #     if t:
-#         raise SyntaxError('invalid syntax', (None, t.lineno, None, t.value))
+#         raise SyntaxError('invalid syntax', (None, t.lexer.lineno, None, t.value))
 #     else:
 #         raise SyntaxError('unexpected EOF while parsing',
 #                           (None, None, None, None))
