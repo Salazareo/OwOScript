@@ -143,10 +143,11 @@ def p_boolExpr(t):
         '**': lambda x, y: x ** y,
         '%': lambda x, y: x % y,
     }
-    if typeConv[expr1["returnType"]] not in ("waifu", "senpai") or typeConv[expr1["returnType"]] != typeConv[expr2["returnType"]]:
+    if (typeConv[expr1["returnType"]] not in ("waifu", "senpai") and 'harem' not in typeConv[expr1["returnType"]])\
+            or typeConv[expr1["returnType"]] != typeConv[expr2["returnType"]]:
         raise Exception("TypeError")
 
-    if typeConv[expr1["returnType"]] == "senpai" and op != '+':
+    if (typeConv[expr1["returnType"]] == "senpai" or 'harem' in typeConv[expr1["returnType"]]) and op != '+':
         raise Exception("Operand not supported!")
 
     if isinstance(expr1["value"], str) and isinstance(expr2["value"], str):
@@ -156,7 +157,12 @@ def p_boolExpr(t):
         }
     elif typeConv[expr1["returnType"]] == "senpai":
         t[0] = {"type": "strExpr", "value": {
-                "type": op, "value": [expr1, expr2]}}
+                "type": op, "value": [expr1, expr2]}
+                }
+    elif 'harem' in typeConv[expr1["returnType"]]:
+        t[0] = {"type": "arrExpr", "value": {
+            "type": op, "value": [expr1, expr2]}
+        }
     else:
         if isinstance(expr1["value"], (float, int)) and isinstance(expr2["value"], (float, int)):
             # Directly evaluates literals as optimization
@@ -178,8 +184,7 @@ def p_boolExpr(t):
                                                   "value": [expr1, expr2]}}
     t[0]["line"] = t.lineno(1)
     t[0]["returnType"] = "catgirl" if t[0]["type"] == "boolExpr"\
-        else ("senpai" if t[0]["type"] == "strExpr" else
-              "waifu")
+        else typeConv[expr1["returnType"]]
 
 
 def p_equality_op(t):  # Because both bools and nums can use it
