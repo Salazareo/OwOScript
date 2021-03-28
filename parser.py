@@ -42,7 +42,7 @@ class TypeConvervter():
 typeConv = TypeConvervter()
 
 
-def declarations(name, typeVal, isArray, type):
+def declarations(name, typeVal, isArray, type, t):
     if (not lets.inCurrentScope(name) and not fns.inCurrentScope(name)):
         lets.forceNew(name, {
             "type": typeVal,
@@ -53,7 +53,7 @@ def declarations(name, typeVal, isArray, type):
         return {"type": type, "returnType": typeConv[typeVal["returnType"]], "value": {
             "type": typeVal["value"], "value": name}}
     else:
-        raise Exception("{} has already been declared.".format(name))
+        raise Exception("%s has already been declared at line %s" % (name, t.lineno(1)))
 
 
 lets = ScopedMap()
@@ -153,10 +153,10 @@ def p_boolExpr(t):
     }
     if (typeConv[expr1["returnType"]] not in ("waifu", "senpai") and 'harem' not in typeConv[expr1["returnType"]])\
             or typeConv[expr1["returnType"]] != typeConv[expr2["returnType"]]:
-        raise Exception("TypeError")
+        raise Exception("TypeError at line %s" % t.lineno(1))
 
     if (typeConv[expr1["returnType"]] == "senpai" or 'harem' in typeConv[expr1["returnType"]]) and op != '+':
-        raise Exception("Operand not supported!")
+        raise Exception("Operand not supported at line %s" % t.lineno(1))
 
     if isinstance(expr1["value"], str) and isinstance(expr2["value"], str):
         t[0] = {
@@ -205,7 +205,7 @@ def p_equality_op(t):  # Because both bools and nums can use it
                }
     # Check that both expr have the same types
     if typeConv[expr1["returnType"]] != typeConv[expr2["returnType"]]:
-        raise Exception("Incomparable types")
+        raise Exception("Incomparable types at line %s" % t.lineno(1))
     if isinstance(expr1["value"], (int, float)) and isinstance(expr2["value"], (int, float)):
         t[0] = {"value": options[op](expr1["value"], expr2["value"])}
     else:
@@ -223,7 +223,7 @@ def p_boolExpr_op(t):
                '||': lambda x, y: x or y
                }
     if typeConv[expr1["returnType"]] != "catgirl" and typeConv[expr2["returnType"]] != "catgirl":
-        raise Exception("Expected type catgirl")
+        raise Exception("Expected type catgirl at line %s" % t.lineno(1))
     elif isinstance(expr1["value"], (bool)) and isinstance(expr2["value"], (bool)):
         # Directly evaluate literals for optimization
         t[0] = {"value": options[op](
@@ -238,7 +238,7 @@ def p_boolExpr_op(t):
 def p_boolExprNeg(t):
     'expr : NOT expr'
     if typeConv[t[2]["returnType"]] != "catgirl":
-        raise Exception("Expected type catgirl")
+        raise Exception("Expected type catgirl at line %s" % t.lineno(1))
     t[0] = {"value": [t[1], t[2]]} if not isinstance(t[2]['value'], (bool)) \
         else {"value": not t[2]['value'], "line": t.lineno(1)}
     t[0]["type"] = "boolExpr"
@@ -248,7 +248,7 @@ def p_boolExprNeg(t):
 def p_numExpr_uminus(t):
     'expr : MINUS expr %prec UMINUS'
     if typeConv[t[2]["returnType"]] != "waifu":
-        raise Exception("Expected type waifu")
+        raise Exception("Expected type waifu at line %s" % t.lineno(1))
     t[0] = {"value": [t[1], t[2]] if not isinstance(t[2]['value'], (int, float))
             else -t[2]['value'], "line": t.lineno(1)}
     t[0]["type"] = "numExpr"
@@ -260,9 +260,9 @@ def p_ternaryOp(t):
     '''
     _, condition, _, expr1, _, expr2 = t
     if typeConv[condition["returnType"]] != "catgirl":
-        raise Exception("Expected type catgirl for the condition")
+        raise Exception("Expected type catgirl for the condition at line %s" % t.lineno(1))
     elif typeConv[expr1["returnType"]] != typeConv[expr2["returnType"]]:
-        raise Exception("Expressions do not have the same type")
+        raise Exception("Expressions do not have the same type at line %s" % t.lineno(1))
     elif isinstance(condition['value'], bool):
         t[0] = expr1 if condition['value'] else expr2
     else:
@@ -297,20 +297,20 @@ def p_binOpAssign(t):
     if len(t) == 4:
         _, name, op, val = t
         if typeConv[val["returnType"]] != "waifu":
-            raise Exception("Expected type waifu")
+            raise Exception("Expected type waifu at line %s" % t.lineno(1))
     else:
         _, name, op = t
         val = 1
     if (name in lets):
         if typeConv[lets[name]["returnType"]] != "waifu":
-            raise Exception("Expected type waifu")
+            raise Exception("Expected type waifu at line %s" % t.lineno(1))
         if (name not in consts):
             t[0] = {'type': 'short_binop',
                     'value': t[1::], "line": t.lineno(1)}
         else:
-            raise Exception("Cannot reassign constant")
+            raise Exception("Cannot reassign constant at line %s" % t.lineno(1))
     else:
-        raise Exception("Variable {} not declared.".format(name))
+        raise Exception("Variable %s not declared at line %s" % (name, t.lineno(1)))
 
 
 def p_conditional(t):
@@ -325,7 +325,7 @@ def p_if(t):
            | NANI LPAREN expr RPAREN newScope singleStatement popScope
     '''
     if typeConv[t[3]["returnType"]] != "catgirl":
-        raise Exception("Expected type catgirl")
+        raise Exception("Expected type catgirl at line %s" % t.lineno(1))
     t[0] = {'type': 'if', 'value': t[2:5]+[t[6]], "line": t.lineno(1)}
 
 
@@ -342,14 +342,14 @@ def p_reassign(t):
     _, name, _, val = t
     if name in lets:
         if typeConv[lets[name]["returnType"]] != typeConv[val["returnType"]]:
-            raise Exception("Incompatible types for reassignment")
+            raise Exception("Incompatible types for reassignment at line %s" % t.lineno(1))
         elif name not in consts or not (consts.inScopeIndex(lets.getScopeIndex(name), name)):
             t[0] = {'type': 'reassign', 'value': t[1::], "line": t.lineno(1)}
             lets[name]["value"] = val
         else:
-            raise Exception("Cannot reassign constant")
+            raise Exception("Cannot reassign constant at line %s" % t.lineno(1))
     else:
-        raise Exception("Variable {} not declared.".format(name))
+        raise Exception("Variable %s not declared at line %s" % (t.lineno(1), name))
 
 
 def p_functionDeclaration(t):
@@ -419,10 +419,10 @@ def p_arrayAssign(t):
     '''  # Before: ID [ expr ] = expr
     _, name, *elements = t
     if name['type'] != "arrayReference":
-        raise Exception("Expected a harem to be referenced")
+        raise Exception("Expected a harem to be referenced at line %s" % t.lineno(1))
 
     if typeConv[name["returnType"]] != typeConv[t[3]["returnType"]]:
-        raise Exception("Assignment type does not match array type")
+        raise Exception("Assignment type does not match array type at line %s" % t.lineno(1))
     elif (name['value'] != None):
         varName = name['value'][0]['value']['value']  # why
         t[0] = {
@@ -474,7 +474,7 @@ def p_arrayLiteral(t):
         arrayType = typeConv[exprList[0]["returnType"]]
         for i in range(1, len(exprList)):
             if arrayType != typeConv[exprList[i]["returnType"]]:
-                raise Exception("Harem members are not the same type")
+                raise Exception("Harem members are not the same type at line %s" % t.lineno(1))
 
         t[0] = {
             "type": "arrayLiteral",
@@ -513,7 +513,7 @@ def p_letInitialize(t):
             {"type": typeName, "value": name}, '=', t[3]], "line": t.lineno(1)}
         lets[name]["value"] = val
     else:
-        raise Exception("Expression type does not match variable type")
+        raise Exception("Expression type does not match variable type at line %s" % t.lineno(1))
 
 
 def p_constInitialize(t):
@@ -529,7 +529,7 @@ def p_constInitialize(t):
             {"type": typeName, "value": name}, '=', t[3]], "line": t.lineno(1)}
         lets[name]["value"] = val
     else:
-        raise Exception("Expression type does not match variable type")
+        raise Exception("Expression type does not match variable type at line %s" % t.lineno(1))
 
 
 def p_declaration(t):
@@ -571,7 +571,7 @@ def p_arrayDeclaration(t):
     returnType = typeConv[typeVal["value"]] + " harem"
     t[0] = declarations(
         name, {"type": 'type', "returnType": returnType, "value": returnType},
-        True, 'declaration')
+        True, 'declaration', t)
     t[0]["line"] = t.lineno(1)
 
 
@@ -580,7 +580,7 @@ def p_letDeclaration(t):
 
     _, typeVal, name = t
     typeVal["returnType"] = typeConv[typeVal["value"]]
-    t[0] = declarations(name, typeVal, False, 'declaration')
+    t[0] = declarations(name, typeVal, False, 'declaration', t)
 
 
 def p_whileLoop(t):
@@ -588,7 +588,7 @@ def p_whileLoop(t):
     '''
     _, _, _, cond, _, _, _, statements, _ = t
     if cond["returnType"] != "catgirl":
-        raise Exception("Expected type catgirl")
+        raise Exception("Expected type catgirl at line %s" % t.lineno(1))
     t[0] = {"type": 'whileLoop', "value": t[1:6] +
             [statements], "line": t.lineno(1)}
 
@@ -604,7 +604,7 @@ def p_forTrio(t):
     ''' forTrio : forAssign SEMICOL expr SEMICOL forReassign
     '''
     if t[3]["returnType"] != "catgirl":
-        raise Exception("Expected type catgirl")
+        raise Exception("Expected type catgirl at line %s" % t.lineno(1))
     t[0] = {'type': 'forTrio', 'value': t[1::], "line": t.lineno(1)}
 
 
@@ -675,7 +675,7 @@ def p_arrayReference(t):
     _, lst, _, index, _ = t
 
     if index["returnType"] != "waifu":
-        raise Exception("Expected type waifu for the index")
+        raise Exception("Expected type waifu for the index at line %s" % t.lineno(1))
     if isinstance(lst, str):
         name = lst
         if (name in lets):
