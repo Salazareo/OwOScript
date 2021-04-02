@@ -9,4 +9,4 @@ Example/*.js
 parselog.txt
 parsetab.py
 node_modules
-./build/
+build/

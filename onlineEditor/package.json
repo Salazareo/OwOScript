@@ -1,11 +1,10 @@
 {
-  "name": "memeorable",
-  "version": "3.0.0",
-  "description": "Meme webapp",
+  "name": "stolen",
+  "version": "1.0.0",
+  "description": "stole this",
   "scripts": {
     "start": "NODE_ENV=production node ./build/index.js",
-    "start-server": "nodemon --config \"./util/nodemon.json\"",
-    "start-client": "cd ./memeorable && npm start"
+    "start-server": "nodemon --config \"./util/nodemon.json\""
   },
   "repository": {
     "type": "git",
@@ -34,7 +33,6 @@
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.5",
-    "http-status-codes": "^2.1.2",
-    "mongoose": "^5.11.7"
+    "http-status-codes": "^2.1.2"
   }
 }
