@@ -30,6 +30,7 @@ class TypeConvervter():
             "husbando": "waifu",
             "catgirl": "catgirl",
             "catboy": "catgirl",
+            "yokai": "yokai",
         }
 
     def __getitem__(self, key: str):
@@ -404,8 +405,12 @@ def p_newScope(t):
 
 def p_returnStatement(t):
     ''' returnStatement : expr DESU
+                        | empty DESU
     '''
     if fns.currentlyInFunction():
+        if(t[1] == None): #return nothing
+            t[1] = {"returnType": "yokai"}
+
         returnType = typeConv[fns.getFunctionInfo()["returnType"]]
         if typeConv[t[1]["returnType"]] != returnType:
             raise Exception("Incorrect return type, expected type %s but received type %s at line %s" %
