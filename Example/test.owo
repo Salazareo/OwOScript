@@ -1,0 +1,55 @@
+yokai~chan foo(waifu harem lst){
+    lst[0] = 100;
+}
+
+
+waifu harem boo = [1,2,3,4,5];
+foo(boo);
+
+waifu x = boo[0];
+
+catgirl yy = boo[0] == boo[4];
+"---------------------------------------------------";
+waifu y = 10;
+
+nani (y == 10){
+    baka(y);
+    catgirl z = uwu;
+}
+
+"this will error";
+"baka(z);";
+"---------------------------------------------------";
+waifu something = 10;
+
+catgirl~sama fun(catgirl something){
+    something && owo desu;
+}
+
+waifu~sama fun2(catgirl bool){
+    something desu;
+}
+
+
+baka(fun(owo));
+baka(fun2(uwu));
+
+"This errors";
+"waifu~sama fun3(catgirl bool){";
+    "something && bool desu;";
+"}";
+
+"baka(fun3(uwu));";
+fun2(uwu);
+
+"--------------------------------------------------";
+
+waifu b = x + y;
+
+waifu z = 3 + 5;
+
+waifu c = z;
+
+catgirl aa = uwu && owo;
+
+"--------------------------------------------------";

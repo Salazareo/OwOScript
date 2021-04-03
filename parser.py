@@ -106,6 +106,7 @@ def p_singleStatement(t):
                         | whileLoop
                         | forLoop
                         | conditional
+                        | standAloneFuncCall SEMICOL
                         | returnStatement SEMICOL
     '''
     t[0] = t[1]
@@ -459,6 +460,32 @@ def p_arrayAssign(t):
         raise Exception("Array %s at line %s uninitialized" %
                         (name, t.lexer.lineno))
 
+def p_standAloneFuncCall(t):
+    '''standAloneFuncCall : ID LPAREN exprLst RPAREN
+                          | ID LPAREN RPAREN'''
+    _, fnName, *elements = t
+    if (fnName in fns):
+        if len(elements) == 2:  # Empty brackets
+            t[0] = {"type": "standAloneFuncCall",
+                    "returnType": fns[fnName][0]["value"],
+                    "name": fnName, "value": [fnName]+elements}
+        else:
+            params = fns[fnName][1][0]
+            if len(params) != len(t[3]):
+                raise Exception("Incorrect number of arguments, expected %s and received %s arguments at line %s" %
+                                (len(fns[fnName][1][0]), len(elements)-2, str(t.lexer.lineno)))
+            # Check if argument types match
+            for i in range(len(params)):
+                if typeConv[params[i]["returnType"]] != typeConv[t[3][i]["returnType"]]:
+                    raise Exception("Argument type %s does not match expected type %s at line %s" %
+                                    (typeConv[t[3][i]["returnType"]], typeConv[params[i]["returnType"]], t.lexer.lineno))
+
+            t[0] = {"type": "standAloneFuncCall",
+                    "returnType": fns[fnName][0]["value"],
+                    "name": fnName, "value": [fnName]+[elements[0], *elements[1], elements[2]]}
+    else:
+        raise Exception("Undefined function name '%s' at line %s" %
+                        (fnName, t.lexer.lineno))
 
 def p_printCall(t):
     ''' functionCall : printCall '''

@@ -60,6 +60,7 @@ class JSConverter():
             'strExpr': self.strExpr,
             'strReference': self.strReference,
             'arrExpr': self.arrExpr,
+            'standAloneFuncCall': self.standAloneFunctionCall
         }
 
     # def writeToFile(self,f,lst):
@@ -187,6 +188,7 @@ class JSConverter():
         return 'return {};\n'.format(self.typeTransfer(val['type'], val['value']))
 
     def functionCall(self, val):
+        print(val)
         out = ''
         for i in val:
             if isinstance(i, str):
@@ -194,6 +196,16 @@ class JSConverter():
             else:
                 out += self.typeTransfer(i['type'], i['value'])+', '
         return out.replace(', )', ')')
+    
+    def standAloneFunctionCall(self, val):
+        print(val)
+        out = ''
+        for i in val:
+            if isinstance(i, str):
+                out += i
+            else:
+                out += self.typeTransfer(i['type'], i['value'])+', '
+        return out.replace(', )', ');\n')
 
     def reassign(self, val, special=False):
         return '{} = {}'.format(val[0], self.typeTransfer(val[2]['type'], val[2]['value'], True))+(''if special else ';\n')
