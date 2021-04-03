@@ -163,7 +163,7 @@ class JSConverter():
             if not isinstance(val, list):
                 if not val['type'] in ['arrayReference', 'letReference', 'boolExpr']:
                     isParen = val['value'][0] == '('
-                    op = val['type'].replace('==', '===')
+                    op = val['type'].replace('==', '===').replace("!=", "!==")
                     val1 = val['value'][0 + int(isParen)]
                     val2 = val['value'][1 + int(isParen)]
                     return ('('if isParen else '') +\
