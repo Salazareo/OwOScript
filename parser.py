@@ -409,7 +409,7 @@ def p_returnStatement(t):
     '''
     if fns.currentlyInFunction():
         if(t[1] == None): #return nothing
-            t[1] = {"returnType": "yokai"}
+            t[1] = {"type": "null","returnType": "yokai"}
 
         returnType = typeConv[fns.getFunctionInfo()["returnType"]]
         if typeConv[t[1]["returnType"]] != returnType:

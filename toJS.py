@@ -184,7 +184,10 @@ class JSConverter():
         return val['value']
 
     def ret(self, val):
-        return 'return {};\n'.format(self.typeTransfer(val['type'], val['value']))
+        if val['type'] == "null":
+            return 'return;\n';
+        else:
+            return 'return {};\n'.format(self.typeTransfer(val['type'], val['value']))
 
     def functionCall(self, val, special=False):
         out = ''
