@@ -186,14 +186,14 @@ class JSConverter():
     def ret(self, val):
         return 'return {};\n'.format(self.typeTransfer(val['type'], val['value']))
 
-    def functionCall(self, val):
+    def functionCall(self, val, special=False):
         out = ''
         for i in val:
             if isinstance(i, str):
                 out += i
             else:
                 out += self.typeTransfer(i['type'], i['value'])+', '
-        return out.replace(', )', ')')
+        return out.replace(', )', ')') + ('' if special else ';\n')
 
     def reassign(self, val, special=False):
         return '{} = {}'.format(val[0], self.typeTransfer(val[2]['type'], val[2]['value'], True))+(''if special else ';\n')
@@ -255,7 +255,7 @@ class JSConverter():
                                self.typeTransfer(val[2]['type'], val[2]['value'], True)) + ('' if special else ';\n')
 
     def printCall(self, val):
-        return 'console.log({});\n'.format(self.typeTransfer(val[2]['type'], val[2]['value']))
+        return 'console.log({});\n'.format(self.typeTransfer(val[2]['type'], val[2]['value'], True))
 
     def typeTransfer(self, typeName, val, specialCase=False):
         try:
