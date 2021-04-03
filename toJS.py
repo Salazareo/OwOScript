@@ -198,10 +198,14 @@ class JSConverter():
     def reassign(self, val, special=False):
         return '{} = {}'.format(val[0], self.typeTransfer(val[2]['type'], val[2]['value'], True))+(''if special else ';\n')
 
-    def ternaryOp(self, val):
-        val0 = self.typeTransfer(val[0]['type'], val[0]['value'])
-        val2 = self.typeTransfer(val[2]['type'], val[2]['value'])
-        val4 = self.typeTransfer(val[4]['type'], val[4]['value'])
+    def ternaryOp(self, val, _=False):
+        i = 0
+        if val[0] == '(':
+            return "("+self.ternaryOp(val[1]['value'])+")"
+
+        val0 = self.typeTransfer(val[0+i]['type'], val[0+i]['value'], True)
+        val2 = self.typeTransfer(val[2+i]['type'], val[2+i]['value'], True)
+        val4 = self.typeTransfer(val[4+i]['type'], val[4+i]['value'], True)
         return '{} ? {} : {}'.format(val0, val2, val4)
 
     def conditional(self, val):
