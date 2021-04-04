@@ -5,11 +5,11 @@ import re
 # we wont need this once we write straight to uhh the thing
 
 
-def convertToStr(lst, encl=False):
+def convertToStr(lst, encl=0):
     out = ''
     for i in prune(lst):
         if encl:
-            out += '\t'
+            out += '\t'*encl
         out += i
     return out
 
@@ -30,6 +30,7 @@ def prune(lst):
 class JSConverter():
 
     def __init__(self):
+        self.currentClosure = 0
         self.fakeSwitch = {
             'functionDeclaration': self.functionDeclaration,
             'declaration': self.declaration,
@@ -111,10 +112,13 @@ class JSConverter():
         return '{}'.format(val['value']) if special == True else ('let {}'.format(val['value']) if special == 2 else'let {};\n'.format(val['value']))
 
     def enclosure(self, val):
-        return '{\n' + \
-            (convertToStr(list(map(lambda x: self.typeTransfer(x['type'], x['value']), val[1])), True) if isinstance(val[1], list)
+        self.currentClosure += 1
+        out = '{\n' + \
+            (convertToStr(list(map(lambda x: self.typeTransfer(x['type'], x['value']), val[1])), self.currentClosure) if isinstance(val[1], list)
              else self.typeTransfer(val[1]['type'], val[1]['value'])) \
-            + '}\n'
+            + ('\t'*(self.currentClosure-1)) + '}\n'
+        self.currentClosure -= 1
+        return out
 
     def initialize(self, val, special=False):
         return 'let {} = {}'.format(val[0]['value'],
@@ -185,7 +189,7 @@ class JSConverter():
 
     def ret(self, val):
         if val['type'] == "null":
-            return 'return;\n';
+            return 'return;\n'
         else:
             return 'return {};\n'.format(self.typeTransfer(val['type'], val['value']))
 
@@ -229,7 +233,7 @@ class JSConverter():
 
     def whileLoop(self, val):
         return 'while ({}) '.format(self.typeTransfer(val[2]['type'],
-                                                      val[2]['value'])) + self.typeTransfer(val[-1]['type'], val[-1]['value'])
+                                                      val[2]['value'], True)) + self.typeTransfer(val[-1]['type'], val[-1]['value'])
 
     def forLoop(self, val):
         return 'for ({}) '.format(self.typeTransfer(val[2]['type'], val[2]['value'])) + self.typeTransfer(val[4]['type'], val[4]['value'])
@@ -242,7 +246,7 @@ class JSConverter():
 
     def forElement(self, val):
         return '{} of {}'.format(self.typeTransfer(val[0]['type'], val[0]['value'], 2),
-                                 val[2])
+                                 self.typeTransfer(val[2]['type'], val[2]['value'], True))
 
     def arrayLiteral(self, val):
         return str(list(map(lambda x: self.typeTransfer(x['type'], x['value']), val[1:-1]))).replace("'", '')

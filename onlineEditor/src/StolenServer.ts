@@ -20,12 +20,12 @@ class StolenServer extends Server {
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: true }));
         this.setupControllers();
-        if (IS_DEV) {
-            this.app.get('*', (req, res) => res.send(this.DEV_MSG));
-        } else {
+        // if (IS_DEV) {
+        //     this.app.get('*', (req, res) => res.send(this.DEV_MSG));
+        // } else {
 
-            this.serveFrontEndProd();
-        }
+        this.serveFrontEndProd();
+        // }
     }
 
     public start(port: number): void {
@@ -43,7 +43,7 @@ class StolenServer extends Server {
     }
 
     private serveFrontEndProd(): void {
-        const dir = path.join(__dirname, 'public/Stolen');
+        const dir = path.join(__dirname, 'public/');
         this.app.use(express.static(dir));
         this.app.get('*', (req, res) => {
             res.sendFile('index.html', { root: dir });

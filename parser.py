@@ -408,8 +408,8 @@ def p_returnStatement(t):
                         | empty DESU
     '''
     if fns.currentlyInFunction():
-        if(t[1] == None): #return nothing
-            t[1] = {"type": "null","returnType": "yokai"}
+        if(t[1] == None):  # return nothing
+            t[1] = {"type": "null", "returnType": "yokai"}
 
         returnType = typeConv[fns.getFunctionInfo()["returnType"]]
         if typeConv[t[1]["returnType"]] != returnType:
@@ -595,6 +595,7 @@ def p_constDeclaration(t):
     '''
     name = t[2]["value"]["value"]
     t[0] = {"type": "constDeclaration",
+            "returnType": t[2]['returnType'],
             "value": t[2]["value"]}
     consts.forceNew(name, True)
 
@@ -659,11 +660,18 @@ def p_forReassign(t):
     t[0] = t[1]
 
 
+# NEED TO CHANGE THIS BELOW
 def p_forElement(t):
-    ''' forElement : declaration COL ID
-                   | constDeclaration COL ID
+    ''' forElement : declaration COL expr
+                   | constDeclaration COL expr
     '''
     #  need to error check
+    if 'harem' not in t[3]['returnType']:
+        raise Exception(
+            "Expected type harem for the iterator at line %s" % t.lexer.lineno)
+    if typeConv[t[1]['returnType']] != typeConv[rreplace(t[3]['returnType'], ' harem', '')]:
+        raise Exception(
+            "Mismatching types for forloop at line %s" % t.lexer.lineno)
     t[0] = {'type': 'forElement', 'value': t[1::]}
 
 

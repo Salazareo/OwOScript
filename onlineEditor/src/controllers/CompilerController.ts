@@ -19,7 +19,7 @@ class CompilerController {
                     compiledCode,
                 });
             } else {
-                fs.writeFileSync(`./${hashName}.owo`, code);
+                fs.writeFileSync(`./${hashName}.owo`, code.replace('\r', ''));
                 const output: string = execSync(`python ../parser.py ./${hashName}.owo`).toString().trim().replace('\r', '');
                 // execSync(`rm ./${hashName}.owo`);
                 if (!output.endsWith('parsing complete')) {
