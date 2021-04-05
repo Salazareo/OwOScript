@@ -15,17 +15,19 @@ class CompilerController {
             const hashName = createHash('md5').update(code).digest('hex');
             if (fs.existsSync(`./${hashName}.js`)) {
                 const compiledCode: string = fs.readFileSync(`./${hashName}.js`).toString().trim().replace('\r', '');
+                const AST: string = fs.readFileSync(`./${hashName}.owo.json`).toString().trim().replace('\r', '');
                 return res.status(StatusCodes.OK).json({
                     compiledCode,
+                    AST
                 });
             } else {
                 fs.writeFileSync(`./${hashName}.owo`, code.replace('\r', ''));
-                const output: string = execSync(`python ../parser.py ./${hashName}.owo`).toString().trim().replace('\r', '');
+                const output: string = execSync(`python3 ../parser.py ./${hashName}.owo`).toString().trim().replace('\r', '');
                 // execSync(`rm ./${hashName}.owo`);
                 if (!output.endsWith('parsing complete')) {
                     throw Error(output)
                 }
-                const jsOutput: string = execSync(`python ../toJS.py ./${hashName}.owo.json`).toString().trim().replace('\r', '');
+                const jsOutput: string = execSync(`python3 ../toJS.py ./${hashName}.owo.json`).toString().trim().replace('\r', '');
                 // execSync(`rm ./${hashName}.owo.json`); // <- if we want this comment it out
                 if (!jsOutput.endsWith('compiling complete')) {
                     throw Error(output)
