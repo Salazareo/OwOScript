@@ -12,44 +12,57 @@
     <meta property="og:image" content="icon-480.png" />
     <script src="index.js"></script>
     <style type="text/css" media="screen">
-    body {
-        background-image: url("https://thumbs.gfycat.com/SelfreliantBlandAmericancurl-size_restricted.gif");
-        background-repeat: repeat;
+        body {
+            background-image: url("https://i.imgur.com/Gnj7nzV.gif");
+            background-repeat: repeat;
 
-    }
+        }
         #input,
         #output {
             display: inline-block;
             width: 98%;
-            height: 55vh;
-        }
+            height: 52vh;
+            border-radius: 10px;
 
+        }
         .smol {
             display: inline-block;
             width: 45%;
-            padding: auto;
+            color: white;
+            border: thick solid black;
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.54);
+            margin-bottom: 10px;
         }
-
         #console,
         #ast {
             display: inline-block;
             width: 98%;
             height: 20vh;
+            border-radius: 10px;
         }
-
-        .box {
-            width: 100%;
+        .title {
+            /* background-color: rgba(0, 0, 0, 0.54); */
+            font-size: 2.5em;
+            color: white;
+            text-shadow: -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000, 3px 3px 0 #000;
+            margin-bottom: 0;
+            width: 15em;
             margin: auto;
         }
-
-        .title {
-            margin-bottom: 0;
+        h3 {
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+        }
+        button {
+            font-size: medium;
+            padding: 10px;
+            font-weight: bold;
         }
     </style>
 </head>
 
 <body style="text-align: center;">
-    <h1 class='title'>ÒwÓScript Editor <span style="font-size: x-small;">BETA</span>
+    <h1 class="title">ÒwÓScript Editor <span style="font-size: x-small;">BETA</span>
     </h1>
     <div class='smol'>
         <h3>
@@ -128,7 +141,8 @@ helloWorld();</div>
         ]
       }
     ]
-}</div>
+}
+        </div>
     </div>
     <script src="https://pagecdn.io/lib/ace/1.4.12/ace.js" type="text/javascript" charset="utf-8"></script>
     <script>
