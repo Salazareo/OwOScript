@@ -12,42 +12,156 @@
     <meta property="og:image" content="icon-480.png" />
     <script src="index.js"></script>
     <style type="text/css" media="screen">
+    body {
+        background-image: url("https://thumbs.gfycat.com/SelfreliantBlandAmericancurl-size_restricted.gif");
+        background-repeat: repeat;
+
+    }
         #input,
         #output {
             display: inline-block;
-            width: 45vw;
-            height: 80vh;
+            width: 98%;
+            height: 55vh;
+        }
+
+        .smol {
+            display: inline-block;
+            width: 45%;
+            padding: auto;
+        }
+
+        #console,
+        #ast {
+            display: inline-block;
+            width: 98%;
+            height: 20vh;
         }
 
         .box {
             width: 100%;
             margin: auto;
         }
+
+        .title {
+            margin-bottom: 0;
+        }
     </style>
 </head>
 
-<body>
-    <h1 class='title'>OwOScript Editor</h1>
-
-    <div id="input">
-        function foo(items) {
-        var x = "All this is syntax highlighted";
-        return x;
-        }
+<body style="text-align: center;">
+    <h1 class='title'>ÒwÓScript Editor <span style="font-size: x-small;">BETA</span>
+    </h1>
+    <div class='smol'>
+        <h3>
+            ÒwÓScript
+        </h3>
+        <div id="input">yokai~chan helloWorld() {
+    baka("Hello World");
+}
+helloWorld();</div>
+        <button id='compileButton' onclick="compile()">Compile</button>
     </div>
-    <button id='compileButton' onclick="compile()">Compile</button>
-    <div id="output">
-        x=10
-    </div>
+    <div class='smol'>
+        <h3>
+            JavaScript
+        </h3>
+        <div id="output">const helloWorld = () => {
+    console.log('Hello World');
+}
+helloWorld();</div>
 
+        <button id='runButton' onclick="runCode()">Run Code</button>
+    </div>
+    <div class='smol'>
+        <h3>
+            Console
+        </h3>
+        <div id='console' aria-readonly="true"></div>
+    </div>
+    <div class='smol'>
+        <h3>
+            AST
+        </h3>
+        <div id='ast' aria-readonly="true">{
+    "type": "program",
+    "value": [
+      {
+        "type": "functionDeclaration",
+        "returnType": "yokai",
+        "value": [
+          "helloWorld",
+          "(",
+          [],
+          ")",
+          {
+            "type": "enclosure",
+            "value": [
+              "{",
+              [
+                {
+                  "type": "printCall",
+                  "value": [
+                    "baka",
+                    "(",
+                    {
+                      "type": "strExpr",
+                      "returnType": "senpai",
+                      "value": "Hello World"
+                    },
+                    ")"
+                  ]
+                }
+              ],
+              "}"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "functionCall",
+        "returnType": "yokai",
+        "name": "helloWorld",
+        "value": [
+          "helloWorld",
+          "(",
+          ")"
+        ]
+      }
+    ]
+}</div>
+    </div>
     <script src="https://pagecdn.io/lib/ace/1.4.12/ace.js" type="text/javascript" charset="utf-8"></script>
     <script>
         var editorIn = ace.edit("input");
-        editorIn.setTheme("ace/theme/monokai");
-        editorIn.session.setMode("ace/mode/javascript");
+        editorIn.setTheme("ace/theme/tomorrow_night");
+        editorIn.setShowPrintMargin(false);
         var editorOut = ace.edit("output");
-        editorOut.setTheme("ace/theme/monokai");
+        editorOut.setTheme("ace/theme/tomorrow_night");
+        editorOut.setOptions({
+            readOnly: true,
+            highlightActiveLine: false,
+            highlightGutterLine: false,
+        });
+        editorOut.setShowPrintMargin(false);
         editorOut.session.setMode("ace/mode/javascript");
+        var editorShell = ace.edit("console");
+        editorShell.setOptions({
+            readOnly: true,
+            highlightActiveLine: false,
+            highlightGutterLine: false
+        });
+        editorShell.setShowPrintMargin(false);
+        editorShell.setTheme("ace/theme/tomorrow_night");
+        var editorAST = ace.edit("ast");
+        editorAST.setOptions({
+            readOnly: true,
+            highlightActiveLine: false,
+            highlightGutterLine: false
+        });
+        editorAST.setShowPrintMargin(false);
+        editorAST.setTheme("ace/theme/tomorrow_night");
+        editorAST.session.setMode("ace/mode/json");
+
     </script>
 </body>
 

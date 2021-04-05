@@ -31,8 +31,10 @@ class CompilerController {
                     throw Error(output)
                 }
                 const compiledCode: string = fs.readFileSync(`./${hashName}.js`).toString().trim().replace('\r', '');
+                const AST: string = fs.readFileSync(`./${hashName}.owo.json`).toString().trim().replace('\r', '');
                 res.status(StatusCodes.OK).json({
                     compiledCode,
+                    AST
                 });
                 // execSync(`rm ./${hashName}.js`);
             }
