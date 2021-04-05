@@ -1,4 +1,6 @@
-### Terminology
+# OwOScript Syntax 
+
+## Terminology
 A/B -> either A or B can be used to declare a type.
 
 ## Primitives
