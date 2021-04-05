@@ -1,4 +1,4 @@
-# OwOScript Syntax 
+# ÒwÓScript Syntax 
 
 ## Terminology
 A/B -> either A or B can be used to declare a type.
