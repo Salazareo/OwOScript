@@ -310,7 +310,7 @@ def p_binOpAssign(t):
     if (name in lets):
         if typeConv[lets[name]["returnType"]] != "waifu":
             raise Exception("Expected type waifu at line %s" % t.lexer.lineno)
-        if (name not in consts):
+        if (name not in consts or (consts.inScopeIndex(lets.getScopeIndex(name), name))):
             t[0] = {'type': 'short_binop',
                     'value': t[1::]}
         else:
