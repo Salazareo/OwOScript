@@ -27,7 +27,7 @@ const compile = async () => {
 
     } catch (e) {
         console.log(e);
-        editorOut.setValue(e);
+        editorOut.setValue(e.message || e.toString());
     }
 
     button.disabled = false;
