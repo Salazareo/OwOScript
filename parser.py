@@ -226,7 +226,7 @@ def p_boolExpr_op(t):
     options = {'&&': lambda x, y: x and y,
                '||': lambda x, y: x or y
                }
-    if typeConv[expr1["returnType"]] != "catgirl" and typeConv[expr2["returnType"]] != "catgirl":
+    if typeConv[expr1["returnType"]] != "catgirl" or typeConv[expr2["returnType"]] != "catgirl":
         raise Exception("Expected type catgirl at line %s" % t.lexer.lineno)
     elif isinstance(expr1["value"], (bool)) and isinstance(expr2["value"], (bool)):
         # Directly evaluate literals for optimization
