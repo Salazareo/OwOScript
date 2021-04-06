@@ -12,7 +12,7 @@
     <meta property="og:image" content="icon-480.png" />
     <script src="index.js"></script>
     <style type="text/css" media="screen">
-       body {
+        body {
             background-image: url("https://pa1.narvii.com/6837/da6eb25ae676d96a184c973ed2da8b062cea3d06_hq.gif");
             background-repeat: repeat;
 
@@ -22,7 +22,7 @@
         #output {
             display: inline-block;
             width: 98%;
-            height: 52vh;
+            height: 45vh;
             border-radius: 10px;
             font-size: 1em;
 
@@ -34,7 +34,7 @@
             color: white;
             border: thick solid black;
             border-radius: 10px;
-            background-color: rgba(0, 0, 0, 0.54);
+            background-color: rgba(0, 0, 0, 0.50);
             margin-bottom: 10px;
         }
 
@@ -46,8 +46,9 @@
             border-radius: 10px;
             font-size: 1em;
         }
+
         .title {
-            /* background-color: rgba(0, 0, 0, 0.54); */
+            display: block;
             font-size: 2.5em;
             color: white;
             text-shadow: -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000, 3px 3px 0 #000;
@@ -55,28 +56,43 @@
             width: 15em;
             margin: auto;
         }
+
         h3 {
             text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
         }
+
         button {
             font-size: medium;
-            padding: 10px;
+            padding: 8px;
             font-weight: bold;
+            margin-bottom: 2px;
+            color: navy;
+        }
+
+        a {
+            margin: 25px;
         }
     </style>
 </head>
 
 <body style="text-align: center;">
-    <h1 class="title">ÒwÓScript Editor <span style="font-size: x-small;">BETA</span>
+
+
+    <h1 class="title">ÒwÓScript <span style="font-size: x-small;">BETA</span>
+        <br />
+        <a target="_blank"
+            href='https://github.com/Salazareo/OwOScript/blob/main/syntax.md'><button>Syntax.MD</button></a>
+        <a target="_blank" href='https://github.com/Salazareo/OwOScript/tree/main/Example'><button>Examples</button></a>
     </h1>
+
     <div class='smol'>
         <h3>
             ÒwÓScript
         </h3>
         <div id="input">yokai~chan helloWorld() {
-    baka("Hello World");
-}
-helloWorld();</div>
+            baka("Hello World");
+            }
+            helloWorld();</div>
         <button id='compileButton' onclick="compile()">Compile</button>
     </div>
     <div class='smol'>
@@ -84,9 +100,9 @@ helloWorld();</div>
             JavaScript
         </h3>
         <div id="output">const helloWorld = () => {
-    console.log('Hello World');
-}
-helloWorld();</div>
+            console.log('Hello World');
+            }
+            helloWorld();</div>
 
         <button id='runButton' onclick="runCode()">Run Code</button>
     </div>
@@ -146,8 +162,7 @@ helloWorld();</div>
         ]
       }
     ]
-}
-        </div>
+}</div>
     </div>
     <script src="https://pagecdn.io/lib/ace/1.4.12/ace.js" type="text/javascript" charset="utf-8"></script>
     <script>
