@@ -1,22 +1,13 @@
-real kouhai naruto = "Believe It!";
-baka(naruto);
-real senpai sasuke = naruto + " Sakura";
+"Declaration";
 
-senpai~kun kakashi(senpai s, waifu size) {
-    senpai rasengan = "";
-    
-    catgirl~chan werePartying(){
-        size > 0 desu;
-    }
-    
-    yokai~san theBlade(){
-        size--;
-        rasengan = rasengan + s[size];
-    }
-    
-    whileU (werePartying()) iStudied {
-        theBlade();
-    }
-    rasengan desu; 
-}
-baka(kakashi(naruto,11));
+senpai x = "I am string1";
+real kouhai z = "I am string2";
+
+"Concat";
+
+x = x + " and " +z;
+x = x + "!";
+
+"Length of string";
+
+baka(long(x));

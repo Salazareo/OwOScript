@@ -5,6 +5,7 @@ import re
 # we wont need this once we write straight to uhh the thing
 removeSpace = False
 
+
 def convertToStr(lst, encl=0):
     out = ''
     for i in prune(lst):
@@ -12,8 +13,9 @@ def convertToStr(lst, encl=0):
             out += '\t'*encl
         out += i
     if(removeSpace):
-        out = re.sub('[\t\n]+','',out) #Remove whitespace
-        out = re.sub('\s*(\W)\s*',r'\1',out) #Remove space between special chars
+        out = re.sub('[\t\n]+', '', out)  # Remove whitespace
+        # Remove space between special chars
+        out = re.sub('\s*(\W)\s*', r'\1', out)
         return out
     else:
         return out
@@ -61,7 +63,7 @@ class JSConverter():
             'forElement': self.forElement,
             'arrayLiteral': self.arrayLiteral,
             'printCall': self.printCall,
-            'lengthCall':self.lengthCall,
+            'lengthCall': self.lengthCall,
             'arrayAssign': self.arrayAssign,
             'arrayReference': self.arrayReference,
             'strExpr': self.strExpr,
@@ -161,48 +163,56 @@ class JSConverter():
         if isinstance(val, (int, float)):
             return str(val)
         else:
+            out = ''
             if not isinstance(val, list):
                 if not val['type'] in ['arrayReference', 'letReference', 'numExpr']:
                     isParen = val['value'][0] == '('
                     val1 = val['value'][0 + int(isParen)]
                     val2 = val['value'][1 + int(isParen)]
-                    return ('('if isParen else '') +\
+                    out = ('('if isParen else '') +\
                         '{} {} {}'.format(self.typeTransfer(val1['type'], val1['value']), val['type'], self.typeTransfer(val2['type'], val2['value']))\
                         + (')'if isParen else '')
                 else:
-                    return self.typeTransfer(val['type'], val['value'], True)
+                    out = self.typeTransfer(val['type'], val['value'], True)
             else:
                 if isinstance(val[0], str):
+                    squiggly = False
                     if len(val) == 3:
-                        special = True
-                    return ('({})' if special else '{}').format(
-                        ('-'if val[0] == '-' else '')+self.typeTransfer(val[1]['type'], val[1]['value'], val[0] == '-' and val[1]['type'] == 'numExpr'))
+                        squiggly = True
+                    out = ('({})' if squiggly else '{}').format(
+                        ('-'if val[0] == '-' else '')+self.typeTransfer(val[1]['type'], val[1]['value'], 2 if (val[0] == '-' and val[1]['type'] == 'numExpr')else False))
                 else:
-                    return ('({})' if special else '{}').format(self.typeTransfer(val[0]['type'], val[0]['value']))
+                    out = ('({})' if special == 2 else '{}').format(
+                        self.typeTransfer(val[0]['type'], val[0]['value']))
+            return out + ('' if special == True else ';\n')
 
     def boolExpr(self, val, special=False):
         if isinstance(val, bool):
             return str(val).lower()
         else:
+            out = ''
             if not isinstance(val, list):
                 if not val['type'] in ['arrayReference', 'letReference', 'boolExpr']:
                     isParen = val['value'][0] == '('
                     op = val['type'].replace('==', '===').replace("!=", "!==")
                     val1 = val['value'][0 + int(isParen)]
                     val2 = val['value'][1 + int(isParen)]
-                    return ('('if isParen else '') +\
+                    out = ('('if isParen else '') +\
                         '{} {} {}'.format(self.typeTransfer(val1['type'], val1['value'], True), op, self.typeTransfer(val2['type'], val2['value'], True))\
                         + (')'if isParen else '')
                 else:
-                    return self.typeTransfer(val['type'], val['value'], True)
+                    out = self.typeTransfer(val['type'], val['value'], True)
             else:
                 if isinstance(val[0], str):
+                    squiggly = False
                     if len(val) == 3:
-                        special = True
-                    return ('({})' if special else '{}').format(
-                        ('!'if val[0] == '!'else '')+self.typeTransfer(val[1]['type'], val[1]['value'], val[0] == '!' and val[1]['type'] == 'boolExpr'))
+                        squiggly = True
+                    out = ('({})' if squiggly else '{}').format(
+                        ('!'if val[0] == '!'else '')+self.typeTransfer(val[1]['type'], val[1]['value'], 2 if (val[0] == '!' and val[1]['type'] == 'boolExpr')else False))
                 else:
-                    return ('({})' if special else '{}').format(self.typeTransfer(val[0]['type'], val[0]['value']))
+                    out = ('({})' if special == 2 else '{}').format(
+                        self.typeTransfer(val[0]['type'], val[0]['value']))
+            return out + ('' if special == True else ';\n')
 
     def letReference(self, val):
         return val['value']
@@ -283,7 +293,7 @@ class JSConverter():
 
     def printCall(self, val):
         return 'console.log({});\n'.format(self.typeTransfer(val[2]['type'], val[2]['value'], True))
-    
+
     def lengthCall(self, val, special=False):
         return '{}.length'.format(self.typeTransfer(val[2]['type'], val[2]['value'], True)) + ('' if special else ';\n')
 
@@ -306,9 +316,10 @@ if __name__ == "__main__":
         description='Take in the OwOScript ast and convert it into runnable JS code.')
     argParser.add_argument(
         'FILE', help="Input file with OwOScript ast")
-    argParser.add_argument('-whitespace','--whitespace', help="Turn white space optimization on", action="store_true")
+    argParser.add_argument('-whitespace', '--whitespace',
+                           help="Turn white space optimization on", action="store_true")
     args = argParser.parse_args()
-    if args.whitespace: #Flag to turn on white space remover
+    if args.whitespace:  # Flag to turn on white space remover
         removeSpace = True
     with open(args.FILE) as ast:
         astAsDict = json.load(ast)
