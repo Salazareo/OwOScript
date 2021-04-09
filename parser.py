@@ -460,7 +460,8 @@ def p_arrayAssign(t):
 
 
 def p_printCall(t):
-    ''' functionCall : printCall '''
+    ''' functionCall : printCall
+                     | lengthCall '''
     t[0] = t[1]
 
 
@@ -690,6 +691,14 @@ def p_print(t):
         elements[0], elements[1], *elements[2], elements[3]]
     }
 
+def p_length(t):
+    '''lengthCall : LONG LPAREN expr RPAREN'''
+    _ , *elements = t
+    if "harem" in typeConv[t[3]['returnType']] or "senpai" in typeConv[t[3]['returnType']]:
+        t[0] = {"type": "lengthCall", "returnType":"waifu",  "value": [elements[0], elements[1], elements[2], elements[3]]}
+    else:
+        raise Exception("Incorrect type %s used in Long function  at line %s" % (t[2]['returnType'], t.lexer.lineno))
+
 
 def p_reference(t):
     ''' reference : letReference
@@ -865,4 +874,9 @@ if __name__ == "__main__":
     sourceFile = open(args.FILE)
     sourceCode = sourceFile.read()
     sourceFile.close()
-    run_parser(sourceCode, '{}.json'.format(args.FILE), parser)
+    try:
+        run_parser(sourceCode, '{}.json'.format(args.FILE), parser)
+    except Exception as e:
+        print(e)
+        print("Error in file " + args.FILE + " " + str(e)) 
+        exit(1)

@@ -61,6 +61,7 @@ class JSConverter():
             'forElement': self.forElement,
             'arrayLiteral': self.arrayLiteral,
             'printCall': self.printCall,
+            'lengthCall':self.lengthCall,
             'arrayAssign': self.arrayAssign,
             'arrayReference': self.arrayReference,
             'strExpr': self.strExpr,
@@ -282,6 +283,9 @@ class JSConverter():
 
     def printCall(self, val):
         return 'console.log({});\n'.format(self.typeTransfer(val[2]['type'], val[2]['value'], True))
+    
+    def lengthCall(self, val, special=False):
+        return '{}.length'.format(self.typeTransfer(val[2]['type'], val[2]['value'], True)) + ('' if special else ';\n')
 
     def typeTransfer(self, typeName, val, specialCase=False):
         try:

@@ -67,7 +67,8 @@ reserved = {
     "whileU": "WHILEU",
     "iStudied": "ISTUDIED",
     "shi": "SHI",
-    "baka": "BAKA"
+    "baka": "BAKA",
+    "long": "LONG"
 }
 
 # Add reserved names to list of tokens
