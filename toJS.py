@@ -20,7 +20,7 @@ def prune(lst):
     for i in lst:
         if digit.match(i) or i in ['true', 'false'] \
             or i.startswith("'")\
-                or i.startswith("["):
+                or i.startswith("[") or i == "":
             pass
         else:
             ret.append(i)
@@ -103,12 +103,18 @@ class JSConverter():
                                                                                            val[2]['value'], True))
 
     def functionDeclaration(self, val):
+        if not val['referenced']:
+            return ''
+        val = val['value']
         return 'const {} = ({}) => {}'.format(val[0],
                                               str(list(map(lambda x: self.typeTransfer(x['type'], x['value'],
                                                                                        True), val[2])))[1:-1].replace('\'', ''),
                                               self.typeTransfer(val[4]['type'], val[4]['value']))
 
     def declaration(self, val, special=False):
+        if not val['referenced']:
+            return ''
+        val = val['value']
         return '{}'.format(val['value']) if special == True else ('let {}'.format(val['value']) if special == 2 else'let {};\n'.format(val['value']))
 
     def enclosure(self, val):
@@ -121,13 +127,23 @@ class JSConverter():
         return out
 
     def initialize(self, val, special=False):
+        if not val[0]['value']['referenced']:
+            return ''
+        val[0] = val[0]['value']
         return 'let {} = {}'.format(val[0]['value'],
                                     self.typeTransfer(val[2]['type'], val[2]['value'], True)) + ('' if special else ';\n')
 
     def constInitialize(self, val):
+
+        if not val[0]['value']['referenced']:
+            return ''
+        val[0] = val[0]['value']
         return 'const {} = {};\n'.format(val[0]['value'], self.typeTransfer(val[2]['type'], val[2]['value'], True))
 
     def constDeclaration(self, val, _special=None):
+        if not val['referenced']:
+            return ''
+        val = val['value']
         return 'const {}'.format(val['value'])
 
     def short_binop(self, val, special=False):

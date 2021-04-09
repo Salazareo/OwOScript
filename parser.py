@@ -53,10 +53,9 @@ def declarations(name, typeVal, isArray, type, t):
             "type": typeVal,
             "returnType": typeConv[typeVal["returnType"]],
             "array": isArray,
-            "value": None
+            "value": {"value": name, "referenced": 0}
         })
-        return {"type": type, "returnType": typeConv[typeVal["returnType"]], "value": {
-            "type": typeVal["value"], "value": name}}
+        return lets[name]
     else:
         raise Exception("%s has already been declared at line %s" %
                         (name, t.lexer.lineno))
@@ -369,8 +368,8 @@ def p_functionDeclaration(t):
     _, fnHeader, l, args, r, enclosure, _ = t
     returnType, _, honorific, fnName = fnHeader
     t[0] = {'type': 'functionDeclaration',
-            'returnType': returnType['value'], 'value': [fnName, l, args, r, enclosure]}
-    fns[fnName][1] = (args, enclosure)
+            'returnType': returnType['value'], 'value': {"referenced": 0, "value": [fnName, l, args, r, enclosure]}}
+    fns[fnName][1] = (args, enclosure, t[0]["value"])
 
 
 def p_enclosure(t):
@@ -489,6 +488,7 @@ def p_functionCall(t):
             t[0] = {"type": "functionCall",
                     "returnType": fns[fnName][0]["value"],
                     "name": fnName, "value": [fnName]+[elements[0], *elements[1], elements[2]]}
+        fns[fnName][1][2]['referenced'] += 1
     else:
         raise Exception("Undefined function name '%s' at line %s" %
                         (fnName, t.lexer.lineno))
@@ -539,13 +539,13 @@ def p_letInitialize(t):
     ''' letInitialize : declaration EQ expr
     '''
     name = t[1]["value"]["value"]
-    typeName = typeConv[t[1]["value"]["type"]]
+    typeName = typeConv[t[1]["returnType"]]
     val = t[3]
     if typeName == typeConv[val["returnType"]] or \
             ("harem" in typeName and val["returnType"] == "empty harem"):
         t[0] = {"type": "initialize", "value": [
-            {"type": typeName, "value": name}, '=', t[3]]}
-        lets[name]["value"] = val
+            {"type": typeName, "value": lets[name]["value"]}, '=', t[3]]}
+        # lets[name]["value"] = val
     else:
         raise Exception(
             "Expression type does not match variable type at line %s" % t.lexer.lineno)
@@ -555,13 +555,12 @@ def p_constInitialize(t):
     ''' constInitialize : constDeclaration EQ expr
     '''
     name = t[1]["value"]["value"]
-    typeName = typeConv[t[1]["value"]["type"]]
+    typeName = typeConv[t[1]["returnType"]]
     val = t[3]
     if typeName == typeConv[val["returnType"]] or \
             ("harem" in typeName and val["returnType"] == "empty harem"):
         t[0] = {"type": "constInitialize", "value": [
-            {"type": typeName, "value": name}, '=', t[3]]}
-        lets[name]["value"] = val
+            {"type": typeName, "value": lets[name]["value"]}, '=', t[3]]}
     else:
         raise Exception(
             "Expression type does not match variable type at line %s" % t.lexer.lineno)
@@ -580,13 +579,14 @@ def p_argumentDeclaration(t):
                            | declaration COMMA argumentDeclaration
                            |
     '''
-    if len(t) == 2:
-        t[0] = [t[1]]
+    if len(t) == 1:
+        t[0] = []
     else:
-        if len(t) == 1:
-            t[0] = []
+        if len(t) == 2:
+            t[0] = [t[1]]
         else:
             t[0] = [t[1]] + t[3]
+        t[1]['value']['referenced'] = 1
 
 
 def p_constDeclaration(t):
@@ -601,13 +601,19 @@ def p_constDeclaration(t):
 
 
 def p_arrayDeclaration(t):
-    'arrayDeclaration : type HAREM ID'
-    _, typeVal, _,  name = t
-
-    returnType = typeConv[typeVal["value"]] + " harem"
+    'arrayDeclaration : arrayDeclarationHelper ID'
+    _, typeVal, name = t
+    returnType = typeConv[typeVal["value"]]
     t[0] = declarations(
         name, {"type": 'type', "returnType": returnType, "value": returnType},
         True, 'declaration', t)
+
+
+def p_arrayDeclarationHelper(t):
+    '''arrayDeclarationHelper : type HAREM
+                              | arrayDeclarationHelper HAREM'''
+    _, typeVal, _ = t
+    t[0] = {"type": "type", "value": typeConv[typeVal["value"]]+' harem'}
 
 
 def p_letDeclaration(t):
@@ -673,6 +679,7 @@ def p_forElement(t):
         raise Exception(
             "Mismatching types for forloop at line %s" % t.lexer.lineno)
     t[0] = {'type': 'forElement', 'value': t[1::]}
+    t[1]['value']['referenced'] = 1
 
 
 def p_print(t):
@@ -695,6 +702,7 @@ def p_letReference(t):
     '''
     _, name = t
     if (name in lets):
+        print(lets[name])
         t[0] = {
             "type": "letReference",
             "returnType": typeConv[lets[name]["returnType"]],
@@ -704,6 +712,8 @@ def p_letReference(t):
                     "value": name,
             }
         }
+
+        lets[name]['value']['referenced'] += 1
     else:
         raise Exception("Undefined name '%s' at line %s" %
                         (name, t.lexer.lineno))
@@ -786,12 +796,15 @@ def p_bool(t):
 def p_fnType(t):
     ''' fnType : YOKAI
                | type
-               | type HAREM
+               | arrayDeclarationHelper
     '''
-    t[0] = {'type': 'type',
-            "value": t[1] + " harem" if len(t) == 3 else t[1]} if t[1] == 'yokai' else t[1]
-    t[0]["value"] = typeConv[t[0]["value"]] + \
-        " harem" if len(t) == 3 else t[0]["value"]
+    if t[1] == 'yokai':
+        t[0] = {
+            'type': 'type',
+            'value': t[1]
+        }
+    else:
+        t[0] = t[1]
 
 
 def p_type(t):
@@ -802,7 +815,7 @@ def p_type(t):
              | SENPAI
              | KOUHAI
     '''
-    t[0] = {'type': 'type', "value": t[1]}
+    t[0] = {'type': 'type', "value": typeConv[t[1]]}
 
 
 def p_empty(t):
