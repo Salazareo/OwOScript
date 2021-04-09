@@ -121,7 +121,7 @@ class JSConverter():
         out = '{\n' + \
             (convertToStr(list(map(lambda x: self.typeTransfer(x['type'], x['value']), val[1])), self.currentClosure) if isinstance(val[1], list)
              else self.typeTransfer(val[1]['type'], val[1]['value'])) \
-            + ('\t'*(self.currentClosure-1)) + '}\n'
+            + ('\t'*(self.currentClosure-1)) + '};\n'
         self.currentClosure -= 1
         return out
 

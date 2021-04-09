@@ -507,7 +507,8 @@ def p_arrayLiteral(t):
         exprList = elements[1]
         arrayType = typeConv[exprList[0]["returnType"]]
         for i in range(1, len(exprList)):
-            if arrayType != typeConv[exprList[i]["returnType"]]:
+            if arrayType != typeConv[exprList[i]["returnType"]] and \
+               'harem' in arrayType and not (arrayType == "empty harem" or typeConv[exprList[i]["returnType"]] == "empty harem"):
                 raise Exception(
                     "Harem members are not the same type at line %s" % t.lexer.lineno)
 
