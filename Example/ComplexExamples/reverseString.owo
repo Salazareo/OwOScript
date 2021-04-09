@@ -1,9 +1,8 @@
 real kouhai naruto = "Believe It!";
 baka(naruto);
-real senpai sasuke = naruto + " Sakura";
-
-senpai~kun kakashi(senpai s, waifu size) {
+senpai~kun kakashi(senpai s) {
     senpai rasengan = "";
+    waifu size = loli(s);
     
     catgirl~chan werePartying(){
         size > 0 desu;
@@ -19,4 +18,4 @@ senpai~kun kakashi(senpai s, waifu size) {
     }
     rasengan desu; 
 }
-baka(kakashi(naruto,11));
+baka(kakashi(naruto));

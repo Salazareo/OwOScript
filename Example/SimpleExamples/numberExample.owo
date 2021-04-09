@@ -1,7 +1,7 @@
 "Declaration";
 
 waifu x = 1;
-const waifu z = 2;
+real husbando z = 2;
 
 "Binop";
 

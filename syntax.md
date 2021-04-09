@@ -33,6 +33,10 @@ waifu harem x_array = [5,1,2,3,7,40,-100,90,0];
 ## Print
 baka("print something");
 
+## Obtain length of arrays and strings
+loli("this is a string");  
+loli([1,2,3,4]);  
+
 ## Operations
 ### Waifu/Husbando
 Most binops work

@@ -157,7 +157,10 @@ def p_boolExpr(t):
     }
     if (typeConv[expr1["returnType"]] not in ("waifu", "senpai") and 'harem' not in typeConv[expr1["returnType"]])\
             or typeConv[expr1["returnType"]] != typeConv[expr2["returnType"]]:
-        raise Exception("TypeError at line %s" % t.lexer.lineno)
+        if 'empty' in typeConv[expr1["returnType"]] or 'empty' in typeConv[expr2["returnType"]] and \
+                typeConv[expr1["returnType"]].split(' ', 1)[-1] != typeConv[expr2["returnType"]].split(' ', 1)[-1]:
+            raise Exception("TypeError at line {}. Mismatching types: {} + {}".format(
+                t.lexer.lineno, typeConv[expr1["returnType"]], typeConv[expr2["returnType"]]))
 
     if (typeConv[expr1["returnType"]] == "senpai" or 'harem' in typeConv[expr1["returnType"]]) and op != '+':
         raise Exception("Operand not supported at line %s" % t.lexer.lineno)
@@ -691,13 +694,16 @@ def p_print(t):
         elements[0], elements[1], *elements[2], elements[3]]
     }
 
+
 def p_length(t):
-    '''lengthCall : LONG LPAREN expr RPAREN'''
-    _ , *elements = t
+    '''lengthCall : LOLI LPAREN expr RPAREN'''
+    _, *elements = t
     if "harem" in typeConv[t[3]['returnType']] or "senpai" in typeConv[t[3]['returnType']]:
-        t[0] = {"type": "lengthCall", "returnType":"waifu",  "value": [elements[0], elements[1], elements[2], elements[3]]}
+        t[0] = {"type": "lengthCall", "returnType": "waifu",  "value": [
+            elements[0], elements[1], elements[2], elements[3]]}
     else:
-        raise Exception("Incorrect type %s used in Long function  at line %s" % (t[2]['returnType'], t.lexer.lineno))
+        raise Exception("Incorrect type %s used in loli function  at line %s" % (
+            t[2]['returnType'], t.lexer.lineno))
 
 
 def p_reference(t):
@@ -878,5 +884,5 @@ if __name__ == "__main__":
         run_parser(sourceCode, '{}.json'.format(args.FILE), parser)
     except Exception as e:
         print(e)
-        print("Error in file " + args.FILE + " " + str(e)) 
+        print("Error in file " + args.FILE + " " + str(e))
         exit(1)

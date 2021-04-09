@@ -1,5 +1,10 @@
 #!/bin/bash
-for filename in Example/*.owo; do
-    ./wow.sh $filename
-    echo '================================================'
+for dirName in Example/*/; do
+    echo "Running examples in $dirName"
+    echo "----------------------------------------------------"
+    for fileName in $dirName/*.owo; do
+        ./wow.sh $fileName
+        echo '================================================'
+    done
+    echo ""
 done

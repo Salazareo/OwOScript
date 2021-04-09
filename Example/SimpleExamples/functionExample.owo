@@ -1,0 +1,46 @@
+"Function declarations and calling";
+
+yokai~chan helloWorld(){
+    baka("Hello World!");
+}
+helloWorld();
+
+waifu~sama sqrt(waifu x){
+    x ** (1/2) desu;
+}
+baka(sqrt(16));
+
+catboy~kun isEven(husbando x){
+    x % 2 == 0 desu;
+}
+baka(isEven(3));
+
+senpai~san replace(senpai original, kouhai oldC, kouhai newC){
+    senpai toReturn = "";
+    shi( waifu i = 0; i < loli(original); i++){
+        toReturn = toReturn + (original[i] == oldC? newC : original[i]);
+    }
+    toReturn desu;
+}
+baka(replace("This is O","O","Ò") + replace("wOScript!","O","Ó"));
+
+waifu harem~chan range(waifu x){
+    waifu harem toReturn = [];
+    shi( waifu i = 0; i < x; i++){
+        toReturn = toReturn + [i];
+    }
+    toReturn desu;
+}
+baka(range(5));
+
+waifu harem harem~sama matrix(waifu x, waifu y){
+    waifu harem harem toRet = [];
+    shi ( waifu i = 0; i < x; i++){
+        toRet = toRet + [[]];
+        shi (waifu j = 0; j < y; j++){
+            toRet[i] = toRet[i] + [0];
+        }
+    }
+    toRet desu;
+}
+baka(matrix(2,2)[0]);
