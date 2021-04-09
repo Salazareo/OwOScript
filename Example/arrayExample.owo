@@ -15,6 +15,12 @@ real husbando harem harem harem aaa = [aa,aa,[]];
 real catboy harem harem harem bbb = [bb,bb,[]];
 real kouhai harem harem harem ccc = [cc,cc,[]];
 
+
+"Array Concatenation";
+real catboy harem harem bbb2 = [b] + bb;
+baka(bbb2);
+
+
 "Array Referencing";
 
 baka(aaa[2]);
