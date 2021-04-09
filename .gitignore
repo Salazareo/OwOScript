@@ -6,6 +6,7 @@ parsetab.py
 *.json
 parsetab.py
 Example/*.js
+OptimizationExamples/*.js
 parselog.txt
 parsetab.py
 node_modules

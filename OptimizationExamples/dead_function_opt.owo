@@ -1,0 +1,27 @@
+waifu~chan foo(){
+    waifu x = 0;
+    x += 500;
+    x -= 250;
+    x desu;
+}
+
+catgirl~sama bar(waifu x, catgirl y){
+    catgirl~san baz(waifu x){
+        baka(x);
+        x>10 desu;
+    }
+    (x < 10 || (baz(x/2) && x<2)) && y desu;
+}
+
+husbando harem~kun range(waifu x){
+    husbando harem bruh = [];
+    shi (waifu y = 0; y < x; y++) {
+        bruh = bruh + [y];
+    }
+    bruh desu;
+}
+
+
+waifu x = 10;
+waifu harem y = range(x);
+baka(x);
