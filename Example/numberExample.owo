@@ -1,0 +1,21 @@
+"Declaration";
+
+waifu x = 1;
+const waifu z = 2;
+
+"Binop";
+
+x+z;
+x-z;
+x*z;
+x/z;
+x**z; "pow(x,z)";
+x%z; "mod(x,z)";
+
+
+"Reassign";
+
+x += z;
+x *= 2;
+x = x + z;
+"so on and so forth...";
