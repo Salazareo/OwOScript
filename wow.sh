@@ -7,16 +7,14 @@ sourceCode=$1
 defaultVer=$(python --version 2>/dev/null)
 v3=" 3."
 if [[ "$defaultVer" == *"$v3"* ]]; then
-    python ./parser.py $sourceCode && python ./toJS.py "$sourceCode.json"
+    python ./parser.py $sourceCode && python ./toJS.py "$sourceCode.json" && rm "$sourceCode.json"
 else
     pythonVer=$(which python3 2>/dev/null)
 
     v3="python3"
     if [[ "$pythonVer" == *"$v3"* ]]; then
-        python3 ./parser.py $sourceCode && python3 ./toJS.py "$sourceCode.json"
+        python3 ./parser.py $sourceCode && python3 ./toJS.py "$sourceCode.json" && rm "$sourceCode.json"
     else
         echo "Requires python3"
     fi
 fi
-
-rm "$sourceCode.json"
