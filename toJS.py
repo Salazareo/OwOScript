@@ -3,7 +3,7 @@ import json
 import re
 
 # we wont need this once we write straight to uhh the thing
-
+removeSpace = False
 
 def convertToStr(lst, encl=0):
     out = ''
@@ -11,7 +11,12 @@ def convertToStr(lst, encl=0):
         if encl:
             out += '\t'*encl
         out += i
-    return out
+    if(removeSpace):
+        out = re.sub('[\t\n]+','',out) #Remove whitespace
+        out = re.sub('\s*(\W)\s*',r'\1',out) #Remove space between special chars
+        return out
+    else:
+        return out
 
 
 def prune(lst):
@@ -301,7 +306,10 @@ if __name__ == "__main__":
         description='Take in the OwOScript ast and convert it into runnable JS code.')
     argParser.add_argument(
         'FILE', help="Input file with OwOScript ast")
+    argParser.add_argument('-whitespace','--whitespace', help="Turn white space optimization on", action="store_true")
     args = argParser.parse_args()
+    if args.whitespace: #Flag to turn on white space remover
+        removeSpace = True
     with open(args.FILE) as ast:
         astAsDict = json.load(ast)
         with open('{}.js'.format(args.FILE.split('.owo')[0]), 'w') as f:
