@@ -5,13 +5,22 @@ import re
 # we wont need this once we write straight to uhh the thing
 
 
-def convertToStr(lst, encl=0):
+def convertToStr(lst, encl=0, removeSpace=True):
     out = ''
     for i in prune(lst):
         if encl:
             out += '\t'*encl
         out += i
-    return out
+    if(removeSpace):
+        out = re.sub('[\t\n]+','',out)
+        #out = re.sub('\s*[;><=]\s*','',out)
+        return out
+        # return out.replace('\t', '').replace('\n', '')\
+        #     .replace(' (','(').replace(') ',')')\
+        #     .replace(' =','=').replace('= ','=')\
+        #     .replace('> ', '>')
+    else:
+        return out
 
 
 def prune(lst):
