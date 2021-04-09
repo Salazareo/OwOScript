@@ -28,4 +28,3 @@ else
         echo "Requires python3"
     fi
 fi
-sleep 100
