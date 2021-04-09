@@ -1,13 +1,23 @@
 "Array Declaration";
 
-real waifu harem a = [1,2,3];
-real catgirl harem b = [uwu, owo, uwu];
-real senpai harem c = ["A","B","C"];
+waifu harem a = [1,2,3];
+catgirl harem b = [uwu, owo, uwu];
+senpai harem c = ["A","B","C"];
 
 
 "Nested Array";
 
-real waifu harem harem aa = [a,a];
-real waifu harem harem harem aaa = [aa,aa];
+real husbando harem harem aa = [a,a,[]];
+real catboy harem harem bb = [b,b,[]];
+real kouhai harem harem cc = [c,c,[]];
+
+real husbando harem harem harem aaa = [aa,aa,[]];
+real catboy harem harem harem bbb = [bb,bb,[]];
+real kouhai harem harem harem ccc = [cc,cc,[]];
 
 
+"Array Referencing";
+
+baka(aaa[2]);
+baka(bbb[1][1]);
+baka(ccc[0][1][2]);
