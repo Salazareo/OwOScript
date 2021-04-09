@@ -1,8 +1,13 @@
-waifu harem lst = [1,2,3];
-catgirl harem bools = [owo, uwu, owo, uwu];
+"Array Declaration";
 
-bools = bools + [1>2];
-bools + [uwu];
-real catgirl harem newJoint = [uwu] + bools;
+real waifu harem a = [1,2,3];
+real catgirl harem b = [uwu, owo, uwu];
+real senpai harem c = ["A","B","C"];
 
-baka(uwu && bools[lst[2]]);
+
+"Nested Array";
+
+real waifu harem harem aa = [a,a];
+real waifu harem harem harem aaa = [aa,aa];
+
+

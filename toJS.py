@@ -114,7 +114,6 @@ class JSConverter():
     def declaration(self, val, special=False):
         if not val['referenced']:
             return ''
-        val = val['value']
         return '{}'.format(val['value']) if special == True else ('let {}'.format(val['value']) if special == 2 else'let {};\n'.format(val['value']))
 
     def enclosure(self, val):
@@ -143,7 +142,6 @@ class JSConverter():
     def constDeclaration(self, val, _special=None):
         if not val['referenced']:
             return ''
-        val = val['value']
         return 'const {}'.format(val['value'])
 
     def short_binop(self, val, special=False):

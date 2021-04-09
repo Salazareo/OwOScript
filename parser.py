@@ -47,10 +47,10 @@ class TypeConvervter():
 typeConv = TypeConvervter()
 
 
-def declarations(name, typeVal, isArray, type, t):
+def declarations(name, typeVal, isArray, typeVals, t):
     if (not lets.inCurrentScope(name) and not fns.inCurrentScope(name)):
         lets.forceNew(name, {
-            "type": typeVal,
+            "type": typeVals,
             "returnType": typeConv[typeVal["returnType"]],
             "array": isArray,
             "value": {"value": name, "referenced": 0}
@@ -353,7 +353,7 @@ def p_reassign(t):
                 "Incompatible types for reassignment at line %s" % t.lexer.lineno)
         elif name not in consts or not (consts.inScopeIndex(lets.getScopeIndex(name), name)):
             t[0] = {'type': 'reassign', 'value': t[1::]}
-            lets[name]["value"] = val
+            # lets[name]["value"] = val
         else:
             raise Exception("Cannot reassign constant at line %s" %
                             t.lexer.lineno)
@@ -702,13 +702,12 @@ def p_letReference(t):
     '''
     _, name = t
     if (name in lets):
-        print(lets[name])
         t[0] = {
             "type": "letReference",
             "returnType": typeConv[lets[name]["returnType"]],
             "value":
                 {
-                    "type": lets[name]["type"]["value"],
+                    "type": typeConv[lets[name]["returnType"]],
                     "value": name,
             }
         }
