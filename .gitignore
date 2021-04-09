@@ -4,7 +4,7 @@
 temp.py
 parsetab.py
 *.json
-Example/*.js
+Example/**/*.js
 parselog.txt
 node_modules
 ZIP_ME/

@@ -68,7 +68,7 @@ reserved = {
     "iStudied": "ISTUDIED",
     "shi": "SHI",
     "baka": "BAKA",
-    "long": "LONG"
+    "loli": "LOLI"
 }
 
 # Add reserved names to list of tokens

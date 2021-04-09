@@ -8,6 +8,12 @@ real kouhai z = "I am string2";
 x = x + " and " +z;
 x = x + "!";
 
+
+"Sting indexing";
+
+x[0];
+
+
 "Length of string";
 
-baka(long(x));
+baka(loli(x));

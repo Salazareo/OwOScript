@@ -1,0 +1,21 @@
+"Declaration";
+
+catgirl x = uwu;
+real catboy z = owo;
+
+"Binop";
+
+x != z;
+x == z;
+1<2;
+2>3;
+2>=3;
+1<=2;
+x || z;
+x && z;
+
+
+"Reassign";
+
+x = z || owo;
+"so on and so forth...";

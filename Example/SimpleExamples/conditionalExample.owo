@@ -1,0 +1,38 @@
+"single line if";
+
+nani(uwu) 
+    baka("yes");
+
+
+"single line if/else";
+
+nani(uwu) 
+    baka("yes");
+noU 
+    baka("no");
+
+
+"block if/else";
+
+nani(uwu){
+    baka("yes");
+} noU {
+    baka("no");
+}
+
+
+"block if -> else if -> else";
+
+nani(uwu){
+    baka("yes");
+} noU nani (uwu) {
+    baka("maybe");
+} noU {
+    baka("no");
+}
+
+
+"ternary Ops";
+
+baka(1>2 ? "wait no" : "ok yeah" );
+

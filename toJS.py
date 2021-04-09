@@ -105,10 +105,10 @@ class JSConverter():
                                                         val['value'][0]['value'], True), self.typeTransfer(val['value'][1]['type'],
                                                                                                            val['value'][1]['value'], True)) + ('' if special else ';\n')
 
-    def strReference(self, val):
+    def strReference(self, val, special=False):
         return '{}[{}]'.format(self.typeTransfer(val[0]['type'],
                                                  val[0]['value'], True), self.typeTransfer(val[2]['type'],
-                                                                                           val[2]['value'], True))
+                                                                                           val[2]['value'], True)) + ('' if special else ';\n')
 
     def functionDeclaration(self, val):
         if not val['referenced']:
@@ -124,14 +124,14 @@ class JSConverter():
             return ''
         return '{}'.format(val['value']) if special == True else ('let {}'.format(val['value']) if special == 2 else'let {};\n'.format(val['value']))
 
-    def enclosure(self, val):
+    def enclosure(self, val, special=False):
         self.currentClosure += 1
         out = '{\n' + \
             (convertToStr(list(map(lambda x: self.typeTransfer(x['type'], x['value']), val[1])), self.currentClosure) if isinstance(val[1], list)
              else self.typeTransfer(val[1]['type'], val[1]['value'])) \
-            + ('\t'*(self.currentClosure-1)) + '};\n'
+            + ('\t'*(self.currentClosure-1)) + '}'
         self.currentClosure -= 1
-        return out
+        return out + ('' if special else ';\n')
 
     def initialize(self, val, special=False):
         if not val[0]['value']['referenced']:
@@ -246,15 +246,15 @@ class JSConverter():
         return '{} ? {} : {}'.format(val0, val2, val4)
 
     def conditional(self, val):
-        val0 = self.typeTransfer(val[0]['type'], val[0]['value'])
+        val0 = self.typeTransfer(val[0]['type'], val[0]['value'], len(val) > 1)
         val1 = ''
         if len(val) > 1:
             val1 = self.typeTransfer(val[1]['type'], val[1]['value'])
         return '{}{}'.format(val0, val1)
 
-    def ifstmt(self, val):
+    def ifstmt(self, val, special=False):
         val1 = self.typeTransfer(val[1]['type'], val[1]['value'])
-        val2 = self.typeTransfer(val[3]['type'], val[3]['value'])
+        val2 = self.typeTransfer(val[3]['type'], val[3]['value'], special)
         return ('if ({}) {}'.format(val1, val2))
 
     def elsestmt(self, val):
@@ -284,7 +284,7 @@ class JSConverter():
     def arrayAssign(self, val, special=False):
         return '{}[{}] = {}'.format(val[0],
                                     self.typeTransfer(
-                                        val[2]['type'], val[2]['value']),
+                                        val[2]['type'], val[2]['value'], True),
                                     self.typeTransfer(val[5]['type'], val[5]['value'], True)) + (''if special else ';\n')
 
     def arrayReference(self, val, special=False):
