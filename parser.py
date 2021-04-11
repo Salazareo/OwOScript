@@ -743,22 +743,12 @@ def p_arrayReference(t):
     if typeConv[index["returnType"]] != "waifu":
         raise Exception(
             "Expected type waifu for the index at line %s" % t.lexer.lineno)
-    if isinstance(lst, str):
-        name = lst
-        if (name in lets):
-            t[0] = {"type": "arrayReference",
-                    "returnType": typeConv[lets[name]["returnType"].replace(' harem', '')],
-                    "value": [{"value": name,
-                               "type": lets[name]["type"]["value"]},
-                              '[',
-                              {"type": "numExpr",
-                               "returnType": "waifu",
-                               "value": index['value'] if isinstance(index['value'], (int, float)) else index},
-                              ']']}
-        else:
-            raise Exception("Undefined name '%s' at line %s" %
-                            (name, t.lexer.lineno))
-    elif typeConv[lst['returnType']] == "senpai":
+    
+    if "harem" not in typeConv[lst["returnType"]] and "senpai" not in typeConv[lst["returnType"]]:
+        raise Exception(
+            "Cannot index into type %s on line %s" % (typeConv[lst["returnType"]], t.lexer.lineno))
+        
+    if typeConv[lst['returnType']] == "senpai":
         if isinstance(lst['value'], str) and isinstance(index['value'], (int, float)):
             t[0] = {"type": "strExpr",
                     "value": lst['value'][index['value']],
@@ -883,6 +873,5 @@ if __name__ == "__main__":
     try:
         run_parser(sourceCode, '{}.json'.format(args.FILE), parser)
     except Exception as e:
-        print(e)
         print("Error in file " + args.FILE + " " + str(e))
         exit(1)
