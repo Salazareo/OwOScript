@@ -1,0 +1,21 @@
+real kouhai naruto = "Believe It!";
+baka(naruto);
+senpai~kun kakashi(senpai s) {
+    senpai rasengan = "";
+    waifu size = loli(s);
+    
+    catgirl~chan werePartying(){
+        size > 0 desu;
+    }
+    
+    yokai~san theBlade(){
+        size--;
+        rasengan = rasengan + s[size];
+    }
+    
+    whileU (werePartying()) iStudied {
+        theBlade();
+    }
+    rasengan desu; 
+}
+baka(kakashi(naruto));
