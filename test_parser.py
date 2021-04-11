@@ -23,9 +23,10 @@ def test_vars():
         "value": [{
             "type": "declaration",
             "returnType": "waifu",
+            "array": False,
             "value": {
-                "type": "waifu",
-                "value": "varName"
+                "value": "varName",
+                "referenced": 0
             }
         }]
     }
@@ -41,7 +42,10 @@ def test_vars():
             "value": [
               {
                 "type": "waifu",
-                "value": "y"
+                "value": {
+                  "value": "y",
+                  "referenced": 0
+                }
               },
               "=",
               {
@@ -85,7 +89,10 @@ def test_vars():
           "value": [
             {
               "type": "waifu",
-              "value": "z"
+              "value": {
+                "value": "z",
+                "referenced": 1
+              }
             },
             "=",
             {
@@ -117,7 +124,10 @@ def test_vars():
             "value": [
               {
                 "type": "catgirl",
-                "value": "a"
+                "value": {
+                "value": "a",
+                "referenced": 0
+              }
               },
               "=",
               {
@@ -140,7 +150,10 @@ def test_vars():
             "value": [
               {
                 "type": "catgirl",
-                "value": "b"
+                "value": {
+                  "value": "b",
+                  "referenced": 0
+                }
               },
               "=",
               {
@@ -164,9 +177,13 @@ def test_vars():
         "value": [{
             "type": "declaration",
             "returnType": "catgirl harem",
+            "array": True,
             "value": {
-              "type": "catgirl harem", #TODO: Eliminate nesting?
-              "value": "A"
+              "type": "catgirl harem",
+              "value": {
+                "value": "A",
+                "referenced": 0
+              }
             }
         }]
     }
@@ -207,10 +224,14 @@ def test_vars():
           "type": "arrayReference",
           "returnType": "catgirl",
           "value": [
-            {
-              "value": "A",
-              "type": "catgirl harem",
-            },
+             {
+              "type": "letReference",
+              "returnType": "catgirl harem",
+              "value": {
+                "type": "catgirl harem",
+                "value": "A"
+              }
+        },
             "[",
             {
               "type": "numExpr",
@@ -393,9 +414,31 @@ def test_boolExpr():
     parser.restart() 
 
 
+def read_test_file(filename):
+  counter = 1
+  with open(filename) as f:
+    for line in f:
+      try:
+        make_ast(line, parser)
+      except Exception as e:
+        errStr = " ".join(str(e).split()[:-1]) #remove line counter
+        print(errStr, str(counter)) #Have our own line counter
+        reset_parser()
+      counter += 1
+
 if __name__ == "__main__":
     test_vars()
     test_numExpr()
     test_boolExpr()
+    print("==================================")
+    print("Testing type errors on expressions")
+    read_test_file("./Example/Errors/typeErrors.owo")
+    print("==================================")
+    print("Testing errors on functions")
+    read_test_file("./Example/Errors/functionErrors.owo")
+    print("==================================")
+    print("Testing errors on variables")
+    read_test_file("./Example/Errors/varErrors.owo")
+    print("==================================")
     print("Testing complete.")
 
