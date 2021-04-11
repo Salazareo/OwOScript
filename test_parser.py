@@ -436,7 +436,6 @@ if __name__ == "__main__":
     # test_vars()
     # test_numExpr()
     # test_boolExpr()
-    print("==================================")
     print("Testing type errors on expressions")
     read_test_file("./Example/Errors/typeErrors.owo")
     print("==================================")

@@ -12,8 +12,11 @@ for dirName in Example/*/; do
         echo ""
     fi
 done
+echo "Running whitespace optimization example"
+echo "----------------------------------------------------"
+./wow.sh -w Example/OptimizationExamples/whitespace_opt.owo
+echo '================================================'
 echo "Running Error cases in Errors folder, each line should be an error"
-python test_parser.py
 sourceCode=$1
 
 defaultVer=$(python --version 2>/dev/null)
