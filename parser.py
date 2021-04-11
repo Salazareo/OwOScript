@@ -157,8 +157,11 @@ def p_boolExpr(t):
     }
     if (typeConv[expr1["returnType"]] not in ("waifu", "senpai") and 'harem' not in typeConv[expr1["returnType"]])\
             or typeConv[expr1["returnType"]] != typeConv[expr2["returnType"]]:
-        if 'empty' in typeConv[expr1["returnType"]] or 'empty' in typeConv[expr2["returnType"]] and \
-                typeConv[expr1["returnType"]].split(' ', 1)[-1] != typeConv[expr2["returnType"]].split(' ', 1)[-1]:
+        if 'empty' in typeConv[expr1["returnType"]] or 'empty' in typeConv[expr2["returnType"]]:
+            if typeConv[expr1["returnType"]].split(' ', 1)[-1] != typeConv[expr2["returnType"]].split(' ', 1)[-1]:
+                raise Exception("TypeError at line {}. Mismatching types: {} + {}".format(
+                    t.lexer.lineno, typeConv[expr1["returnType"]], typeConv[expr2["returnType"]]))
+        else:
             raise Exception("TypeError at line {}. Mismatching types: {} + {}".format(
                 t.lexer.lineno, typeConv[expr1["returnType"]], typeConv[expr2["returnType"]]))
 
@@ -312,7 +315,7 @@ def p_binOpAssign(t):
     if (name in lets):
         if typeConv[lets[name]["returnType"]] != "waifu":
             raise Exception("Expected type waifu at line %s" % t.lexer.lineno)
-        if (name not in consts or (consts.inScopeIndex(lets.getScopeIndex(name), name))):
+        if (name not in consts or not (consts.inScopeIndex(lets.getScopeIndex(name), name))):
             t[0] = {'type': 'short_binop',
                     'value': t[1::]}
         else:
@@ -736,34 +739,18 @@ def p_letReference(t):
 
 def p_arrayReference(t):
     ''' arrayReference : expr LBRACK expr RBRACK 
-                       | ID LBRACK expr RBRACK
     '''
     _, lst, _, index, _ = t
 
     if typeConv[index["returnType"]] != "waifu":
         raise Exception(
             "Expected type waifu for the index at line %s" % t.lexer.lineno)
-    if isinstance(lst, str):
-        name = lst
-        if (name in lets):
-            t[0] = {"type": "arrayReference",
-                    "returnType": typeConv[lets[name]["returnType"].replace(' harem', '')],
-                    "value": [{"value": name,
-                               "type": lets[name]["type"]["value"]},
-                              '[',
-                              {"type": "numExpr",
-                               "returnType": "waifu",
-                               "value": index['value'] if isinstance(index['value'], (int, float)) else index},
-                              ']']}
-        else:
+    if lst['type'] == 'letReference':
+        name = lst['value']['value']
+        if name not in lets:
             raise Exception("Undefined name '%s' at line %s" %
                             (name, t.lexer.lineno))
-    elif typeConv[lst['returnType']] == "senpai":
-        if isinstance(lst['value'], str) and isinstance(index['value'], (int, float)):
-            t[0] = {"type": "strExpr",
-                    "value": lst['value'][index['value']],
-                    'returnType': 'senpai'}
-        else:
+        if typeConv[lst['returnType']] == 'senpai':
             t[0] = {"type": "strReference",
                     "value": [lst,
                               '[',
@@ -771,10 +758,7 @@ def p_arrayReference(t):
                                "value": index['value'] if isinstance(index['value'], (int, float)) else index},
                               ']'],
                     'returnType': 'senpai'}
-    else:
-        if lst["type"] == 'arrayLiteral' and isinstance(index['value'], (int, float)):
-            t[0] = lst["value"][index['value']+1]
-        else:
+        elif 'harem' in typeConv[lst['returnType']]:
             t[0] = {"type": "arrayReference",
                     "returnType": rreplace(typeConv[lst["returnType"]], ' harem', ''),
                     "value": [lst,
@@ -783,6 +767,38 @@ def p_arrayReference(t):
                                "returnType": "waifu",
                                "value": index['value'] if isinstance(index['value'], (int, float)) else index},
                               ']']}
+        else:
+            raise Exception("Expected type harem or senpai but received type {} at line {}".format(
+                typeConv[lst['returnType']], t.lexer.lineno))
+    else:
+        if typeConv[lst['returnType']] == 'senpai':
+            if isinstance(lst['value'], str) and isinstance(index['value'], (int, float)):
+                t[0] = {"type": "strExpr",
+                        "value": lst['value'][index['value']],
+                        'returnType': 'senpai'}
+            else:
+                t[0] = {"type": "strReference",
+                        "value": [lst,
+                                  '[',
+                                  {"type": "numExpr",
+                                   "value": index['value'] if isinstance(index['value'], (int, float)) else index},
+                                  ']'],
+                        'returnType': 'senpai'}
+        elif 'harem' in typeConv[lst['returnType']]:
+            if lst["type"] == 'arrayLiteral' and isinstance(index['value'], (int, float)):
+                t[0] = lst["value"][index['value']+1]
+            else:
+                t[0] = {"type": "arrayReference",
+                        "returnType": rreplace(typeConv[lst["returnType"]], ' harem', ''),
+                        "value": [lst,
+                                  '[',
+                                  {"type": "numExpr",
+                                   "returnType": "waifu",
+                                   "value": index['value'] if isinstance(index['value'], (int, float)) else index},
+                                  ']']}
+        else:
+            raise Exception("Expected type harem or senpai but received type {} at line {}".format(
+                typeConv[lst['returnType']], t.lexer.lineno))
 
 
 def p_numExpr_number(t):
