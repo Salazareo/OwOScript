@@ -159,11 +159,9 @@ def p_boolExpr(t):
             or typeConv[expr1["returnType"]] != typeConv[expr2["returnType"]]:
         if 'empty' in typeConv[expr1["returnType"]] or 'empty' in typeConv[expr2["returnType"]]:
             if typeConv[expr1["returnType"]].split(' ', 1)[-1] != typeConv[expr2["returnType"]].split(' ', 1)[-1]:
-                raise Exception("TypeError at line {}. Mismatching types: {} + {}".format(
-                    t.lexer.lineno, typeConv[expr1["returnType"]], typeConv[expr2["returnType"]]))
+                raise Exception("Mismatching types: %s + %s, TypeError at line %s" % (t.lexer.lineno, typeConv[expr1["returnType"]], typeConv[expr2["returnType"]]))
         else:
-            raise Exception("TypeError at line {}. Mismatching types: {} + {}".format(
-                t.lexer.lineno, typeConv[expr1["returnType"]], typeConv[expr2["returnType"]]))
+            raise Exception("Mismatching types: %s + %s, TypeError at line %s" % (t.lexer.lineno, typeConv[expr1["returnType"]], typeConv[expr2["returnType"]]))
 
     if (typeConv[expr1["returnType"]] == "senpai" or 'harem' in typeConv[expr1["returnType"]]) and op != '+':
         raise Exception("Operand not supported at line %s" % t.lexer.lineno)
