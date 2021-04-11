@@ -162,12 +162,13 @@ def test_vars():
     expected = {
         "type": "program",
         "value": [{
-            "type": "declaration",
-            "returnType": "catgirl harem",
-            "value": {
-              "type": "catgirl harem", #TODO: Eliminate nesting?
-              "value": "A"
-            }
+          "type": "declaration",
+          "returnType": "catgirl harem",
+          "array": True,
+          "value": {
+            "value": "A",
+            "referenced": 0
+          }
         }]
     }
     ast = make_ast(input, parser)
@@ -208,8 +209,12 @@ def test_vars():
           "returnType": "catgirl",
           "value": [
             {
-              "value": "A",
-              "type": "catgirl harem",
+              "type": "letReference",
+              "returnType": "catgirl harem",
+              "value": {
+                "type": "catgirl harem",
+                "value": "A"
+              }
             },
             "[",
             {
@@ -393,9 +398,31 @@ def test_boolExpr():
     parser.restart() 
 
 
+def read_test_file(filename):
+  counter = 1
+  with open(filename) as f:
+    for line in f:
+      try:
+        make_ast(line, parser)
+      except Exception as e:
+        errStr = " ".join(str(e).split()[:-1]) #remove line counter
+        print(errStr, str(counter)) #Have our own line counter
+        reset_parser()
+      counter += 1
+
 if __name__ == "__main__":
-    test_vars()
-    test_numExpr()
-    test_boolExpr()
+    #test_vars()
+    #test_numExpr()
+    #test_boolExpr()
+    print("==================================")
+    print("Testing type errors on expressions")
+    read_test_file("./Example/Errors/typeErrors.owo")
+    print("==================================")
+    print("Testing errors on functions")
+    read_test_file("./Example/Errors/functionErrors.owo")
+    print("==================================")
+    print("Testing errors on variables")
+    read_test_file("./Example/Errors/varErrors.owo")
+    print("==================================")
     print("Testing complete.")
 

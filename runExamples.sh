@@ -8,3 +8,5 @@ for dirName in Example/*/; do
     done
     echo ""
 done
+echo "Running Error cases in Errors folder, each line should be an error"
+python test_parser.py
