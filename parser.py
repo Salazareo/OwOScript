@@ -745,6 +745,9 @@ def p_arrayReference(t):
     if typeConv[index["returnType"]] != "waifu":
         raise Exception(
             "Expected type waifu for the index at line %s" % t.lexer.lineno)
+    if "harem" not in typeConv[lst["returnType"]] and "senpai" not in typeConv[lst["returnType"]]:
+        raise Exception(
+            "Cannot index into type %s on line %s" % (typeConv[lst["returnType"]], t.lexer.lineno))
     if lst['type'] == 'letReference':
         name = lst['value']['value']
         if name not in lets:
@@ -899,6 +902,5 @@ if __name__ == "__main__":
     try:
         run_parser(sourceCode, '{}.json'.format(args.FILE), parser)
     except Exception as e:
-        print(e)
         print("Error in file " + args.FILE + " " + str(e))
         exit(1)

@@ -1,0 +1,17 @@
+2 + "owo";
+"owo" == owo;
+"hello" / "world";
+uwu > owo;
+10 || 10000;
+!"uwu";
+-[];
+"Not a condition" ? 0 : 1;
+(owo) ? "First type" : ["Second type"];
+catboy x = uwu; x += 1;
+catboy y = uwu; y++;
+nani ("cond here") uwu;
+waifu harem A = [100]; [A[0], uwu];
+waifu harem B = [100]; B["index"];
+C[0];
+whileU ("partied") iStudied {"the blade";}
+shi (waifu i = 0; "not a cond"; i++) {}
