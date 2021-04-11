@@ -1,4 +1,4 @@
-from parser import make_parser, run_parser, reset_scope, make_ast
+from parser import make_parser, run_parser, reset_parser, make_ast
 import json
 
 parser = make_parser()
@@ -175,16 +175,13 @@ def test_vars():
     expected = {
         "type": "program",
         "value": [{
-            "type": "declaration",
-            "returnType": "catgirl harem",
-            "array": True,
-            "value": {
-              "type": "catgirl harem",
-              "value": {
-                "value": "A",
-                "referenced": 0
-              }
-            }
+          "type": "declaration",
+          "returnType": "catgirl harem",
+          "array": True,
+          "value": {
+            "value": "A",
+            "referenced": 0
+          }
         }]
     }
     ast = make_ast(input, parser)
@@ -224,14 +221,14 @@ def test_vars():
           "type": "arrayReference",
           "returnType": "catgirl",
           "value": [
-             {
+            {
               "type": "letReference",
               "returnType": "catgirl harem",
               "value": {
                 "type": "catgirl harem",
                 "value": "A"
               }
-        },
+            },
             "[",
             {
               "type": "numExpr",
@@ -245,7 +242,7 @@ def test_vars():
     ast = make_ast(input, parser)
     if ast != expected: print("test:Catgirl 1D array reference did not pass")
 
-    reset_scope()  
+    reset_parser()  
 
 def test_numExpr():
     print("============================")
@@ -423,7 +420,7 @@ def read_test_file(filename):
       except Exception as e:
         errStr = " ".join(str(e).split()[:-1]) #remove line counter
         print(errStr, str(counter)) #Have our own line counter
-        reset_scope()
+        reset_parser()
       counter += 1
 
 if __name__ == "__main__":
