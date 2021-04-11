@@ -1,0 +1,6 @@
+waifu~sama foo() { "Not a number" desu; }
+yokai~kun bar() { [] desu; }
+"Not in a function" desu;
+yokai~chan baz(waifu x) {} baz();
+yokai~chan buzz(waifu x, waifu y) {} baz(5, owo);
+unknownCall();
