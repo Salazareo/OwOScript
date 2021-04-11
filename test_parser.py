@@ -175,16 +175,13 @@ def test_vars():
     expected = {
         "type": "program",
         "value": [{
-            "type": "declaration",
-            "returnType": "catgirl harem",
-            "array": True,
-            "value": {
-              "type": "catgirl harem",
-              "value": {
-                "value": "A",
-                "referenced": 0
-              }
-            }
+          "type": "declaration",
+          "returnType": "catgirl harem",
+          "array": True,
+          "value": {
+            "value": "A",
+            "referenced": 0
+          }
         }]
     }
     ast = make_ast(input, parser)
@@ -224,14 +221,14 @@ def test_vars():
           "type": "arrayReference",
           "returnType": "catgirl",
           "value": [
-             {
+            {
               "type": "letReference",
               "returnType": "catgirl harem",
               "value": {
                 "type": "catgirl harem",
                 "value": "A"
               }
-        },
+            },
             "[",
             {
               "type": "numExpr",
