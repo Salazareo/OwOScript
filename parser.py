@@ -309,10 +309,11 @@ def p_binOpAssign(t):
     else:
         _, name, op = t
         val = 1
+
     if (name in lets):
         if typeConv[lets[name]["returnType"]] != "waifu":
             raise Exception("Expected type waifu at line %s" % t.lexer.lineno)
-        if (name not in consts or (consts.inScopeIndex(lets.getScopeIndex(name), name))):
+        if (name not in consts and (consts.inScopeIndex(lets.getScopeIndex(name), name))):
             t[0] = {'type': 'short_binop',
                     'value': t[1::]}
         else:
@@ -474,15 +475,18 @@ def p_functionCall(t):
     '''
     _, fnName, *elements = t
     if (fnName in fns):
+        lenArgs = 0 if len(elements) == 2 else len(t[3])
+        params = fns[fnName][1][0]
+        if len(params) != lenArgs:
+            raise Exception("Incorrect number of arguments, expected %s and received %s arguments at line %s" %
+                            (len(fns[fnName][1][0]), len(elements)-2, str(t.lexer.lineno)))
+
         if len(elements) == 2:  # Empty brackets
             t[0] = {"type": "functionCall",
                     "returnType": fns[fnName][0]["value"],
                     "name": fnName, "value": [fnName]+elements}
         else:
             params = fns[fnName][1][0]
-            if len(params) != len(t[3]):
-                raise Exception("Incorrect number of arguments, expected %s and received %s arguments at line %s" %
-                                (len(fns[fnName][1][0]), len(elements)-2, str(t.lexer.lineno)))
             # Check if argument types match
             for i in range(len(params)):
                 if typeConv[params[i]["returnType"]] != typeConv[t[3][i]["returnType"]]:
@@ -511,8 +515,7 @@ def p_arrayLiteral(t):
         exprList = elements[1]
         arrayType = typeConv[exprList[0]["returnType"]]
         for i in range(1, len(exprList)):
-            if arrayType != typeConv[exprList[i]["returnType"]] and \
-               'harem' in arrayType and not (arrayType == "empty harem" or typeConv[exprList[i]["returnType"]] == "empty harem"):
+            if arrayType != typeConv[exprList[i]["returnType"]]: 
                 raise Exception(
                     "Harem members are not the same type at line %s" % t.lexer.lineno)
 
@@ -743,13 +746,14 @@ def p_arrayReference(t):
     if typeConv[index["returnType"]] != "waifu":
         raise Exception(
             "Expected type waifu for the index at line %s" % t.lexer.lineno)
-    if isinstance(lst, str):
-        name = lst
+    if lst['type'] == 'letReference': #ID Reference
+        name = lst['value']['value']
         if (name in lets):
+            if not 'harem' in lets[name]['returnType']:
+                raise Exception("Expected type harem but received type {} at line {}".format(lets[name]['returnType'], t.lexer.lineno))
             t[0] = {"type": "arrayReference",
                     "returnType": typeConv[lets[name]["returnType"].replace(' harem', '')],
-                    "value": [{"value": name,
-                               "type": lets[name]["type"]["value"]},
+                    "value": [lst,
                               '[',
                               {"type": "numExpr",
                                "returnType": "waifu",
@@ -758,7 +762,7 @@ def p_arrayReference(t):
         else:
             raise Exception("Undefined name '%s' at line %s" %
                             (name, t.lexer.lineno))
-    elif typeConv[lst['returnType']] == "senpai":
+    elif typeConv[lst['returnType']] == "senpai": #Handle String indexing
         if isinstance(lst['value'], str) and isinstance(index['value'], (int, float)):
             t[0] = {"type": "strExpr",
                     "value": lst['value'][index['value']],
@@ -771,18 +775,12 @@ def p_arrayReference(t):
                                "value": index['value'] if isinstance(index['value'], (int, float)) else index},
                               ']'],
                     'returnType': 'senpai'}
+    elif lst["type"] == 'arrayLiteral' and isinstance(index['value'], (int, float)):
+        #Array literal case
+        t[0] = lst["value"][index['value']+1]
     else:
-        if lst["type"] == 'arrayLiteral' and isinstance(index['value'], (int, float)):
-            t[0] = lst["value"][index['value']+1]
-        else:
-            t[0] = {"type": "arrayReference",
-                    "returnType": rreplace(typeConv[lst["returnType"]], ' harem', ''),
-                    "value": [lst,
-                              '[',
-                              {"type": "numExpr",
-                               "returnType": "waifu",
-                               "value": index['value'] if isinstance(index['value'], (int, float)) else index},
-                              ']']}
+        raise Exception("Expected a harem but received type {} at line {}".format(lst['returnType'], t.lexer.lineno))
+
 
 
 def p_numExpr_number(t):
@@ -864,7 +862,7 @@ def run_parser(sourceCode, outputFileName, parser):
     print("parsing complete")
 
 
-def reset_parser():
+def reset_scope():
     lets = ScopedMap()
     consts = ScopedMap()
     fns = ScopedMap()
