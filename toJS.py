@@ -170,7 +170,7 @@ class JSConverter():
                     val1 = val['value'][0 + int(isParen)]
                     val2 = val['value'][1 + int(isParen)]
                     out = ('('if isParen else '') +\
-                        '{} {} {}'.format(self.typeTransfer(val1['type'], val1['value']), val['type'], self.typeTransfer(val2['type'], val2['value']))\
+                        '{} {} {}'.format(self.typeTransfer(val1['type'], val1['value'], True), val['type'], self.typeTransfer(val2['type'], val2['value'], True))\
                         + (')'if isParen else '')
                 else:
                     out = self.typeTransfer(val['type'], val['value'], True)
@@ -180,10 +180,10 @@ class JSConverter():
                     if len(val) == 3:
                         squiggly = True
                     out = ('({})' if squiggly else '{}').format(
-                        ('-'if val[0] == '-' else '')+self.typeTransfer(val[1]['type'], val[1]['value'], 2 if (val[0] == '-' and val[1]['type'] == 'numExpr')else False))
+                        ('-'if val[0] == '-' else '')+self.typeTransfer(val[1]['type'], val[1]['value'], 2 if (val[0] == '-' and val[1]['type'] == 'numExpr')else True))
                 else:
                     out = ('({})' if special == 2 else '{}').format(
-                        self.typeTransfer(val[0]['type'], val[0]['value']))
+                        self.typeTransfer(val[0]['type'], val[0]['value'], True))
             return out + ('' if special == True else ';\n')
 
     def boolExpr(self, val, special=False):
@@ -221,7 +221,7 @@ class JSConverter():
         if val['type'] == "null":
             return 'return;\n'
         else:
-            return 'return {};\n'.format(self.typeTransfer(val['type'], val['value']))
+            return 'return {};\n'.format(self.typeTransfer(val['type'], val['value'], True))
 
     def functionCall(self, val, special=False):
         out = ''
@@ -253,7 +253,7 @@ class JSConverter():
         return '{}{}'.format(val0, val1)
 
     def ifstmt(self, val, special=False):
-        val1 = self.typeTransfer(val[1]['type'], val[1]['value'])
+        val1 = self.typeTransfer(val[1]['type'], val[1]['value'], True)
         val2 = self.typeTransfer(val[3]['type'], val[3]['value'], special)
         return ('if ({}) {}'.format(val1, val2))
 
@@ -279,7 +279,7 @@ class JSConverter():
                                  self.typeTransfer(val[2]['type'], val[2]['value'], True))
 
     def arrayLiteral(self, val):
-        return str(list(map(lambda x: self.typeTransfer(x['type'], x['value']), val[1:-1]))).replace("'", '')
+        return str(list(map(lambda x: self.typeTransfer(x['type'], x['value'], True), val[1:-1]))).replace("'", '')
 
     def arrayAssign(self, val, special=False):
         return '{}[{}] = {}'.format(val[0],

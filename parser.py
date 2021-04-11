@@ -477,15 +477,17 @@ def p_functionCall(t):
     '''
     _, fnName, *elements = t
     if (fnName in fns):
+        lenArgs = 0 if len(elements) == 2 else len(t[3])
+        params = fns[fnName][1][0]
+        if len(params) != lenArgs:
+            raise Exception("Incorrect number of arguments, expected %s and received %s arguments at line %s" %
+                            (len(fns[fnName][1][0]), len(elements)-2, str(t.lexer.lineno)))
         if len(elements) == 2:  # Empty brackets
             t[0] = {"type": "functionCall",
                     "returnType": fns[fnName][0]["value"],
                     "name": fnName, "value": [fnName]+elements}
         else:
-            params = fns[fnName][1][0]
-            if len(params) != len(t[3]):
-                raise Exception("Incorrect number of arguments, expected %s and received %s arguments at line %s" %
-                                (len(fns[fnName][1][0]), len(elements)-2, str(t.lexer.lineno)))
+
             # Check if argument types match
             for i in range(len(params)):
                 if typeConv[params[i]["returnType"]] != typeConv[t[3][i]["returnType"]]:
@@ -513,11 +515,17 @@ def p_arrayLiteral(t):
         # Check if all elements are the same type
         exprList = elements[1]
         arrayType = typeConv[exprList[0]["returnType"]]
-        for i in range(1, len(exprList)):
-            if arrayType != typeConv[exprList[i]["returnType"]] and \
-               'harem' in arrayType and not (arrayType == "empty harem" or typeConv[exprList[i]["returnType"]] == "empty harem"):
-                raise Exception(
-                    "Harem members are not the same type at line %s" % t.lexer.lineno)
+        for i in range(len(exprList)):
+            if arrayType == 'empty harem' and typeConv[exprList[i]["returnType"]] != 'emtpy harem':
+                arrayType = typeConv[exprList[i]["returnType"]]
+                break
+        for i in range(len(exprList)):
+            if arrayType != typeConv[exprList[i]["returnType"]]:
+                if 'harem' in arrayType and typeConv[exprList[i]["returnType"]] == "empty harem":
+                    pass
+                else:
+                    raise Exception(
+                        "Harem members are not the same type at line %s" % t.lexer.lineno)
 
         t[0] = {
             "type": "arrayLiteral",
